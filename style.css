@@ -1,0 +1,111 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+    width: 820;
+}
+
+h1 {
+  font-size: 400%;
+}
+
+@media screen and (max-width: 980px) {
+  body {
+    width: 80%;
+  }
+
+  h1 {
+    font-size: 350%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  body {
+    width: 85%;
+  }
+
+  h1 {
+    font-size: 300%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    width: 95%;
+    min-width: 300px;
+  }
+
+  h1 {
+    font-size: 200%;
+  }
+}
+
+.noTransitions {
+  transition: none !important;
+}
+
+body {
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 {
+  position: relative;
+  margin-bottom: 0;
+  transition: 1s;
+}
+
+p {
+  margin-top: 0;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+#guts {
+  transition: 1s;
+  opacity: 0;
+  height: 0;
+}
+
+article.active > #guts {
+  opacity: 1;
+  padding-bottom: 5;
+}
+
+article.active > h1 {
+  padding-bottom: 0.5em;
+}
+
+article {
+  position: relative;
+  width: auto;
+  background: DarkGray;
+  text-align: left;
+  transition: 1s;
+}
+
+article > h1 {
+  margin-left: 1.5em;
+  padding-left: 0.1em;
+  cursor: pointer;
+}
+
+h1:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -1.5em;
+  border-width: 0 1.5em 1.5em 0;
+  border-style: solid;
+  border-color: #fff #fff;
+  border-radius: 0 0 30% 0;
+}
+
+
+
