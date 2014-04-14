@@ -4,8 +4,6 @@ title: Jekyll As a Blog Engine
 author: Keith
 ---
 
-This is a test.
-
 As the first post on the blog, I thought I would explain a bit about the technology behind it, but first an introduction to what I plan on using the blog for.
 
 As a general rule of thumb, posts by me, will be more about the technical aspect of game development. I plan on writing on a variety of topics ranging from new programming languages to techniques used in game programming to new technologies as they come out along with updates on the programming side of our various projects at 02Credits. I will be unlikely to write much commentary on the social side or much about the artwork that goes into game development as a whole. For that you should look for JonJo's posts as he is more into the design and progression of creating a game than the code and back end.
