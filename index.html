@@ -1,18 +1,19 @@
-<html>
-    <head>
-        <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
-        <link href="style.css" rel="stylesheet" type="text/css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <script src=".\script.js"></script>
-        <header>
-            Header
-        </header>
-        <section id="content">
-        </section>
-        <footer>
-            Footer
-        </footer>
-    </body>
-</html>
+---
+layout: default
+title: 02Credits
+---
+
+<div>
+    <h1>Blog Posts</h1>
+    <ul>
+        {% for post in site.posts %}
+        <li>
+            <span>{{ post.date | date_to_string }}</span> 
+            <span>~</span> 
+            <a href="{{ post.url }}">
+                {{ post.title }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
