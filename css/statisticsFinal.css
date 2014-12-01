@@ -1,0 +1,220 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    padding-left:55px;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/*
+    Now here is when interesting things start to appear.
+
+    We set up <body> styles with default font and nice gradient in the background.
+    And yes, there is a lot of repetition there because of -prefixes but we don't
+    want to leave anybody behind.
+*/
+body {
+    font-family: 'Inconsolata', sans-serif;
+    color: rgb(190, 190, 190);
+    min-height: 740px;
+
+    background: rgb(215, 215, 215);
+    background:    -moz-linear-gradient(to bottom, #020111 10%,#3a3a52 100%);
+    background:     -ms-linear-gradient(to bottom, #020111 10%,#3a3a52 100%);
+    background:      -o-linear-gradient(to bottom, #020111 10%,#3a3a52 100%);
+    background:         linear-gradient(to bottom, #020111 10%,#3a3a52 100%);
+}
+
+/*
+    Now let's bring some text styles back ...
+*/
+b, strong { font-weight: bold }
+i, em { font-style: italic }
+
+/*
+    ... and give links a nice look.
+*/
+a {
+    color: inherit;
+    text-decoration: none;
+    padding: 0 0.1em;
+    background: rgba(255,255,255,0.5);
+    text-shadow: -1px -1px 2px rgba(100,100,100,0.9);
+    border-radius: 0.2em;
+
+    -webkit-transition: 0.5s;
+    -moz-transition:    0.5s;
+    -ms-transition:     0.5s;
+    -o-transition:      0.5s;
+    transition:         0.5s;
+}
+
+a:hover,
+a:focus {
+    background: rgba(255,255,255,1);
+    text-shadow: -1px -1px 2px rgba(100,100,100,0.5);
+}
+
+/*
+    Now let's style the presentation steps.
+
+    We start with basics to make sure it displays correctly in everywhere ...
+*/
+
+.step {
+    position: relative;
+    width: 900px;
+    padding: 40px;
+    margin: 20px auto;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing:    border-box;
+    -ms-box-sizing:     border-box;
+    -o-box-sizing:      border-box;
+    box-sizing:         border-box;
+    
+    font-size: 48px;
+    line-height: 1.5;
+}
+
+/*
+    ... and we enhance the styles for impress.js.
+
+    Basically we remove the margin and make inactive steps a little bit transparent.
+*/
+.impress-enabled .step {
+    margin: 0;
+    opacity: 0.15;
+
+    -webkit-transition: opacity 1s;
+    -moz-transition:    opacity 1s;
+    -ms-transition:     opacity 1s;
+    -o-transition:      opacity 1s;
+    transition:         opacity 1s;
+}
+
+#BigSortingGraph .step.inactive {
+    opacity: 0.1;
+}
+
+#BigSortingGraph .step.active {
+    opacity: 1;
+}
+
+.impress-enabled .step.active { opacity: 1 }
+
+/*
+    Title Screen
+*/
+
+#cards {
+    padding-left: 400px;
+    width:250px;
+}
+
+/*
+    Overview
+*/
+
+#fsharp {
+    padding-left: 200px;
+    width: 200px;
+}
+
+#r {
+    width: 200px;
+}
+
+/*
+    Algorithm Complexity
+*/
+
+#complexityGraph {
+    padding-left: 250px;
+}
+
+/*
+    Big Graph
+*/
+
+#bigGraph {
+    width:750px;
+}
+
+/*
+    Comparison Graphs
+*/
+
+.comparison {
+    height:250px;
+}
+
+/*
+    Distribution
+*/
+
+#densityPlot {
+    width:750px;
+}
+
+/*
+    Huh?
+*/
+
+#Huh {
+    font-size: 200px;
+}
+
+/*
+    Selection Sort Example
+*/
+
+#selectionGraph {
+    width:750px;
+}
+
+/*
+    Personal Computer Problems
+*/
+
+#PersonalComputer {
+    width:750px;
+}

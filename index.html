@@ -1,19 +1,171 @@
----
-layout: default
-title: 02Credits
----
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <title>Comparison of Sorting Algorithms</title>
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+    <link href="css/statisticsFinal.css" rel="stylesheet" />
+</head>
+<body>
 
-<div>
-    <h1>Blog Posts</h1>
-    <ul>
-        {% for post in site.posts %}
-        <li>
-            <span>{{ post.date | date_to_string }}</span> 
-            <span>~</span> 
-            <a href="{{ post.url }}">
-                {{ post.title }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+<div id="impress">
+    <div id="Title" class="step" data-z="0">
+        <b>Comparison of Sorting Algorithms</b>
+        <p>&nbsp;&nbsp;By Keith Simmons</p>
+        <img id="cards" src="images/Cards.png"/>
+    </div>
+    <div id="Overview" class="step" data-z="5000">
+        <b>Description of Experiment</b>
+        <ul>
+            <li>Common Sorting Algorithms</li>
+            <li>Wrote Timing</li>
+            <li>Used R</li>
+        </ul>
+        <img id="fsharp" src="images/fsharpLogo.png"/>
+        <img id="r" src="images/Rlogo.png"/>
+    </div>
+    <div id="AlgorithmComplexity" class="step" data-z="10000">
+        <b>Algorithm Complexity</b>
+        <ul>
+            <li>O() Notation</li>
+            <li>Best</li>
+            <li>Average</li>
+            <li>Worst</li>
+        </ul>
+        <img id="complexityGraph" src="images/Algorithm Complexity.png" />
+    </div>
+    <div id="BigSortingGraph" class="step" data-z="15000">
+        <img id="bigGraph" src="images/AllSortingAlgorithms.png"/>
+    </div>
+    <div id="BigGraphInfo" class="step" data-z="24000">
+        <b>Big Graph Information</b>
+        <ul>
+            <li>Run Times</li>
+            <li>50000 Samples</li>
+            <li>0 to 10000 Elements</li>
+        </ul>
+    </div>
+    <div id="ConventionalWisdom" class="step" data-z="20000" data-y="2000" data-rotate-x="-20">
+        <b>Top 3</b>
+        <p>&nbsp;&nbsp;Selection</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;O(n^2)</p>
+        <p>&nbsp;&nbsp;Merge Sort</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;O(nlog(n))</p>
+        <p>&nbsp;&nbsp;Quick Sort</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;O(nlog(n)) Best, Average</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;O(n^2) Worst</p>
+    </div>
+    <div id="BigSortingGraph" class="step" data-z="15000">
+        <img id="bigGraph" src="images/AllSortingAlgorithms.png" />
+    </div>
+    <div id="GraphicComparison" class="step" data-z="20000" data-x="-2000" data-rotate-z="90" data-rotate-y="-20">
+        <b>Merge and Quick</b>
+        <div>
+            <img id="merge0-10000" class="comparison" src="images/MergeSort Box Plots 0 - 10000.png"/>
+            <img id="quick0-10000" class="comparison" src="images/QuickSort Box Plots 0 -10000.png" />
+        </div>
+        <div>
+            <img id="merge100000-200000" class="comparison" src="images/MergeSort Box Plots 100000 - 200000.png" />
+            <img id="quick0-10000" class="comparison" src="images/QuickSort Box Plots 100000 -200000.png"/>
+        </div>
+    </div>
+    <div id="MergeQuickAnalysis" class="step" data-z="21000" data-x="-3000" data-rotate-z="90" data-rotate-y="-40">
+        <b>Analysis</b>
+        <ul>
+            <li>
+                Fairly Close
+                <ul>
+                    <li>Small</li>
+                    <li>Large</li>
+                </ul>
+            </li>
+            <li>Distribution Better</li>
+        </ul>
+    </div>
+    <div id="Distribution" class="step" data-z="20000" data-x="2000" data-rotate-z="-90" data-rotate-y="20">
+        <b>Density Plot</b>
+        <img id="densityPlot" src="images/Distribution at Array_Size 2500.png" />
+    </div>
+    <div id="DensityAnalysis" class="step" data-z="21000" data-x="3000" data-rotate-z="-90" data-rotate-y="40">
+        <b>Analysis</b>
+        <p>Quick is Better</p>
+        <ul>
+            <li>More Consistant</li>
+            <li>Small Bump</li>
+        </ul>
+    </div>
+    <div id="Huh" class="step" data-z="20000" data-x="3500" data-rotate-z="-90" data-rotate-y="-90">
+        <b>Huh?</b>
+    </div>
+    <div id="Explanation" class="step" data-z="24000" data-x="4500" data-rotate-z="-90" data-rotate-y="30">
+        <b>Explanation</b>
+        <ul>
+            <li>What Happened to O()?</li>
+            <li>
+                Doesn't Tell Everything
+                <ul>
+                    <li>Startup Overhead</li>
+                    <li>Chance of Worst Case</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div id="SelectionSortExample" class="step" data-z="20000" data-y="-2000" data-rotate-z="180" data-rotate-x="20">
+        <b>Selection Sort Example</b>
+        <img id="selectionGraph" src="images/SelectionSortEarlyBenifit.png" />
+    </div>
+    <div id="SelectionSortAnalysis" class="step" data-z="21000" data-y="-3000" data-rotate-z="180" data-rotate-x="40">
+        <b>Analysis</b>
+        <ul>
+            <li>Faster Early On</li>
+            <li>Startup Overhead</li>
+        </ul>
+    </div>
+    <div id="Recap" class="step" data-z="12000" data-x="7000" data-rotate-z="-90" data-rotate-y="135" data-scale="5">
+        <b>Recap</b>
+        <ul>
+            <li>Quick Fastest</li>
+            <li>
+                Merge Second
+                <ul>
+                    <li>Due to Overhead</li>
+                </ul>
+            </li>
+            <li>Selection Fast for Small</li>
+            <li>Complexity Not Always Bad</li>
+        </ul>
+    </div>
+    <div id="Future" class="step" data-z="12000" data-x="-7000" data-rotate-z="90" data-rotate-y="-135" data-scale="5">
+        <b>Infinite Time/Money</b>
+        <ul>
+            <li>Dedicated Hardware</li>
+            <li>Memory Effects</li>
+            <li>More Algorithms</li>
+            <li>Better Graphs</li>
+            <li>More Samples</li>
+        </ul>
+    </div>
+    <div id="PersonalComputerError" class="step" data-z="6000" data-x="-13000" data-rotate-z="90" data-rotate-y="-135" data-scale="5">
+        <b>Personal Computer Problems</b>
+        <img id="PersonalComputer" src="images/Personal Computer Inconsistancies.png" />
+    </div>
+    <div id="Future" class="step" data-z="12000" data-x="-7000" data-rotate-z="90" data-rotate-y="-135" data-scale="5">
+        <b>Infinite Time/Money</b>
+        <ul>
+            <li>Dedicated Hardware</li>
+            <li>Memory Effects</li>
+            <li>More Algorithms</li>
+            <li>Better Graphs</li>
+            <li>More Samples</li>
+        </ul>
+    </div>
+    <div id="ThankYou" class="step" data-z="35000">
+        <b>Thanks For Watching</b>
+        <p>&nbsp;&nbsp;Any Questions?</p>
+    </div>
 </div>
+<script src="js/impress.js"></script>
+<script>impress().init();</script>
+</body>
+</html>
