@@ -1,0 +1,49 @@
+<head>
+    <script src="./p5.min.js"></script>
+    <script language="javascript">
+        var img;
+        var velocity = 0;
+        var friction = 0.99;
+        var currentRotation = 0;
+        function setup() {
+            createCanvas(window.innerWidth, window.innerHeight);
+            imageMode(CENTER);
+            img = loadImage("http://i.imgur.com/gHNorlB.png");
+            fill(0);
+            stroke(0);
+        }
+
+        function draw() {
+            var size;
+            if (width > height)
+            {
+                size = height * 3 / 4;
+            }
+            else
+            {
+                size = width * 3 / 4;
+            }
+
+            velocity *= friction;
+            currentRotation += velocity;
+            translate(width / 2, height / 2);
+            rotate(currentRotation);
+            image(img, 0, 0, size, size);
+            rotate(-currentRotation);
+            triangle(-20, -(size / 2) - 50, 20, -(size / 2) - 50, 0, -(size / 2));
+        }
+
+        function mouseClicked() {
+            velocity += 1 + random(10) / 5;
+        }
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+</body>
