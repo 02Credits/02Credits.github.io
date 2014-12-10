@@ -24,12 +24,8 @@
         var lastNote = 0;
         var noteFrequency;
 
-        function setup() {
-            createCanvas(window.innerWidth, window.innerHeight);
-            imageMode(CENTER);
+        function preload() {
             img = loadImage("brocouncilspinner.png");
-            noStroke();
-
             A = loadSound('Notes/A.wav');
             B = loadSound('Notes/B.wav');
             C = loadSound('Notes/C.wav');
@@ -38,9 +34,13 @@
             G = loadSound('Notes/G.wav');
             LowF = loadSound('Notes/LowF.wav')
             LowG = loadSound('Notes/LowG.wav');
+        }
 
+        function setup() {
+            createCanvas(window.innerWidth, window.innerHeight);
+            imageMode(CENTER);
+            noStroke();
             noteOrder = [A, A, C, A, D, A, E, D, C, C, E, C, G, C, E, C, LowG, LowG, B, LowG, C, LowG, D, C, LowF, LowF, A, LowF, C, LowF, C, B];
-
             noteFrequency = PI / 8;
         }
 
