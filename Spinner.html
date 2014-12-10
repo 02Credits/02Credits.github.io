@@ -68,17 +68,25 @@
             currentRotation += velocity;
 
             var currentNote = Math.floor(currentRotation / noteFrequency);
+            var notePlayed = false;
             if (currentNote != lastNote)
             {
                 lastNote = currentNote;
                 noteOrder[currentNote % noteOrder.length].play();
+                notePlayed = true;
             }
 
+            // Draw Wheel
             translate(width / 2, height / 2);
             rotate(currentRotation);
             image(img, 0, 0, size, size);
+
+            // Draw Ticker
             rotate(-currentRotation);
-            triangle(-20, -(size / 2) - 50, 20, -(size / 2) - 50, 0, -(size / 2));
+            translate(0, -height / 2);
+            if (notePlayed)
+                rotate(PI / 8);
+            triangle(-20, -50, 20, - 50, 0, 0);
         }
 
         function mouseClicked() {
