@@ -8,7 +8,7 @@
         var maxVelocity = 0.16;
         var minVelocity = 0.004;
         var currentRotation = 0;
-        var soundFiles = {}
+        var tickerRotation = 0;
 
         var A;
         var B;
@@ -46,7 +46,7 @@
         }
 
         function draw() {
-            background(51);
+            background(255);
             var size;
             if (width > height)
             {
@@ -86,7 +86,10 @@
             rotate(-currentRotation);
             translate(0, -size / 2 - 50);
             if (notePlayed)
-                rotate(PI / 8);
+                tickerRotation = -PI / 8;
+            else
+                tickerRotation *= 0.5;
+            rotate(tickerRotation);
             triangle(-20, 0, 20, 0, 0, 50);
         }
 
