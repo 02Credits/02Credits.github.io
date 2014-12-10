@@ -83,10 +83,10 @@
 
             // Draw Ticker
             rotate(-currentRotation);
-            translate(0, -height / 2);
+            translate(0, -size / 2 - 50);
             if (notePlayed)
                 rotate(PI / 8);
-            triangle(-20, -50, 20, - 50, 0, 0);
+            triangle(-20, 0, 20, 0, 0, 50);
         }
 
         function mouseClicked() {
