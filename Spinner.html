@@ -5,7 +5,7 @@
         var img;
         var velocity = 0;
         var friction = 0.995;
-        var maxVelocity = 0.25;
+        var maxVelocity = 0.125;
         var currentRotation = 0;
         var soundFiles = {}
 
@@ -41,7 +41,7 @@
 
             noteOrder = [A, A, C, A, D, A, E, D, C, C, E, C, G, C, E, C, LowG, LowG, B, LowG, C, LowG, D, C, LowF, LowF, A, LowF, C, LowF, C, B];
 
-            noteFrequency = PI / 8;
+            noteFrequency = PI / 16;
         }
 
         function draw() {
@@ -78,7 +78,7 @@
         }
 
         function mouseClicked() {
-            velocity += 0.125 + random(10) / 20;
+            velocity += 0.1 + random(10) / 40;
         }
     </script>
     <style>
