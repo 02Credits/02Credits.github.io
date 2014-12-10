@@ -28,8 +28,7 @@
             createCanvas(window.innerWidth, window.innerHeight);
             imageMode(CENTER);
             img = loadImage("brocouncilspinner.png");
-            fill(0);
-            stroke(0);
+            noStroke();
 
             A = loadSound('Notes/A.wav');
             B = loadSound('Notes/B.wav');
@@ -46,7 +45,7 @@
         }
 
         function draw() {
-            background(47, 45, 51);
+            background(51, 50, 56);
             var size;
             if (width > height)
             {
