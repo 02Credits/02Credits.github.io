@@ -4,7 +4,8 @@
     <script language="javascript">
         var img;
         var velocity = 0;
-        var friction = 0.97;
+        var friction = 0.99;
+        var maxVelocity = 1;
         var currentRotation = 0;
         var soundFiles = {}
 
@@ -20,7 +21,7 @@
         var noteOrder;
 
         var lastNote = 0;
-        var noteFrequency = 1;
+        var noteFrequency;
 
         function setup() {
             createCanvas(window.innerWidth, window.innerHeight);
@@ -39,6 +40,8 @@
             LowG = loadSound('Notes/A.LowG');
 
             noteOrder = [A, A, C, A, D, A, E, D, C, C, E, C, G, C, E, C, LowG, LowG, B, LowG, C, LowG, D, C, LowF, LowF, A, LowF, C, LowF, C, B];
+
+            noteFrequency = PI / 8;
         }
 
         function draw() {
@@ -54,6 +57,11 @@
 
             velocity *= friction;
             currentRotation += velocity;
+
+            if (velocity > maxVelocity)
+            {
+                velocity = maxVelocity;
+            }
 
             var currentNote = Math.floor(currentRotation / noteFrequency);
             if (currentNote != lastNote)
