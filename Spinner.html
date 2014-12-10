@@ -1,16 +1,45 @@
 <head>
     <script src="./p5.min.js"></script>
+    <script src="./p5.sound.min.js"></script>
     <script language="javascript">
         var img;
         var velocity = 0;
-        var friction = 0.95;
+        var friction = 0.97;
         var currentRotation = 0;
+        var soundFiles = {}
+
+        var A;
+        var B;
+        var C;
+        var D;
+        var E;
+        var G;
+        var LowF;
+        var LowG;
+
+        var noteOrder;
+
+        var lastNote = 0;
+        var noteFrequency = 1;
+
         function setup() {
             createCanvas(window.innerWidth, window.innerHeight);
             imageMode(CENTER);
+            mySound.playMode('sustain');
             img = loadImage("http://i.imgur.com/gHNorlB.png");
             fill(0);
             stroke(0);
+
+            A = loadSound('Notes/A.wav');
+            B = loadSound('Notes/B.wav');
+            C = loadSound('Notes/C.wav');
+            D = loadSound('Notes/D.wav');
+            E = loadSound('Notes/E.wav');
+            G = loadSound('Notes/G.wav');
+            LowF = loadSound('Notes/LowF.wav')
+            LowG = loadSound('Notes/A.LowG');
+
+            noteOrder = [A, A, C, A, D, A, E, D, C, C, E, C, G, C, E, C, LowG, LowG, B, LowG, C, LowG, D, C, LowF, LowF, A, LowF, C, LowF, C, B];
         }
 
         function draw() {
@@ -26,6 +55,14 @@
 
             velocity *= friction;
             currentRotation += velocity;
+
+            var currentNote = math.Floor(currentRotation / noteFrequency);
+            if (currentNote != lastNote)
+            {
+                lastNote = currentNote;
+                noteOrder[currentNote % noteOrder.length].play();
+            }
+
             translate(width / 2, height / 2);
             rotate(currentRotation);
             image(img, 0, 0, size, size);
@@ -34,7 +71,7 @@
         }
 
         function mouseClicked() {
-            velocity += 0.5 + random(10) / 10;
+            velocity += 0.25 + random(10) / 20;
         }
     </script>
     <style>
