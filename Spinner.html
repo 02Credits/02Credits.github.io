@@ -5,7 +5,7 @@
         var img;
         var velocity = 0;
         var friction = 0.995;
-        var maxVelocity = 0.08;
+        var maxVelocity = 0.16;
         var minVelocity = 0.004;
         var currentRotation = 0;
         var soundFiles = {}
@@ -82,7 +82,7 @@
         }
 
         function mouseClicked() {
-            velocity += 0.04 + random(100) / 25000;
+            velocity += 0.08 + random(100) / 12500;
         }
     </script>
     <style>
