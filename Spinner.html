@@ -46,7 +46,7 @@
         }
 
         function draw() {
-            background(51);
+            background(47, 45, 51);
             var size;
             if (width > height)
             {
@@ -83,6 +83,7 @@
             image(img, 0, 0, size, size);
 
             // Draw Ticker
+            fill(36, 35, 39);
             rotate(-currentRotation);
             translate(0, -size / 2 - 50);
             if (notePlayed)
