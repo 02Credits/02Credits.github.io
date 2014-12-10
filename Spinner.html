@@ -55,7 +55,7 @@
             velocity *= friction;
             currentRotation += velocity;
 
-            var currentNote = math.Floor(currentRotation / noteFrequency);
+            var currentNote = Math.floor(currentRotation / noteFrequency);
             if (currentNote != lastNote)
             {
                 lastNote = currentNote;
