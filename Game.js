@@ -105,7 +105,7 @@ function init() {
 
     var bucketTexture = THREE.ImageUtils.loadTexture("Textures/MisterBucket.png");
     bucketTexture.minFilter = bucketTexture.magFilter = THREE.NearestFilter;
-    bucketMaterial = new THREE.MeshPhongMaterial({ map: bucketTexture, shininess: 5 });
+    bucketMaterial = new THREE.MeshPhongMaterial({ map: bucketTexture, shininess: 5, transparent: true });
 
     for (var x = 0; x < mapWidth; x++) {
         for (var z = 0; z < mapHeight; z++) {
@@ -215,7 +215,7 @@ function animate() {
     floorMesh.position.x = ceilingMesh.position.x = Math.floor(controls.getObject().position.x);
     floorMesh.position.z = ceilingMesh.position.z = Math.floor(controls.getObject().position.z);
 
-    mrBucket.quaternion.copy(camera.quaternion);
+    mrBucket.quaternion.copy(controls.getObject().quaternion);
 
     renderer.render(scene, camera);
 }
