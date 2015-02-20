@@ -16,15 +16,20 @@ var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 
 var announced = false;
+var announcedTime = -1000000;
 var warned = false;
+var warnedTime = -1000000;
 var music = false;
-var rewardMusicPlayed = false;
 var musicTime = -1000000;
+var rewardMusicPlayed = false;
 
 var step = false;
 var stepTime = -100000;
 var stepSpacing = 500;
 var stepSound;
+
+var playing = true;
+var lost = false;
 
 var mapWidth = 16;
 var mapHeight = 16;
@@ -200,7 +205,7 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
 
-    if (controlsEnabled) {
+    if (controlsEnabled || !playing) {
         var time = performance.now();
         var delta = (time - prevTime) / 1000;
 
@@ -239,7 +244,7 @@ function animate() {
         var newPosition = new THREE.Vector3();
         var posDelta = new THREE.Vector3();
 
-        if (positionDifference.length() > 0.4) {
+        if (positionDifference.length() > 0.4 || (!playing && !lost)) {
             previousPosition.copy(controls.getObject().position);
             controls.getObject().translateX(velocity.x * delta);
             controls.getObject().translateZ(velocity.z * delta);
@@ -271,6 +276,7 @@ function animate() {
                 }
             } else {
                 if (!rewardMusicPlayed) {
+                    showResult("You Win!");
                     rewardMusicPlayed = true;
                     var rewardMusic = new THREE.Audio(listener);
                     rewardMusic.load("Sounds/Mr Bucket Normal.ogg");
@@ -280,38 +286,44 @@ function animate() {
                     flashlight.add(rewardMusic);
                 }
             }
-        }
 
-        previousPosition.copy(mrBucket.position);
-        positionDifference.normalize();
-        positionDifference.multiplyScalar(0.7 * delta);
-        mrBucket.position.add(positionDifference);
-        newPosition.copy(mrBucket.position);
+            if (playing) {
+                previousPosition.copy(mrBucket.position);
+                positionDifference.normalize();
+                positionDifference.multiplyScalar(0.7 * delta);
+                mrBucket.position.add(positionDifference);
+                newPosition.copy(mrBucket.position);
 
-        posDelta.copy(newPosition);
-        posDelta.sub(previousPosition);
-        var bucketRadius = 0.4;
+                posDelta.copy(newPosition);
+                posDelta.sub(previousPosition);
+                var bucketRadius = 0.4;
 
-        if (newPosition.x > 0 && newPosition.x < mapWidth && newPosition.z > 0 && newPosition.z < mapHeight) {
-            if (posDelta.x > 0) {
-                if (wallMap[Math.floor(newPosition.x + bucketRadius)][Math.floor(previousPosition.z)] === 1) {
-                    mrBucket.position.x = previousPosition.x;
-                }
-            } else {
-                if (wallMap[Math.floor(newPosition.x - bucketRadius)][Math.floor(previousPosition.z)] === 1) {
-                    mrBucket.position.x = previousPosition.x;
+                if (newPosition.x > 0 && newPosition.x < mapWidth && newPosition.z > 0 && newPosition.z < mapHeight) {
+                    if (posDelta.x > 0) {
+                        if (wallMap[Math.floor(newPosition.x + bucketRadius)][Math.floor(previousPosition.z)] === 1) {
+                            mrBucket.position.x = previousPosition.x;
+                        }
+                    } else {
+                        if (wallMap[Math.floor(newPosition.x - bucketRadius)][Math.floor(previousPosition.z)] === 1) {
+                            mrBucket.position.x = previousPosition.x;
+                        }
+                    }
+
+                    if (posDelta.z > 0) {
+                        if (wallMap[Math.floor(previousPosition.x)][Math.floor(newPosition.z + bucketRadius)] === 1) {
+                            mrBucket.position.z = previousPosition.z;
+                        }
+                    } else {
+                        if (wallMap[Math.floor(previousPosition.x)][Math.floor(newPosition.z - bucketRadius)] === 1) {
+                            mrBucket.position.z = previousPosition.z;
+                        }
+                    }
                 }
             }
-
-            if (posDelta.z > 0) {
-                if (wallMap[Math.floor(previousPosition.x)][Math.floor(newPosition.z + bucketRadius)] === 1) {
-                    mrBucket.position.z = previousPosition.z;
-                }
-            } else {
-                if (wallMap[Math.floor(previousPosition.x)][Math.floor(newPosition.z - bucketRadius)] === 1) {
-                    mrBucket.position.z = previousPosition.z;
-                }
-            }
+        } else {
+            showResult("You Lose...");
+            lost = true;
+            flashlight.exponent *= 1.01;
         }
 
         prevTime = time;
@@ -326,12 +338,13 @@ function animate() {
 
     rayCast(10, false,
         function() {
-            if (!announced) {
+            if (!announced && time - announcedTime > 3000) {
                 var announcement = new THREE.Audio(listener);
                 announcement.load("Sounds/Hey! I'm Mr Bucket.ogg");
                 announcement.setRefDistance(20);
                 mrBucket.add(announcement);
                 announced = true;
+                announcedTime = time;
             }
         },
         function() {
@@ -340,12 +353,13 @@ function animate() {
 
     rayCast(1, false,
         function() {
-            if (!warned) {
+            if (playing && !warned && time - warnedTime > 10000) {
                 var warning = new THREE.Audio(listener);
                 warning.load("Sounds/I'm gonna.wav");
                 warning.setRefDistance(20);
                 mrBucket.add(warning);
                 warned = true;
+                warnedTime = time;
             }
         },
         function() {
@@ -354,7 +368,7 @@ function animate() {
 
     rayCast(5, true,
         function() {
-            if (!music && time - musicTime > 15000) {
+            if (playing && !music && time - musicTime > 15000) {
                 var screwed = new THREE.Audio(listener);
                 screwed.load("Sounds/Mr Bucket screwed.ogg");
                 screwed.setRefDistance(20);
@@ -396,4 +410,14 @@ function rayCast(distance, any, inViewCallback, notInViewCallback) {
     } else {
         notInViewCallback();
     }
+}
+
+function showResult(result) {
+    var badblocker = document.getElementById('blocker');
+    badblocker.style.display = "none";
+    var blocker = document.getElementById('resultBlocker');
+    var resultElement = document.getElementById('result');
+    resultElement.textContent = result;
+    blocker.style.display = "block";
+    playing = false;
 }
