@@ -1,4 +1,4 @@
-﻿var camera, scene, renderer, listener, raycaster;
+﻿var camera, scene, renderer, listener, raycaster, flashlight;
 var geometry, wallMaterial, floorMaterial, ceilingMaterial, bucketMaterial;
 var controls;
 
@@ -18,7 +18,14 @@ var velocity = new THREE.Vector3();
 var announced = false;
 var warned = false;
 var music = false;
+var rewardMusicPlayed = false;
 var musicTime = -1000000;
+
+var step = false;
+var stepTime = -100000;
+var stepSpacing = 500;
+var stepSound;
+
 var mapWidth = 16;
 var mapHeight = 16;
 
@@ -47,9 +54,9 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.001, 1000);
 
-    var flashlight = new THREE.SpotLight(0xffffff, 2, 10, Math.PI / 2, 30);
+    flashlight = new THREE.SpotLight(0xffffff, 2, 10, Math.PI / 2, 30);
     camera.add(flashlight);
-    flashlight.position.set(0, 0, 1);
+    flashlight.position.set(0.01, 0, 1);
     flashlight.target = camera;
 
     raycaster = new THREE.Raycaster();
@@ -205,6 +212,26 @@ function animate() {
         if (moveLeft) velocity.x -= 20.0 * delta;
         if (moveRight) velocity.x += 20.0 * delta;
 
+        if (moveForward || moveBackward || moveLeft || moveRight) {
+            if (time - stepTime > stepSpacing) {
+                stepTime = time;
+                step = !step;
+                var fileName = "Sounds/Steps/";
+                if (step) {
+                    fileName = fileName + "L";
+                } else {
+                    fileName = fileName + "R";
+                }
+                if (stepSound != null) {
+                    flashlight.remove(stepSound);
+                }
+                fileName = fileName + (Math.floor(Math.random() * 7) + 1) + ".wav";
+                stepSound = new THREE.Audio(listener);
+                stepSound.load(fileName);
+                stepSound.setRefDistance(20);
+                flashlight.add(stepSound);
+            }
+        }
 
         var positionDifference = new THREE.Vector3();
         positionDifference.subVectors(controls.getObject().position, mrBucket.position);
@@ -241,6 +268,15 @@ function animate() {
                     if (wallMap[Math.floor(previousPosition.x)][Math.floor(newPosition.z - playerRadius)] === 1) {
                         controls.getObject().position.z = previousPosition.z;
                     }
+                }
+            } else {
+                if (!rewardMusicPlayed) {
+                    rewardMusicPlayed = true;
+                    var rewardMusic = new THREE.Audio(listener);
+                    rewardMusic.load("Sounds/Mr Bucket Normal.ogg");
+                    rewardMusic.setRefDistance(20);
+                    rewardMusic.setLoop(true);
+                    flashlight.add(rewardMusic);
                 }
             }
         }
