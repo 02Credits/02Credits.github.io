@@ -23,6 +23,11 @@ var music = false;
 var musicTime = -1000000;
 var rewardMusicPlayed = false;
 
+var flicker = false;
+var flickerTime = 0;
+var flickerOffLength = 0;
+var flickerOffChance = 500;
+
 var step = false;
 var stepTime = -100000;
 var stepSpacing = 500;
@@ -208,6 +213,18 @@ function animate() {
     if (controlsEnabled || !playing) {
         var time = performance.now();
         var delta = (time - prevTime) / 1000;
+
+        if (flicker && (time - flickerTime) > flickerOffLength) {
+            flashlight.intensity = 2;
+            flicker = false;
+        } else {
+            if (Math.random() * flickerOffChance <= 1) {
+                flashlight.intensity = 0.5;
+                flicker = true;
+                flickerTime = time;
+                flickerOffLength = Math.random() * 200;
+            }
+        }
 
         velocity.x -= velocity.x * 10.0 * delta;
         velocity.z -= velocity.z * 10.0 * delta;
