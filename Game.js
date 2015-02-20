@@ -239,7 +239,7 @@ function animate() {
         var newPosition = new THREE.Vector3();
         var posDelta = new THREE.Vector3();
 
-        if (positionDifference.length() > 0.1) {
+        if (positionDifference.length() > 0.25) {
             previousPosition.copy(controls.getObject().position);
             controls.getObject().translateX(velocity.x * delta);
             controls.getObject().translateZ(velocity.z * delta);
