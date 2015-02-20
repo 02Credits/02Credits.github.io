@@ -239,7 +239,7 @@ function animate() {
         var newPosition = new THREE.Vector3();
         var posDelta = new THREE.Vector3();
 
-        if (positionDifference.length() > 0.25) {
+        if (positionDifference.length() > 0.4) {
             previousPosition.copy(controls.getObject().position);
             controls.getObject().translateX(velocity.x * delta);
             controls.getObject().translateZ(velocity.z * delta);
@@ -284,7 +284,7 @@ function animate() {
 
         previousPosition.copy(mrBucket.position);
         positionDifference.normalize();
-        positionDifference.multiplyScalar(0.6 * delta);
+        positionDifference.multiplyScalar(0.7 * delta);
         mrBucket.position.add(positionDifference);
         newPosition.copy(mrBucket.position);
 
