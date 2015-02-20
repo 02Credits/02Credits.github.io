@@ -276,7 +276,7 @@ function animate() {
                     rewardMusic.load("Sounds/Mr Bucket Normal.ogg");
                     rewardMusic.setRefDistance(20);
                     rewardMusic.setLoop(true);
-                    flashlight.exponent = 10;
+                    flashlight.exponent = 5;
                     flashlight.add(rewardMusic);
                 }
             }
@@ -342,7 +342,7 @@ function animate() {
         function() {
             if (!warned) {
                 var warning = new THREE.Audio(listener);
-                warning.load("Sounds/I'm gonna.ogg");
+                warning.load("Sounds/I'm gonna.wav");
                 warning.setRefDistance(20);
                 mrBucket.add(warning);
                 warned = true;
