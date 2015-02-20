@@ -159,17 +159,17 @@ function init() {
     camera.add(listener);
 
     var bucketStrolling = new THREE.Audio(listener);
-    bucketStrolling.load("Sounds/Mr Bucket strolling.wav");
-    bucketStrolling.setRefDistance(1);
+    bucketStrolling.load("Sounds/Mr Bucket strolling.ogg");
+    bucketStrolling.setRefDistance(20);
     bucketStrolling.setLoop(true);
     mrBucket.add(bucketStrolling);
 
     var spoopyMusic = new THREE.Audio(listener);
-    spoopyMusic.load("Sounds/Mr bucket slow.wav");
-    spoopyMusic.setRefDistance(1);
+    spoopyMusic.load("Sounds/Mr bucket slow.ogg");
+    spoopyMusic.setRefDistance(20);
     spoopyMusic.setLoop(true);
-    spoopyMusic.gain.gain.value = 0.15;
-    camera.add(spoopyMusic);
+    spoopyMusic.gain.gain.value = 0.05;
+    flashlight.add(spoopyMusic);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -232,9 +232,10 @@ function animate() {
         if (intersectedObjects.length !== 0 && intersectedObjects[0].object === mrBucket) {
             if (!announced) {
                 var announcement = new THREE.Audio(listener);
-                announcement.load("Sounds/Hey! I'm Mr Bucket.wav");
-                announcement.setRefDistance(1);
-                camera.add(announcement);
+                announcement.position = new THREE.Vector3(0, 0, 1);
+                announcement.load("Sounds/Hey! I'm Mr Bucket.ogg");
+                announcement.setRefDistance(20);
+                mrBucket.add(announcement);
                 announced = true;
             }
         } else {
