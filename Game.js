@@ -52,7 +52,7 @@ function init() {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1]
     ];
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.001, 1000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.05, 1000);
 
     flashlight = new THREE.SpotLight(0xffffff, 2, 10, Math.PI / 2, 30);
     camera.add(flashlight);
@@ -276,6 +276,7 @@ function animate() {
                     rewardMusic.load("Sounds/Mr Bucket Normal.ogg");
                     rewardMusic.setRefDistance(20);
                     rewardMusic.setLoop(true);
+                    flashlight.exponent = 10;
                     flashlight.add(rewardMusic);
                 }
             }
@@ -283,7 +284,7 @@ function animate() {
 
         previousPosition.copy(mrBucket.position);
         positionDifference.normalize();
-        positionDifference.multiplyScalar(0.4 * delta);
+        positionDifference.multiplyScalar(0.6 * delta);
         mrBucket.position.add(positionDifference);
         newPosition.copy(mrBucket.position);
 
