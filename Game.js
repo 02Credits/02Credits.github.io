@@ -1,15 +1,11 @@
-﻿var camera, scene, renderer, listener;
+﻿var camera, scene, renderer, listener, raycaster;
 var geometry, wallMaterial, floorMaterial, ceilingMaterial, bucketMaterial;
 var controls;
 
 var floorMesh, ceilingMesh, mrBucket;
 
 var wallMap;
-
-
-init();
-animate();
-
+var intersectObjects = [];
 
 var moveForward = false;
 var moveBackward = false;
@@ -19,17 +15,22 @@ var moveRight = false;
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 
+var announced = false;
+
+init();
+animate();
+
 function init() {
     var mapWidth = 16;
     var mapHeight = 16;
     wallMap = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -47,6 +48,10 @@ function init() {
     camera.add(flashlight);
     flashlight.position.set(0, 0, 1);
     flashlight.target = camera;
+
+    raycaster = new THREE.Raycaster();
+    raycaster.near = 0;
+    raycaster.far = 5;
 
     scene = new THREE.Scene();
 
@@ -115,11 +120,13 @@ function init() {
             if (wallType === 1) {
                 var cube = new THREE.Mesh(geometry, wallMaterial);
                 cube.position.set(middleX, 0.5, middleZ);
+                intersectObjects.push(cube);
                 scene.add(cube);
             } else if (wallType === 2) {
                 var bucketGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
                 mrBucket = new THREE.Mesh(bucketGeometry, bucketMaterial);
                 mrBucket.position.set(middleX, 0.5, middleZ);
+                intersectObjects.push(mrBucket);
                 scene.add(mrBucket);
             } else if (wallType === 9) {
                 controls.getObject().position.set(middleX, 0.5, middleZ);
@@ -156,6 +163,13 @@ function init() {
     bucketStrolling.setRefDistance(1);
     bucketStrolling.setLoop(true);
     mrBucket.add(bucketStrolling);
+
+    var spoopyMusic = new THREE.Audio(listener);
+    spoopyMusic.load("Sounds/Mr bucket slow.wav");
+    spoopyMusic.setRefDistance(1);
+    spoopyMusic.setLoop(true);
+    spoopyMusic.gain.gain.value = 0.15;
+    camera.add(spoopyMusic);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -206,6 +220,26 @@ function animate() {
         positionDifference.normalize();
         positionDifference.multiplyScalar(0.2 * delta);
         mrBucket.position.add(positionDifference);
+
+        raycaster.ray.origin.copy(controls.getObject().position);
+        var directionVector = new THREE.Vector3();
+        directionVector.copy(mrBucket.position);
+        directionVector.sub(controls.getObject().position);
+        directionVector.normalize();
+        raycaster.ray.direction.copy(directionVector);
+        var intersectedObjects = raycaster.intersectObjects(intersectObjects);
+
+        if (intersectedObjects.length !== 0 && intersectedObjects[0].object === mrBucket) {
+            if (!announced) {
+                var announcement = new THREE.Audio(listener);
+                announcement.load("Sounds/Hey! I'm Mr Bucket.wav");
+                announcement.setRefDistance(1);
+                camera.add(announcement);
+                announced = true;
+            }
+        } else {
+            announced = false;
+        }
 
         prevTime = time;
     } else {
