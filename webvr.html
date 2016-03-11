@@ -3,8 +3,19 @@
         <script src="https://aframe.io/releases/latest/aframe.min.js"></script>
     </head>
     <body>
+        <a-assets>
+            <img id="ceilingTex" src="Textures/CeilingTexture.png">
+            <img id="floorTex" src="Textures/FloorTexture.png">
+            <img id="wallTex" src="Textures/WallTexture.png">
+            <a-mixin id="ceilingMat" material="src: #ceilingTex"></a-mixin>
+            <a-mixin id="floorMat" material="src: #floorTex"></a-mixin>
+        </a-assets>
+        <template is="a-template" element="a-room">
+            <a-plane mixin="ceilingMat" rotation="0 -45 10" height="1" width="1" position="0 0 1"></a-plane>
+            <a-plane mixin="floorMat" rotation="0 -45 10" height="1" width="1"></a-plane>
+        </template>
         <a-scene>
-            <a-cube color="green"/>
+            <a-room></a-room>
         </a-scene>
     </body>
 </html>
