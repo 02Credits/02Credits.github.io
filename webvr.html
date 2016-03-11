@@ -7,8 +7,6 @@
             <img id="ceilingTex" src="Textures/CeilingTexture.png">
             <img id="floorTex" src="Textures/FloorTexture.png">
             <img id="wallTex" src="Textures/WallTexture.png">
-            <a-mixin id="ceilingMat" material="src: #ceilingTex"></a-mixin>
-            <a-mixin id="floorMat" material="src: #floorTex"></a-mixin>
         </a-assets>
         <template is="a-template" element="a-room">
             <!-- <a-plane mixin="ceilingMat" rotation="0 -45 10" height="10" width="10" position="0 0 10"></a-plane> -->
@@ -16,7 +14,7 @@
             <a-cube></a-cube>
         </template>
         <a-scene>
-            <a-plane mixin="ceilingMat"></a-plane>
+            <a-plane src="#ceilingTex"></a-plane>
         </a-scene>
     </body>
 </html>
