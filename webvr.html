@@ -10,11 +10,11 @@
             <template is="a-template" element="a-room">
                 <!-- <a-plane mixin="ceilingMat" rotation="0 -45 10" height="10" width="10" position="0 0 10"></a-plane> -->
                 <!-- <a-plane mixin="floorMat" rotation="0 -45 10" height="10" width="10"></a-plane> -->
-                <a-cube></a-cube>
+                <a-image src="#ceilingTex" width="10" height="10" rotation="0 -45 0"></a-image>
             </template>
         </a-assets>
         <a-scene>
-            <a-plane src="#ceilingTex"></a-plane>
+            <a-room></a-room>
         </a-scene>
     </body>
 </html>
