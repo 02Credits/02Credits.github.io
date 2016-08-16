@@ -12,12 +12,15 @@ System.config({
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
   },
+  typescriptOptions: {
+    "tsconfig": true
+  }
 
   map: {
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.7",
-    "pixijs/pixi.js": "github:pixijs/pixi.js@3.0.11",
+    "pixi.js": "github:pixijs/pixi.js@3.0.11",
     "typescript": "npm:typescript@1.8.10",
     "underscore": "npm:underscore@1.8.3",
     "github:jspm/nodelibs-assert@0.1.0": {
