@@ -20,8 +20,8 @@
       "jspm_packages",
       "node_modules"
     ],
-    "compileOnSave": false,
-    "buildOnSave": false,
+    "compileOnSave": true,
+    "buildOnSave": true,
     "atom": {
         "rewriteTsconfig": false
     }
