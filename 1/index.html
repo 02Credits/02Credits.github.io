@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>02Credits</title>
-  <script type = "text/javascript" src = "../phaser/build/phaser.min.js"></script>
+  <script src="jspm_packages/system.js"></script>
+  <script src="config.js"></script>
   <style>
     body {
       margin: 0;
@@ -17,7 +18,9 @@
   </style>
 </head>
 <body>
-  <script type="text/javascript" src="game.js"></script>
+  <script>
+  System.import('bootstrap').then(null, console.error.bind(console));
+  </script>
   <div id="game">
   </div>
 </body>

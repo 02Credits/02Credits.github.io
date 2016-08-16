@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs",
+        "module": "system",
         "moduleResolution": "node",
         "sourceMap": true,
         "isolatedModules": false,
@@ -16,10 +16,11 @@
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true
     },
-    "files": [
-        "../phaser/typescript/phaser.d.ts"
-    ]
-    "compileOnSave": true,
+    "exclude": [
+      "jspm_packages",
+      "node_modules"
+    ],
+    "compileOnSave": false,
     "buildOnSave": false,
     "atom": {
         "rewriteTsconfig": false
