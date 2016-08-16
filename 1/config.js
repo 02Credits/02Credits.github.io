@@ -14,7 +14,7 @@ System.config({
   },
   typescriptOptions: {
     "tsconfig": true
-  }
+  },
 
   map: {
     "babel": "npm:babel-core@5.8.38",
