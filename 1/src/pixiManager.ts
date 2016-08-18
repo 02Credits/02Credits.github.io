@@ -56,20 +56,20 @@ export default () => {
             sprite.x = position.x;
             sprite.y = position.y;
 
-            if (rendered.scale) {
+            if (_.has(rendered, "scale")) {
                 sprite.scale.x = rendered.scale.x;
                 sprite.scale.y = rendered.scale.y;
             }
 
-            if (position.rotation) {
+            if (_.has(position, "rotation")) {
                 sprite.rotation = position.rotation;
             }
 
-            if (position.cx) {
+            if (_.has(position, "cx")) {
                 sprite.anchor.x = position.cx;
             }
 
-            if (position.cy) {
+            if (_.has(position, "cy")) {
                 sprite.anchor.y = position.cy;
             }
         }
