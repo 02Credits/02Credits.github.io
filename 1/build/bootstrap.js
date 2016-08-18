@@ -16,7 +16,7 @@ System.register(["./ces.js", "./pixiManager.js", "./editorManager.js"], function
             }],
         execute: function() {
             pixiManager_js_1.default();
-            ces_js_1.default.AddEntity({ rendered: { texture: "player.png" }, position: { x: 0, y: 0, cx: 0.5, cy: 0.5 } });
+            ces_js_1.default.AddEntity({ rendered: { texture: "Player.png" }, position: { x: 0, y: 0, cx: 0.5, cy: 0.5 } });
             editorManager_js_1.default();
         }
     }
