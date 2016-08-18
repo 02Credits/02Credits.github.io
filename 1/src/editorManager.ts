@@ -19,7 +19,7 @@ export default () => {
             }
         }
         if (!editor.isFocused()) {
-            editor.setValue(JSON.stringify(ces.entities), 0);
+            editor.setValue(JSON.stringify(ces.entities, null, 4), 0);
         }
         return true;
     });

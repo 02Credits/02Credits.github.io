@@ -29,7 +29,7 @@ System.register(["underscore", "./events.js", "./ces.js"], function(exports_1, c
                         }
                     }
                     if (!editor.isFocused()) {
-                        editor.setValue(JSON.stringify(ces_js_1.default.entities), 0);
+                        editor.setValue(JSON.stringify(ces_js_1.default.entities, null, 4), 0);
                     }
                     return true;
                 });
