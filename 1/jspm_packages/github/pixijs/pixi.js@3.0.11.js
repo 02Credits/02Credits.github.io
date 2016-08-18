@@ -1,1 +1,0 @@
-module.exports = require("github:pixijs/pixi.js@3.0.11/src/index.js");
