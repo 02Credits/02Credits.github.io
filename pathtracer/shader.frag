@@ -26,11 +26,11 @@ float ballMap(vec3 p)
 
 float map(vec3 p)
 {
-  float c = cos(20.0 * p.y);
-  float s = sin(20.0 * p.y);
+  float c = cos(2.0 * p.y);
+  float s = sin(2.0 * p.y);
   mat2 m = mat2(c, -s, s, c);
   vec3 q = vec3(m*p.xz, p.y);
-  return min(floorMap(q), ballMap(q));
+  return min(floorMap(p), ballMap(q));
 }
 
 vec3 getNormal(vec3 p)
