@@ -52,7 +52,7 @@ vec4 applyFog(vec4 color, float dist)
 float trace(vec3 o, vec3 r)
 {
   float t = 0.0;
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 32; i++) {
     vec3 p = o + r * t;
     float d = map(p);
     if (d < 0.01) {
