@@ -17,16 +17,22 @@ float floorMap(vec3 p)
   return p.y;
 }
 
-float ballMap(vec3 p)
+float boxMap(vec3 p)
 {
   vec3 q = p + vec3(0, -0.3, 0);
   q = mod(q, vec3(2)) - 0.5 * vec3(2);
-  return length(q) - 0.5;
+
+  float c = cos(2.0 * q.y);
+  float s = sin(2.0 * q.y);
+  mat2 m = mat2(c, -s, s, c);
+  vec3 r = vec3(m*q.xz, q.y);
+
+  return length(max(abs(r), vec3(0.2))) - 0.5;
 }
 
 float map(vec3 p)
 {
-  return min(floorMap(p), ballMap(p));
+  return min(floorMap(p), boxMap(p));
 }
 
 vec3 getNormal(vec3 p)
@@ -40,7 +46,7 @@ vec3 getNormal(vec3 p)
 
 vec4 applyFog(vec4 color, float dist)
 {
-  float fogAmount = clamp(1.0 - exp(-dist * 0.2), 0.0001, 1.0);
+  float fogAmount = clamp(1.0 - exp(-dist * 0.2), 0.00001, 1.0);
   vec4 fogColor = vec4(vec3(0), 1.0);
   return mix(color, fogColor, fogAmount);
 }
@@ -48,7 +54,7 @@ vec4 applyFog(vec4 color, float dist)
 float trace(vec3 o, vec3 r)
 {
   float t = 0.0;
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 500; i++) {
     vec3 p = o + r * t;
     float d = map(p);
     if (d < 0.01) {
@@ -75,7 +81,7 @@ void main ()
     vec3 normal = getNormal(collisionPoint);
     vec3 lightDir = normalize(lightPosition - collisionPoint);
     vec4 lightColor = lightColor * (1.0 - dot(lightDir, normal));
-    color = applyFog(lightColor, dist);
+    color = lightColor;
   }
 
   gl_FragColor = color;
