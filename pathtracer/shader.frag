@@ -26,11 +26,7 @@ float ballMap(vec3 p)
 
 float map(vec3 p)
 {
-  float c = cos(0.0001 * p.y);
-  float s = sin(0.0001 * p.y);
-  mat2 m = mat2(c, -s, s, c);
-  vec3 q = vec3(m*p.xz, p.y);
-  return min(floorMap(p), ballMap(q));
+  return min(floorMap(p), ballMap(p));
 }
 
 vec3 getNormal(vec3 p)
@@ -52,7 +48,7 @@ vec4 applyFog(vec4 color, float dist)
 float trace(vec3 o, vec3 r)
 {
   float t = 0.0;
-  for (int i = 0; i < 32; i++) {
+  for (int i = 0; i < 100; i++) {
     vec3 p = o + r * t;
     float d = map(p);
     if (d < 0.01) {
