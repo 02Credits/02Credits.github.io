@@ -44,7 +44,7 @@ pixiManager(["Wall.png", "Player.png"], () => {
             },
             "collidable": true,
             "hole": {
-                "steepness": 0.12;
+                "steepness": 0.12
             }
         },
         {
