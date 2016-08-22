@@ -20,16 +20,18 @@ System.register(["underscore", "./events.js", "./ces.js"], function(exports_1, c
                 editor.getSession().setMode("ace/mode/json");
                 editor.$blockScrolling = Infinity;
                 events_js_1.default.Subscribe("ces.update", function () {
-                    var annotations = editor.getSession().getAnnotations();
-                    if (!underscore_1.default(annotations).any()) {
-                        try {
-                            ces_js_1.default.entities = JSON.parse(editor.getValue());
-                        }
-                        catch (e) {
-                        }
-                    }
                     if (!editor.isFocused()) {
                         editor.setValue(JSON.stringify(ces_js_1.default.entities, null, 4), 0);
+                    }
+                    else {
+                        var annotations = editor.getSession().getAnnotations();
+                        if (!underscore_1.default(annotations).any()) {
+                            try {
+                                ces_js_1.default.entities = JSON.parse(editor.getValue());
+                            }
+                            catch (e) {
+                            }
+                        }
                     }
                     return true;
                 });

@@ -15,7 +15,7 @@ System.register(["./events.js", "underscore"], function(exports_1, context_1) {
         execute: function() {
             (function (CES) {
                 var currentId = 0;
-                CES.entities = [];
+                CES.entities = {};
                 function PublishEvent(eventName) {
                     var success = true;
                     if (events_js_1.default.Publish("ces." + eventName)) {
@@ -36,8 +36,8 @@ System.register(["./events.js", "underscore"], function(exports_1, context_1) {
                     var succeed = events_js_1.default.PublishMultiple(eventNames, entity);
                     if (succeed) {
                         entity.id = currentId;
+                        CES.entities[currentId] = entity;
                         currentId++;
-                        CES.entities.push(entity);
                         eventNames = underscore_1.default(entity).keys().map(function (key) { return "ces.addEntity." + key; });
                         events_js_1.default.PublishMultiple(eventNames, entity);
                     }
@@ -47,9 +47,13 @@ System.register(["./events.js", "underscore"], function(exports_1, context_1) {
                 function RemoveEntity(entity) {
                     var eventNames = underscore_1.default(entity).keys().map(function (key) { return "ces.removeEntity." + key; });
                     events_js_1.default.PublishMultiple(eventNames, entity);
-                    CES.entities = underscore_1.default.without(CES.entities, entity);
+                    delete CES.entities[entity.id];
                 }
                 CES.RemoveEntity = RemoveEntity;
+                function GetEntities(component) {
+                    return underscore_1.default(CES.entities).pairs().map(function (p) { return p[1]; }).filter(function (e) { return underscore_1.default(e).has(component); });
+                }
+                CES.GetEntities = GetEntities;
             })(CES = CES || (CES = {}));
             exports_1("CES", CES);
             exports_1("default",CES);

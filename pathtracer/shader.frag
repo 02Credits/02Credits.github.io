@@ -27,7 +27,7 @@ float boxMap(vec3 p)
   mat2 m = mat2(c, -s, s, c);
   vec3 r = vec3(m*q.xz, q.y);
 
-  return length(max(abs(r), vec3(0.2))) - 0.5;
+  return length(q) - 0.5;
 }
 
 float map(vec3 p)

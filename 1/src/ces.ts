@@ -5,7 +5,7 @@ import _ from "underscore";
 
 export module CES {
     var currentId = 0;
-    export var entities: any[] = [];
+    export var entities: {[id: number]: any} = {};
 
     export function PublishEvent(eventName: string) {
         var success = true;
@@ -28,8 +28,8 @@ export module CES {
         var succeed = events.PublishMultiple(eventNames, entity);
         if (succeed) {
             entity.id = currentId;
+            entities[currentId] = entity;
             currentId++;
-            entities.push(entity);
             eventNames = _(entity).keys().map(key => "ces.addEntity." + key);
             events.PublishMultiple(eventNames, entity);
         }
@@ -39,7 +39,11 @@ export module CES {
     export function RemoveEntity(entity: any) {
         var eventNames = _(entity).keys().map(key => "ces.removeEntity." + key);
         events.PublishMultiple(eventNames, entity);
-        entities = _.without(entities, entity);
+        delete entities[entity.id];
+    }
+
+    export function GetEntities(component: string) {
+        return _(entities).pairs().map(p => p[1]).filter(e => _(e).has(component));
     }
 }
 
