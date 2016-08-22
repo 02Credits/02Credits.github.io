@@ -39,8 +39,8 @@ pixiManager(["Wall.png", "Player.png"], () => {
                 "cy": 0.5
             },
             "dimensions": {
-                "width": 50,
-                "height": 50
+                "width": 200,
+                "height": 200
             },
             "collidable": true,
             "hole": {
