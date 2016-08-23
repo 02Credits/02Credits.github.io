@@ -81,7 +81,7 @@ void main ()
     vec3 normal = getNormal(collisionPoint);
     vec3 lightDisp = lightPosition - collisionPoint;
     float lightDist = length(lightDisp);
-    vec4 lightColor = lightColor * (1.0 - dot(lightDisp, normal)) * (1.0 / (0.01 * lightDist));
+    vec4 lightColor = lightColor * (1.0 - dot(lightDisp, normal)) * (1.0 / (0.1 * lightDist));
     color = lightColor;
   }
 
