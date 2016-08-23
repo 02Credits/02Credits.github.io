@@ -20,7 +20,7 @@ float floorMap(vec3 p)
 float boxMap(vec3 p)
 {
   vec3 q = p + vec3(0, -0.3, 0);
-  q = mod(q, vec3(2)) - 0.5 * vec3(2);
+  //q = mod(q, vec3(2)) - 0.5 * vec3(2);
 
   float c = cos(2.0 * q.y);
   float s = sin(2.0 * q.y);
