@@ -18,7 +18,7 @@ System.register(["./events.js", "underscore"], function(exports_1, context_1) {
                 CES.entities = {};
                 function PublishEvent(eventName) {
                     var success = true;
-                    if (events_js_1.default.Publish("ces." + eventName)) {
+                    if (events_js_1.default.Publish("ces." + eventName + ".all")) {
                         underscore_1.default(CES.entities).each(function (entity) {
                             var newEventNames = underscore_1.default(entity)
                                 .keys()

@@ -16,7 +16,7 @@ System.register(["pixi.js", "./events.js", "./ces.js"], function(exports_1, cont
         execute: function() {
             exports_1("default",function (texturePaths, loaded) {
                 var sprites = {};
-                var renderer = new pixi_js_1.default.WebGLRenderer(800, 600);
+                var renderer = new pixi_js_1.default.CanvasRenderer(800, 600);
                 document.getElementById("game").appendChild(renderer.view);
                 renderer.view.focus();
                 var stages = {};
@@ -99,6 +99,12 @@ System.register(["pixi.js", "./events.js", "./ces.js"], function(exports_1, cont
                     function animate() {
                         requestAnimationFrame(animate);
                         ces_js_1.default.PublishEvent("update");
+                        var cameras = ces_js_1.default.GetEntities("camera");
+                        if (cameras.length > 0) {
+                            var camera = cameras[0];
+                            root.x = camera.position.x;
+                            root.y = camera.position.y;
+                        }
                         root.children = _(root.children).sortBy(function (stage) {
                             return _(stages).pairs().filter(function (p) { return p[1] === stage; }).map(function (p) { return p[0]; })[0];
                         });

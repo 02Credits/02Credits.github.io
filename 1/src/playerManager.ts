@@ -36,9 +36,9 @@ export default () => {
         if (_(player).has("player")) {
             if (_(collidable).has("wall")) {
                 if (Math.abs(event.xError) < Math.abs(event.yError)) {
-                    player.position.x -= event.xError * 2;
+                    player.position.x -= event.xError;
                 } else {
-                    player.position.y -= event.yError * 2;
+                    player.position.y -= event.yError;
                 }
             } else if (_(collidable).has("hole")) {
 
@@ -91,20 +91,18 @@ export default () => {
 
     function updatePlayer(entity) {
         var mouseState = input.MouseState();
-        if (mouseState.enabled) {
-            var dx = mouseState.x - entity.position.x;
-            var dy = mouseState.y - entity.position.y;
+        var dx = mouseState.x - entity.position.x;
+        var dy = mouseState.y - entity.position.y;
 
-            entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+        entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
 
-            var length = Math.sqrt(dx * dx + dy * dy);
-            if (entity.dimensions && length > 30) {
-                dx = dx / length;
-                dy = dy / length;
+        var length = Math.sqrt(dx * dx + dy * dy);
+        if (entity.dimensions && length > 30) {
+            dx = dx / length;
+            dy = dy / length;
 
-                entity.player.vx += dx * 0.8;
-                entity.player.vy += dy * 0.8;
-            }
+            entity.player.vx += dx * 0.8;
+            entity.player.vy += dy * 0.8;
         }
 
         if (_.has(entity.player, "scale")) {

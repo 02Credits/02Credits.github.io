@@ -12,6 +12,13 @@ pixiManager(["Wall.png", "Player.png"], () => {
 
     var startEntities = JSON.parse(`[
         {
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "camera": true
+        },
+        {
             "rendered": {
                 "texture": "Wall.png"
             },
@@ -107,5 +114,5 @@ pixiManager(["Wall.png", "Player.png"], () => {
         ces.AddEntity(entity);
     })
 
-    editorManager();
+    // editorManager();
 });

@@ -31,7 +31,7 @@ interface RenderedEntity {
 
 export default (texturePaths: string[], loaded: () => void) => {
     var sprites: { [id: number]: pixi.Sprite }  = { };
-    var renderer = new pixi.WebGLRenderer(800, 600);
+    var renderer = new pixi.CanvasRenderer(800, 600);
     document.getElementById("game").appendChild(renderer.view);
     renderer.view.focus();
 
@@ -130,6 +130,13 @@ export default (texturePaths: string[], loaded: () => void) => {
             requestAnimationFrame(animate);
 
             ces.PublishEvent("update");
+
+            var cameras = ces.GetEntities("camera");
+            if (cameras.length > 0) {
+                var camera = cameras[0];
+                root.x = camera.position.x;
+                root.y = camera.position.y;
+            }
 
             root.children = _(root.children).sortBy((stage) => {
                 return _(stages).pairs().filter((p) => p[1] === stage).map(p => p[0])[0];

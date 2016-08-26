@@ -9,7 +9,7 @@ export module CES {
 
     export function PublishEvent(eventName: string) {
         var success = true;
-        if (events.Publish("ces." + eventName)) {
+        if (events.Publish("ces." + eventName + ".all")) {
             _(entities).each((entity) => {
                 var newEventNames =
                     _(entity)

@@ -45,10 +45,10 @@ System.register(["underscore", "./events.js", "./inputManager.js", "./ces.js"], 
                     if (underscore_1.default(player).has("player")) {
                         if (underscore_1.default(collidable).has("wall")) {
                             if (Math.abs(event.xError) < Math.abs(event.yError)) {
-                                player.position.x -= event.xError * 2;
+                                player.position.x -= event.xError;
                             }
                             else {
-                                player.position.y -= event.yError * 2;
+                                player.position.y -= event.yError;
                             }
                         }
                         else if (underscore_1.default(collidable).has("hole")) {
@@ -96,17 +96,15 @@ System.register(["underscore", "./events.js", "./inputManager.js", "./ces.js"], 
                 }
                 function updatePlayer(entity) {
                     var mouseState = inputManager_js_1.default.MouseState();
-                    if (mouseState.enabled) {
-                        var dx = mouseState.x - entity.position.x;
-                        var dy = mouseState.y - entity.position.y;
-                        entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
-                        var length = Math.sqrt(dx * dx + dy * dy);
-                        if (entity.dimensions && length > 30) {
-                            dx = dx / length;
-                            dy = dy / length;
-                            entity.player.vx += dx * 0.8;
-                            entity.player.vy += dy * 0.8;
-                        }
+                    var dx = mouseState.x - entity.position.x;
+                    var dy = mouseState.y - entity.position.y;
+                    entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+                    var length = Math.sqrt(dx * dx + dy * dy);
+                    if (entity.dimensions && length > 30) {
+                        dx = dx / length;
+                        dy = dy / length;
+                        entity.player.vx += dx * 0.8;
+                        entity.player.vy += dy * 0.8;
                     }
                     if (underscore_1.default.has(entity.player, "scale")) {
                         entity.rendered.scale = entity.player.scale;
