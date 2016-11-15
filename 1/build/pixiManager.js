@@ -20,6 +20,7 @@ System.register(["pixi.js", "./events.js", "./ces.js"], function(exports_1, cont
                 document.getElementById("game").appendChild(renderer.view);
                 renderer.view.focus();
                 var stages = {};
+                var uiStages = {};
                 var textures = {};
                 _(texturePaths).each(function (path) {
                     pixi_js_1.default.loader.add(path, window.location + "assets/" + path).load(function (loader, resources) {
@@ -34,6 +35,12 @@ System.register(["pixi.js", "./events.js", "./ces.js"], function(exports_1, cont
                     events_js_1.default.Subscribe("ces.removeEntity.rendered", function (entity) {
                         if (sprites[entity.id]) {
                             stages[entity.position.z].removeChild(sprites[entity.id]);
+                        }
+                        return true;
+                    });
+                    events_js_1.default.Subscribe("ces.removeEntity.renderedUI", function (entity) {
+                        if (sprites[entity.id]) {
+                            uiStages[entity.position.z].removeChild(sprites[entity.id]);
                         }
                         return true;
                     });
@@ -96,6 +103,7 @@ System.register(["pixi.js", "./events.js", "./ces.js"], function(exports_1, cont
                         }
                     }
                     var root = new pixi_js_1.default.Container();
+                    var overlay = new pixi_js_1.default.Container();
                     function animate() {
                         requestAnimationFrame(animate);
                         ces_js_1.default.PublishEvent("update");

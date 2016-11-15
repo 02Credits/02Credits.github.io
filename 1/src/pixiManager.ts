@@ -36,6 +36,7 @@ export default (texturePaths: string[], loaded: () => void) => {
     renderer.view.focus();
 
     var stages: { [id: number]: pixi.Container } =  { };
+    var uiStages: { [id: number]: pixi.Container } = { };
 
     var textures = {};
     _(texturePaths).each((path) => {
@@ -52,6 +53,13 @@ export default (texturePaths: string[], loaded: () => void) => {
         events.Subscribe("ces.removeEntity.rendered", (entity: RenderedEntity) => {
             if (sprites[entity.id]) {
                 stages[entity.position.z].removeChild(sprites[entity.id]);
+            }
+            return true;
+        });
+
+        events.Subscribe("ces.removeEntity.renderedUI", (entity: RenderedEntity) => {
+            if (sprites[entity.id]) {
+                uiStages[entity.position.z].removeChild(sprites[entity.id]);
             }
             return true;
         });
@@ -126,6 +134,7 @@ export default (texturePaths: string[], loaded: () => void) => {
         }
 
         var root = new pixi.Container();
+        var overlay = new pixi.Container();
         function animate() {
             requestAnimationFrame(animate);
 
