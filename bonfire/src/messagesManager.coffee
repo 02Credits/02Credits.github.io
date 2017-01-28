@@ -12,7 +12,7 @@ define ["jquery",
   remoteDB = new PouchDB('http://uwhouse.ddns.net:5984/messages')
   localDB = new PouchDB('messages')
 
-  currentServer = remoteDB;
+  currentDB = remoteDB;
 
   handleChange = (change) ->
     render()
@@ -22,7 +22,7 @@ define ["jquery",
 
   render = () ->
     if !inputManager.searching
-      currentServer.allDocs
+      currentDB.allDocs
         include_docs: true
         conflicts: false
         attachments: true
@@ -94,7 +94,7 @@ define ["jquery",
     .on 'error', (err) ->
       arbiter.publish "error", err
     remoteChanges.cancel()
-    currentServer = localDB;
+    currentDB = localDB;
   .catch (err) ->
     arbiter.publish "error", err
 
@@ -110,16 +110,16 @@ define ["jquery",
   arbiter.subscribe "messages/edit", (args) ->
     id = args.id
     text = args.text
-    currentServer.get(id)
+    currentDB.get(id)
     .then (doc) ->
       doc.text = text
       doc.edited = true
-      currentServer.put doc
+      currentDB.put doc
     .catch (err) ->
       arbiter.publish "error", err
 
   arbiter.subscribe "messages/search", (query) ->
-    currentServer.search
+    currentDB.search
       query: query
       fields: ['author', 'text']
       include_docs: true
@@ -130,7 +130,7 @@ define ["jquery",
     text = args.text
     author = args.author
     if text? and author?
-      currentServer.allDocs
+      currentDB.allDocs
         include_docs: true
         conflicts: false
         limit: 1
@@ -143,7 +143,7 @@ define ["jquery",
         messageNumber = (parseInt(doc.messageNumber) + 1).toString()
         idNumber = parseInt(messageNumber.toString() + time.toString())
         id = collate.toIndexableString(idNumber).replace(/\u0000/g, '\u0001');
-        currentServer.put
+        currentDB.put
           "_id": id
           "messageNumber": messageNumber
           "time": time
@@ -153,7 +153,7 @@ define ["jquery",
         arbiter.publish "error", err
 
   arbiter.subscribe "messages/getLast", (callback) ->
-    currentServer.query "by_author",
+    currentDB.query "by_author",
       key: localStorage.displayName;
       limit: 1
       include_docs: true
@@ -166,7 +166,7 @@ define ["jquery",
   arbiter.subscribe "messages/get", (args) ->
     id = args.id
     callback = args.callback
-    currentServer.get(id)
+    currentDB.get(id)
     .then (doc) ->
       callback doc
     .catch (err) ->
