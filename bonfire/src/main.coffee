@@ -2,8 +2,6 @@ requirejs.config
   shim:
     'spellcheck':
       exports: '$Spelling'
-    'socketio':
-      exports: 'io'
     'deepCopy':
       exports: 'owl'
     'uuid':
@@ -13,10 +11,8 @@ requirejs.config
       deps: ['jquery', 'hammerjs', 'velocity']
   baseUrl: "bin/"
   paths:
-    'socketio': '../socket.io/socket.io'
     'hammerjs': 'external/hammer.min'
     'jquery': 'external/jquery.min'
-    'SocketIOFileUpload': 'external/siofu.min'
     'materialize': 'external/materialize'
     'moment': 'external/moment.min'
     'mithril': 'external/mithril.min'
@@ -38,7 +34,6 @@ requirejs [
   'emoticons'
   'plugins'
   'promisePolyfill'
-  'socketManager'
   'messageRenderer'
   'messagesManager'
   'scrollManager'

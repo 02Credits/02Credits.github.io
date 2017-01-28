@@ -5,9 +5,6 @@
       'spellcheck': {
         exports: '$Spelling'
       },
-      'socketio': {
-        exports: 'io'
-      },
       'deepCopy': {
         exports: 'owl'
       },
@@ -21,10 +18,8 @@
     },
     baseUrl: "bin/",
     paths: {
-      'socketio': '../socket.io/socket.io',
       'hammerjs': 'external/hammer.min',
       'jquery': 'external/jquery.min',
-      'SocketIOFileUpload': 'external/siofu.min',
       'materialize': 'external/materialize',
       'moment': 'external/moment.min',
       'mithril': 'external/mithril.min',
@@ -43,7 +38,7 @@
     }
   });
 
-  requirejs(['errorLogger', 'chatCommands', 'emoticons', 'plugins', 'promisePolyfill', 'socketManager', 'messageRenderer', 'messagesManager', 'scrollManager', 'uiSetup', 'inputManager', 'idleManager', 'settings', 'fileManager'], function() {
+  requirejs(['errorLogger', 'chatCommands', 'emoticons', 'plugins', 'promisePolyfill', 'messageRenderer', 'messagesManager', 'scrollManager', 'uiSetup', 'inputManager', 'idleManager', 'settings', 'fileManager'], function() {
     return window.baseTitle = "Bonfire";
   });
 

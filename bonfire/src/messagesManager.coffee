@@ -24,7 +24,7 @@ define ["jquery",
         notifier.notify true
 
   primeQueries = () ->
-    if caughtUp
+    if caughtUp and false
       currentDB.query "by_author",
         key: localStorage.displayName
         limit: 1
@@ -114,6 +114,10 @@ define ["jquery",
     $('.progress').fadeOut()
     caughtUp = true
     primeQueries()
+    localDB.sync(remoteDB)
+      live: true
+      retry: true
+      include_docs: true
     localDB.changes
       since: 'now'
       live: true
