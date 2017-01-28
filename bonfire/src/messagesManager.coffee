@@ -12,9 +12,17 @@ define ["jquery",
   remoteDB = new PouchDB('http://uwhouse.ddns.net:5984/messages')
   localDB = new PouchDB('messages')
 
+  currentServer = remoteDB;
+
+  handleChange = (change) ->
+    render()
+    if change.doc.author != localStorage.displayName
+      if notifier?
+        notifier.notify true
+
   render = () ->
     if !inputManager.searching
-      localDB.allDocs
+      currentServer.allDocs
         include_docs: true
         conflicts: false
         attachments: true
@@ -67,40 +75,65 @@ define ["jquery",
           messageRenderer.render(doc)
     arbiter.publish("messages/rendered")
 
+  remoteChanges = remoteDB.changes
+    since: 'now'
+    live: true
+    include_docs: true
+  .on 'change', handleChange
+  .on 'error', (err) ->
+    arbiter.publish "error", err
+
+  localDB.sync(remoteDB)
+  .then () ->
+    $('.progress').fadeOut()
+    localDB.changes
+      since: 'now'
+      live: true
+      include_docs: true
+    .on 'change', handleChange
+    .on 'error', (err) ->
+      arbiter.publish "error", err
+    remoteChanges.cancel()
+    currentServer = localDB;
+  .catch (err) ->
+    arbiter.publish "error", err
+
+  render()
+
+  # localDB.sync(remoteDB)
+  # .then () ->
+  #   $('.progress').fadeOut()
+  #   $('#input').prop('disabled', false)
+  #   render()
+
+  #   localDB.sync remoteDB, {live: true, retry: true}
+  #   .on 'error', (err) ->
+  #     arbiter.publish "error", err
+
+  #   localDB.changes
+  #     since: 'now'
+  #     live: true
+  #     include_docs: true
+  #   .on 'change', (change) ->
+  #     render()
+  #     if change.doc.author != localStorage.displayName
+  #       if notifier?
+  #         notifier.notify true
+  #   .on 'error', (err) ->
+  #     arbiter.publish "error", err
+  # .catch (err) ->
+  #   arbiter.publish "error", err
+
   arbiter.subscribe "messages/render", (messages) ->
     if !messages?
       render()
     else
       renderMessages messages
 
-  localDB.sync(remoteDB)
-  .then () ->
-    $('.progress').fadeOut()
-    $('#input').prop('disabled', false)
-    render()
-
-    localDB.sync remoteDB, {live: true, retry: true}
-    .on 'error', (err) ->
-      arbiter.publish "error", err
-
-    localDB.changes
-      since: 'now'
-      live: true
-      include_docs: true
-    .on 'change', (change) ->
-      render()
-      if change.doc.author != localStorage.displayName
-        if notifier?
-          notifier.notify true
-    .on 'error', (err) ->
-      arbiter.publish "error", err
-  .catch (err) ->
-    arbiter.publish "error", err
-
   arbiter.subscribe "messages/edit", (args) ->
     id = args.id
     text = args.text
-    localDB.get(id)
+    currentServer.get(id)
     .then (doc) ->
       doc.text = text
       doc.edited = true
@@ -109,7 +142,7 @@ define ["jquery",
       arbiter.publish "error", err
 
   arbiter.subscribe "messages/search", (query) ->
-    localDB.search
+    currentServer.search
       query: query
       fields: ['author', 'text']
       include_docs: true
@@ -120,7 +153,7 @@ define ["jquery",
     text = args.text
     author = args.author
     if text? and author?
-      localDB.allDocs
+      currentServer.allDocs
         include_docs: true
         conflicts: false
         limit: 1
@@ -143,7 +176,7 @@ define ["jquery",
         arbiter.publish "error", err
 
   arbiter.subscribe "messages/getLast", (callback) ->
-    localDB.query "by_author",
+    currentServer.query "by_author",
       key: localStorage.displayName;
       limit: 1
       include_docs: true
@@ -156,7 +189,7 @@ define ["jquery",
   arbiter.subscribe "messages/get", (args) ->
     id = args.id
     callback = args.callback
-    localDB.get(id)
+    currentServer.get(id)
     .then (doc) ->
       callback doc
     .catch (err) ->
