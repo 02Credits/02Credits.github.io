@@ -137,10 +137,11 @@
       $('.progress').fadeOut();
       caughtUp = true;
       primeQueries();
-      localDB.sync(remoteDB)({
+      localDB.sync(remoteDB, {
         live: true,
-        retry: true,
-        include_docs: true
+        retry: true
+      }).on('error', function(err) {
+        return arbiter.publish("error", err);
       });
       localDB.changes({
         since: 'now',

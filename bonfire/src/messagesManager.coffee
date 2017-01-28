@@ -114,10 +114,11 @@ define ["jquery",
     $('.progress').fadeOut()
     caughtUp = true
     primeQueries()
-    localDB.sync(remoteDB)
+    localDB.sync remoteDB,
       live: true
       retry: true
-      include_docs: true
+    .on 'error', (err) ->
+      arbiter.publish "error", err
     localDB.changes
       since: 'now'
       live: true
