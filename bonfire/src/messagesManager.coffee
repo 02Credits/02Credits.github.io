@@ -99,6 +99,7 @@ define ["jquery",
     arbiter.publish "error", err
 
   render()
+  $('#input').prop('disabled', false)
 
   # localDB.sync(remoteDB)
   # .then () ->

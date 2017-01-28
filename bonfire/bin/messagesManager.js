@@ -117,6 +117,7 @@
       return arbiter.publish("error", err);
     });
     render();
+    $('#input').prop('disabled', false);
     arbiter.subscribe("messages/render", function(messages) {
       if (messages == null) {
         return render();

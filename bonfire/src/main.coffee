@@ -11,7 +11,7 @@ requirejs.config
     'materialize':
       exports: 'Materialize'
       deps: ['jquery', 'hammerjs', 'velocity']
-  baseUrl: "/bin/"
+  baseUrl: "bonfire/bin/"
   paths:
     'socketio': '../socket.io/socket.io'
     'hammerjs': 'external/hammer.min'
