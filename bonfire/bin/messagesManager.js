@@ -132,7 +132,7 @@
       return currentServer.get(id).then(function(doc) {
         doc.text = text;
         doc.edited = true;
-        return localDB.put(doc);
+        return currentServer.put(doc);
       })["catch"](function(err) {
         return arbiter.publish("error", err);
       });
@@ -165,7 +165,7 @@
           messageNumber = (parseInt(doc.messageNumber) + 1).toString();
           idNumber = parseInt(messageNumber.toString() + time.toString());
           id = collate.toIndexableString(idNumber).replace(/\u0000/g, '\u0001');
-          return localDB.put({
+          return currentServer.put({
             "_id": id,
             "messageNumber": messageNumber,
             "time": time,

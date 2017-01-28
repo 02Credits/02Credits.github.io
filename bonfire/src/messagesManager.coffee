@@ -101,30 +101,6 @@ define ["jquery",
   render()
   $('#input').prop('disabled', false)
 
-  # localDB.sync(remoteDB)
-  # .then () ->
-  #   $('.progress').fadeOut()
-  #   $('#input').prop('disabled', false)
-  #   render()
-
-  #   localDB.sync remoteDB, {live: true, retry: true}
-  #   .on 'error', (err) ->
-  #     arbiter.publish "error", err
-
-  #   localDB.changes
-  #     since: 'now'
-  #     live: true
-  #     include_docs: true
-  #   .on 'change', (change) ->
-  #     render()
-  #     if change.doc.author != localStorage.displayName
-  #       if notifier?
-  #         notifier.notify true
-  #   .on 'error', (err) ->
-  #     arbiter.publish "error", err
-  # .catch (err) ->
-  #   arbiter.publish "error", err
-
   arbiter.subscribe "messages/render", (messages) ->
     if !messages?
       render()
@@ -138,7 +114,7 @@ define ["jquery",
     .then (doc) ->
       doc.text = text
       doc.edited = true
-      localDB.put doc
+      currentServer.put doc
     .catch (err) ->
       arbiter.publish "error", err
 
@@ -167,7 +143,7 @@ define ["jquery",
         messageNumber = (parseInt(doc.messageNumber) + 1).toString()
         idNumber = parseInt(messageNumber.toString() + time.toString())
         id = collate.toIndexableString(idNumber).replace(/\u0000/g, '\u0001');
-        localDB.put
+        currentServer.put
           "_id": id
           "messageNumber": messageNumber
           "time": time
