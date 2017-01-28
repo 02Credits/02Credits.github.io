@@ -12,13 +12,39 @@ define ["jquery",
   remoteDB = new PouchDB('http://uwhouse.ddns.net:5984/messages')
   localDB = new PouchDB('messages')
 
-  currentDB = remoteDB;
+  currentDB = remoteDB
+  caughtUp = false
+  editPrimed = false
+  searchPrimed = false
 
   handleChange = (change) ->
     render()
     if change.doc.author != localStorage.displayName
       if notifier?
         notifier.notify true
+
+  primeQueries = () ->
+    if caughtUp
+      currentDB.query "by_author",
+        key: localStorage.displayName
+        limit: 1
+        descending: true
+      .then () ->
+        if not editPrimed
+          editPrimed = true
+          Materialize.toast("Edit Ready", 4000)
+      .catch (err) ->
+        arbiter.publish "error", err
+      currentDB.search
+        query: "Sample Search"
+        fields: ['author', 'text']
+        include_docs: true
+      .then () ->
+        if not searchPrimed
+          searchPrimed = true
+          Materialize.toast("Search Ready", 4000)
+      .catch (err) ->
+        arbiter.publish "error", err
 
   render = () ->
     if !inputManager.searching
@@ -86,6 +112,8 @@ define ["jquery",
   localDB.sync(remoteDB)
   .then () ->
     $('.progress').fadeOut()
+    caughtUp = true
+    primeQueries()
     localDB.changes
       since: 'now'
       live: true
@@ -110,21 +138,33 @@ define ["jquery",
   arbiter.subscribe "messages/edit", (args) ->
     id = args.id
     text = args.text
+    $('.progress').fadeIn()
     currentDB.get(id)
     .then (doc) ->
+      $('.progress').fadeOut()
       doc.text = text
       doc.edited = true
       currentDB.put doc
     .catch (err) ->
       arbiter.publish "error", err
+      $('.progress').fadeOut()
 
   arbiter.subscribe "messages/search", (query) ->
-    currentDB.search
-      query: query
-      fields: ['author', 'text']
-      include_docs: true
-    .then (results) ->
-      renderMessages(results.rows.reverse())
+    if caughtUp
+      renderMessages []
+      $('.progress').fadeIn()
+      currentDB.search
+        query: query
+        fields: ['author', 'text']
+        include_docs: true
+      .then (results) ->
+        $('.progress').fadeOut()
+        renderMessages(results.rows.reverse())
+      .catch (err) ->
+        arbiter.publish "error", err
+        $('.progress').fadeOut()
+    else
+      Materialize.toast("Sync still in progress")
 
   arbiter.subscribe "messages/send", (args) ->
     text = args.text
@@ -153,15 +193,21 @@ define ["jquery",
         arbiter.publish "error", err
 
   arbiter.subscribe "messages/getLast", (callback) ->
-    currentDB.query "by_author",
-      key: localStorage.displayName;
-      limit: 1
-      include_docs: true
-      descending: true
-    .then (result) ->
-      callback result.rows[0].doc
-    .catch (err) ->
-      arbiter.publish "error", err
+    if caughtUp
+      $('.progress').fadeIn()
+      currentDB.query "by_author",
+        key: localStorage.displayName;
+        limit: 1
+        include_docs: true
+        descending: true
+      .then (result) ->
+        $('.progress').fadeOut()
+        callback result.rows[0].doc
+      .catch (err) ->
+        $('.progress').fadeOut()
+        arbiter.publish "error", err
+    else
+      Materialize.toast("Sync still in progress")
 
   arbiter.subscribe "messages/get", (args) ->
     id = args.id
@@ -171,3 +217,7 @@ define ["jquery",
       callback doc
     .catch (err) ->
       arbiter.publish "error", err
+
+  setInterval () ->
+    primeQueries()
+  , 10000
