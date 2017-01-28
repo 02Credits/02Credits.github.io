@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Bonfire</title>
+        <meta name="viewport" content="width=600, user-scalable=no">
+        <link rel="icon" href="BFiconFinished.ico">
+        <script type="text/javascript" src="https://www.gstatic.com/swiffy/v7.4/runtime.js"></script>
+        <script type="text/javascript" src="https://assets.gfycat.com/gfycat.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="bin/external/pouchdb-5.2.0.js"></script>
+        <script src="bin/external/pouchdb.memory.min.js"></script>
+        <link rel="stylesheet" href="bin/external/hint.min.css">
+        <link rel="stylesheet" href="bin/style.css">
+        <script data-main="bin/main" src="bin/external/require.js"></script>
+        <script src="bin/external/linkify.amd.min.js"></script>
+        <script src="bin/external/linkify-string.amd.min.js"></script>
+        <script src="bin/external/linkify-html.amd.min.js"></script>
+    </head>
+    <body>
+        <div class="progress orange lighten-2">
+            <div class="indeterminate orange darken-2"></div>
+        </div>
+        <div id="content">
+            <div id="input-bar">
+                <input disabled id="input" class="white"/>
+                <a id="settings" href="#settings-page" class="btn-floating btn-large modal-trigger">
+                    <i class="material-icons">settings</i>
+                </a>
+            </div>
+            <div id="messages">
+            </div>
+        </div>
+        <div id="settings-page" class="modal bottom-sheet">
+            <div class="modal-content">
+                <h4>Settings</h4>
+                <div class="row">
+                    <div class="input-field col s12 m4 l3">
+                        <input id="displayName" class="settings-input" type="text">
+                        <label class="active" for="displayName">Name</label>
+                    </div>
+                    <div class="input-field col s12 m4 l3">
+                        <input id="status" class="settings-input" type="text">
+                        <label class="active" for="status">Status</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fixed-action-btn" id="seen-user-list" style="bottom: 80px; right: 24px">
+        </div>
+    </body>
+</html>
