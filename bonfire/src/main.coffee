@@ -9,14 +9,12 @@ requirejs.config
     'materialize':
       exports: 'Materialize'
       deps: ['jquery', 'hammerjs', 'velocity']
-    # 'pouchdb-memory':
+    # 'pouchdb-search':
     #   deps: ['pouchdb']
-    'pouchdb-search':
-      deps: ['pouchdb']
-    'pouchdb-upsert':
-      deps: ['pouchdb']
-    'pouchdb-erase':
-      deps: ['pouchdb']
+    # 'pouchdb-upsert':
+    #   deps: ['pouchdb']
+    # 'pouchdb-erase':
+    #   deps: ['pouchdb']
   baseUrl: "bin/"
   paths:
     'hammerjs': 'external/hammer.min'
