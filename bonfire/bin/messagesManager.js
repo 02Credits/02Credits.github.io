@@ -126,6 +126,7 @@
       })()));
       return arbiter.publish("messages/rendered");
     };
+    render();
     remoteChanges = remoteDB.changes({
       since: 'now',
       live: true,
@@ -155,7 +156,6 @@
     })["catch"](function(err) {
       return arbiter.publish("error", err);
     });
-    render();
     $('#input').prop('disabled', false);
     arbiter.subscribe("messages/render", function(messages) {
       if (messages == null) {
