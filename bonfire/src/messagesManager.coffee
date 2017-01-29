@@ -110,7 +110,7 @@ define ["jquery",
   .on 'error', (err) ->
     arbiter.publish "error", err
 
-  localDB.sync(remoteDB)
+  localDB.replicate.from(remoteDB)
   .then () ->
     $('.progress').fadeOut()
     caughtUp = true

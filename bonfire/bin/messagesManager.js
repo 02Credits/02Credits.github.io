@@ -134,7 +134,7 @@
     }).on('change', handleChange).on('error', function(err) {
       return arbiter.publish("error", err);
     });
-    localDB.sync(remoteDB).then(function() {
+    localDB.replicate.from(remoteDB).then(function() {
       $('.progress').fadeOut();
       caughtUp = true;
       primeQueries();
