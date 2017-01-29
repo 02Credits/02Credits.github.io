@@ -11,7 +11,6 @@ define ["mithril"], (m) ->
   gifvRegex = /.(?:gifv|GIFV)$/
   videoRegex = /.webm|.wmv|.mp4$/
   youtubeRegex = /(?:(?:https?:\/\/www\.youtube\.com\/watch\?v=)|(?:^https?:\/\/youtu.be\/))([^#\&\?]*)(?:\?t=(\d+m)?(\d+s)?)?/
-  vineRegex = /(?:https?:\/\/vine\.co\/v\/)/
 
   name: "images"
   parent: "container"
@@ -38,17 +37,6 @@ define ["mithril"], (m) ->
             muted: true,
             width: "100%",
             src: link.href
-          })
-        if vineRegex.test link.href
-          id = link.href.replace vineRegex, ''
-          images.push (m "iframe", {
-            src: "https://vine.co/v/#{id}/embed/simple"
-            width: "600"
-            height: "600"
-            frameborder: "0"
-          })
-          images.push (m "script", {
-            src: "https://platform.vine.co/static/scripts/embed.js"
           })
         if youtubeRegex.test link.href
           match = link.href.match youtubeRegex

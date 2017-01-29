@@ -101,6 +101,7 @@ define ["jquery",
           messageRenderer.render(doc)
     arbiter.publish("messages/rendered")
 
+  render()
   remoteChanges = remoteDB.changes
     since: 'now'
     live: true
@@ -131,7 +132,6 @@ define ["jquery",
   .catch (err) ->
     arbiter.publish "error", err
 
-  render()
   $('#input').prop('disabled', false)
 
   arbiter.subscribe "messages/render", (messages) ->
