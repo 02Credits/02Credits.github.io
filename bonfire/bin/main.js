@@ -14,6 +14,15 @@
       'materialize': {
         exports: 'Materialize',
         deps: ['jquery', 'hammerjs', 'velocity']
+      },
+      'pouchdb-search': {
+        deps: ['pouchdb']
+      },
+      'pouchdb-upsert': {
+        deps: ['pouchdb']
+      },
+      'pouchdb-erase': {
+        deps: ['pouchdb']
       }
     },
     baseUrl: "bin/",
@@ -28,7 +37,6 @@
       'pouchdb-erase': 'external/pouchdb-erase.min',
       'pouchdb-search': 'external/pouchdb.quick-search',
       'pouchdb-upsert': 'external/pouchdb.upsert.min',
-      'pouchdb-memory': 'external/pouchdb.memory.min',
       'underscore': 'external/underscore-min',
       'velocity': 'external/velocity.min',
       'arbiter': 'external/promissory-arbiter',

@@ -61,6 +61,7 @@ define ["jquery",
       exportObject.editing = false
       input.removeClass "editing"
       input.addClass "searching"
+    $('.progress').fadeOut()
       input.focus()
     else if (e.which == 27)
       clear(e)

@@ -17,7 +17,7 @@
       }
     };
     primeQueries = function() {
-      if (caughtUp) {
+      if (caughtUp && false) {
         currentDB.query("by_author", {
           key: localStorage.displayName,
           limit: 1,
@@ -134,7 +134,7 @@
     }).on('change', handleChange).on('error', function(err) {
       return arbiter.publish("error", err);
     });
-    localDB.replicate.from(remoteDB).then(function() {
+    localDB.sync(remoteDB).then(function() {
       $('.progress').fadeOut();
       caughtUp = true;
       primeQueries();
