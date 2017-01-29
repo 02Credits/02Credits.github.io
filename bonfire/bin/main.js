@@ -23,7 +23,7 @@
       'materialize': 'external/materialize',
       'moment': 'external/moment.min',
       'mithril': 'external/mithril.min',
-      'pouchdb': 'external/pouchdb-5.2.0',
+      'pouchdb': 'external/pouchdb-6.1.1.min',
       'pouchdb-collate': 'external/pouchdb-collate',
       'pouchdb-erase': 'external/pouchdb-erase.min',
       'pouchdb-search': 'external/pouchdb.quick-search',

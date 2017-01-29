@@ -17,7 +17,7 @@
       }
     };
     primeQueries = function() {
-      if (caughtUp && false) {
+      if (caughtUp) {
         currentDB.query("by_author", {
           key: localStorage.displayName,
           limit: 1,

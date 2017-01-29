@@ -24,7 +24,7 @@ define ["jquery",
         notifier.notify true
 
   primeQueries = () ->
-    if caughtUp and false
+    if caughtUp
       currentDB.query "by_author",
         key: localStorage.displayName
         limit: 1
