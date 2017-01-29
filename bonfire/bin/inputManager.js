@@ -55,6 +55,7 @@
       exportObject.searching = false;
       input.removeClass("editing");
       input.removeClass("searching");
+      $('.progress').fadeOut();
       input.val("");
       return arbiter.publish("messages/render");
     };

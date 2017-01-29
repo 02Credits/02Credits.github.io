@@ -47,6 +47,7 @@ define ["jquery",
     exportObject.searching = false
     input.removeClass "editing"
     input.removeClass "searching"
+    $('.progress').fadeOut()
     input.val ""
     arbiter.publish("messages/render")
 
