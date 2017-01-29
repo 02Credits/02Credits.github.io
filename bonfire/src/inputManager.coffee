@@ -61,12 +61,17 @@ define ["jquery",
       exportObject.editing = false
       input.removeClass "editing"
       input.addClass "searching"
-    $('.progress').fadeOut()
+      $('.progress').fadeOut()
       input.focus()
     else if (e.which == 27)
       clear(e)
     else if (e.which == 38)
       arbiter.publish "messages/getLast", editDoc
+
+  if window.openDevTools?
+    $('.dev-tools')
+      .css("visibility", "visible")
+      .click(() -> window.openDevTools())
 
   arbiter.subscribe "messages/startEdit", (id) ->
     arbiter.publish "messages/get",

@@ -69,6 +69,7 @@
         exportObject.editing = false;
         input.removeClass("editing");
         input.addClass("searching");
+        $('.progress').fadeOut();
         return input.focus();
       } else if (e.which === 27) {
         return clear(e);
@@ -76,6 +77,11 @@
         return arbiter.publish("messages/getLast", editDoc);
       }
     });
+    if (window.openDevTools != null) {
+      $('.dev-tools').css("visibility", "visible").click(function() {
+        return window.openDevTools();
+      });
+    }
     arbiter.subscribe("messages/startEdit", function(id) {
       return arbiter.publish("messages/get", {
         id: id,
