@@ -17,9 +17,6 @@
         <script src="bin/external/linkify-html.amd.min.js"></script>
     </head>
     <body>
-        <div class="progress orange lighten-2">
-            <div class="indeterminate orange darken-2"></div>
-        </div>
         <div id="content">
             <div id="input-bar">
                 <input disabled id="input" class="white"/>
@@ -43,10 +40,14 @@
                         <label class="active" for="status">Status</label>
                     </div>
                     <a id="dev-tools" class="btn col s12 m2 l2" style="visibility: hidden">Open Dev Tools</a>
+                    <a id="refresh-clients"  class="btn col s12 m2 l2" style="visibility: hidden"></a>
                 </div>
             </div>
         </div>
         <div class="fixed-action-btn" id="seen-user-list" style="bottom: 80px; right: 24px">
+        </div>
+        <div class="progress orange lighten-2">
+            <div class="indeterminate orange darken-2"></div>
         </div>
     </body>
 </html>

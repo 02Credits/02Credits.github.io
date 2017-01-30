@@ -17,8 +17,8 @@
       }
     };
     primeQueries = function() {
-      if (caughtUp && false) {
-        currentDB.query("by_author", {
+      if (caughtUp) {
+        localDB.query("by_author", {
           key: localStorage.displayName,
           limit: 1,
           descending: true
@@ -30,10 +30,9 @@
         })["catch"](function(err) {
           return arbiter.publish("error", err);
         });
-        return currentDB.search({
-          query: "Sample Search",
-          fields: ['author', 'text'],
-          include_docs: true
+        return localDB.search({
+          fields: ['text'],
+          build: true
         }).then(function() {
           if (!searchPrimed) {
             searchPrimed = true;
@@ -61,7 +60,7 @@
         });
       }
     };
-    renderMessages = function(messages) {
+    renderMessages = function(messages, preventCombining) {
       var currentAuthor, currentMessage, doc, groupedMessages, i, len, message;
       messages = _.filter(messages, function(message) {
         var doc;
@@ -81,7 +80,7 @@
           groupedMessages.push(message);
         } else {
           if (currentMessage != null) {
-            if (currentMessage.doc.author === message.doc.author && moment.utc(message.doc.time).diff(moment.utc(currentMessage.doc.time), 'minutes') < 2) {
+            if (currentMessage.doc.author === message.doc.author && moment.utc(message.doc.time).diff(moment.utc(currentMessage.doc.time), 'minutes') < 2 && !preventCombining) {
               if (message.doc.edited) {
                 currentMessage.doc.edited = true;
               }
@@ -183,13 +182,13 @@
       if (caughtUp) {
         renderMessages([]);
         $('.progress').fadeIn();
-        return currentDB.search({
+        return localDB.search({
           query: query,
-          fields: ['author', 'text'],
+          fields: ['text'],
           include_docs: true
         }).then(function(results) {
           $('.progress').fadeOut();
-          return renderMessages(results.rows.reverse());
+          return renderMessages(results.rows.reverse(), true);
         })["catch"](function(err) {
           arbiter.publish("error", err);
           return $('.progress').fadeOut();
