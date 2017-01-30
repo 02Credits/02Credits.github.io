@@ -24,8 +24,8 @@ define ["jquery",
         notifier.notify true
 
   primeQueries = () ->
-    if caughtUp and false
-      currentDB.query "by_author",
+    if caughtUp
+      localDB.query "by_author",
         key: localStorage.displayName
         limit: 1
         descending: true
@@ -35,10 +35,9 @@ define ["jquery",
           Materialize.toast("Edit Ready", 4000)
       .catch (err) ->
         arbiter.publish "error", err
-      currentDB.search
-        query: "Sample Search"
-        fields: ['author', 'text']
-        include_docs: true
+      localDB.search
+        fields: ['text']
+        build: true
       .then () ->
         if not searchPrimed
           searchPrimed = true
@@ -61,7 +60,7 @@ define ["jquery",
       .catch (err) ->
         arbiter.publish "error", err
 
-  renderMessages = (messages) ->
+  renderMessages = (messages, preventCombining) ->
     messages = _.filter(messages, (message) ->
       doc = message.doc
       doc.text? and
@@ -79,7 +78,8 @@ define ["jquery",
       else
         if currentMessage?
           if currentMessage.doc.author == message.doc.author and
-             moment.utc(message.doc.time).diff(moment.utc(currentMessage.doc.time), 'minutes') < 2
+             moment.utc(message.doc.time).diff(moment.utc(currentMessage.doc.time), 'minutes') < 2 and
+             not preventCombining
             if message.doc.edited
               currentMessage.doc.edited = true
             currentMessage.doc.time = message.doc.time
@@ -158,13 +158,13 @@ define ["jquery",
     if caughtUp
       renderMessages []
       $('.progress').fadeIn()
-      currentDB.search
+      localDB.search
         query: query
-        fields: ['author', 'text']
+        fields: ['text']
         include_docs: true
       .then (results) ->
         $('.progress').fadeOut()
-        renderMessages(results.rows.reverse())
+        renderMessages(results.rows.reverse(), true)
       .catch (err) ->
         arbiter.publish "error", err
         $('.progress').fadeOut()
