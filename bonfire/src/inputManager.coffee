@@ -69,7 +69,7 @@ define ["jquery",
       arbiter.publish "messages/getLast", editDoc
 
   if window.openDevTools?
-    $('.dev-tools')
+    $('#dev-tools')
       .css("visibility", "visible")
       .click(() -> window.openDevTools())
 

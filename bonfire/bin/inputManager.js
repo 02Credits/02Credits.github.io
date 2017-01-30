@@ -78,7 +78,7 @@
       }
     });
     if (window.openDevTools != null) {
-      $('.dev-tools').css("visibility", "visible").click(function() {
+      $('#dev-tools').css("visibility", "visible").click(function() {
         return window.openDevTools();
       });
     }
