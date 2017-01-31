@@ -44,9 +44,11 @@ define ["mithril"], (m) ->
           start = ""
           seconds = 0
           if match[2]?
-            seconds += parseInt(match[2]) * 60
+            seconds += parseInt(match[2]) * 60 * 60
           if match[3]?
-            seconds += parseInt(match[3])
+            seconds += parseInt(match[3]) * 60
+          if match[4]?
+            seconds += parseInt(match[4])
           if seconds != 0
             start = "&start=" + seconds
           youtubeElement = m ".video-container[no-controls]",
