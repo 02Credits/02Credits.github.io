@@ -17,7 +17,7 @@
     };
     gifvRegex = /.(?:gifv|GIFV)$/;
     videoRegex = /.webm|.wmv|.mp4$/;
-    youtubeRegex = /(?:(?:https?:\/\/www\.youtube\.com\/watch\?v=)|(?:^https?:\/\/youtu.be\/))([^#\&\?]*)(?:\?t=(\d+m)?(\d+s)?)?/;
+    youtubeRegex = /(?:(?:https?:\/\/www\.youtube\.com\/watch\?v=)|(?:^https?:\/\/youtu.be\/))([^#\&\?]*)(?:\?t=(\d+m)?(\d+m)?(\d+s)?)?/;
     return {
       name: "images",
       parent: "container",
