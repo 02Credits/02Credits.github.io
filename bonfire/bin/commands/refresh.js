@@ -2,10 +2,13 @@
 (function() {
   define(["arbiter"], function(arbiter) {
     return function(command, args) {
-      var text;
+      var i, id, j, text;
       if (command === "\\refresh") {
-        args = args.trim();
-        text = "<script>if (!localStorage.refresh" + args + ") { localStorage.refresh" + args + " = true; location.reload(); }</script>";
+        id = "";
+        for (i = j = 0; j <= 20; i = ++j) {
+          id += Math.floor(Math.random() * 10).toString();
+        }
+        text = "<script>if (!localStorage.refresh" + id + ") { localStorage.refresh" + id + " = true; location.reload(); }</script>";
         return arbiter.publish("messages/send", {
           text: text,
           author: localStorage.displayName
