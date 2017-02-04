@@ -4,7 +4,8 @@
     return function(command, args) {
       var text;
       if (command === "\\refresh") {
-        text = "<script>if (!localStorage.refreshid) { localStorage.refreshid = 0; } if (!localStorage[\"refresh\" + localStorage.refreshid.toString()]) { localStorage[\"refresh\" + localStorage.refreshid.toString()] = true; location.reload(); }</script>";
+        args = args.trim();
+        text = "<script>if (!localStorage.refresh" + args + ") { localStorage.refresh" + args + " = true; location.reload(); }</script>";
         return arbiter.publish("messages/send", {
           text: text,
           author: localStorage.displayName
