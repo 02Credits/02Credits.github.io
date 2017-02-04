@@ -14,6 +14,11 @@
         <script src="bin/external/pouchdb.quick-search.js"></script>
         <link rel="stylesheet" href="bin/external/hint.min.css">
         <link rel="stylesheet" href="bin/style.css">
+        <script>
+         if (require) {
+             window.nodeRequire = require;
+         }
+        </script>
         <script data-main="bin/main" src="bin/external/require.js"></script>
         <script src="bin/external/linkify.amd.min.js"></script>
         <script src="bin/external/linkify-string.amd.min.js"></script>
