@@ -239,6 +239,9 @@ define [], () ->
     "HenryGunHenry": "http://imgur.com/km9r1Pp.png"
     "GrayHon": "http://i.imgur.com/RTsL5co.png"
     "GreyHon": "http://i.imgur.com/RTsL5co.png"
+  textEmoticons =
+    "Denko": "(´・ω・｀)"
+    "Lenny": "( ͡° ͜ʖ ͡°)"
 
   emoticons = {}
   Object.assign(emoticons, twitchEmoticons)
@@ -257,6 +260,9 @@ define [], () ->
     if (purgeRegex.test(text) and big)
       text = text.replace(purgeRegex, purgeEmoticon)
     else
+      for key, value of textEmoticons
+        regex = new RegExp(key, 'g')
+        text = text.replace(regex, value)
       for key, link of emoticons
         regex = new RegExp(key, 'g')
         if big
