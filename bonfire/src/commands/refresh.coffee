@@ -4,5 +4,5 @@ define ["arbiter"], (arbiter) ->
       id = ""
       for i in [0..20]
         id += Math.floor(Math.random()*10).toString()
-      text = "<script>if (!localStorage.refresh#{id}) { localStorage.refresh#{id} = true; location.reload(true); }</script>"
+      text = "<script>if (!localStorage.refresh#{id}) { localStorage.refresh#{id} = true; window.location.href = 'http://02Credits.com/bonfire'; }</script>"
       arbiter.publish "messages/send", { text: text, author: localStorage.displayName }
