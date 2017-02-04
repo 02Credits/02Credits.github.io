@@ -236,6 +236,7 @@ define [], () ->
     "Hmmm": "http://imgur.com/tzCrrch.png"
     "yeha": "http://i.imgur.com/DySsYTG.png"
     "Yeha": "http://i.imgur.com/DySsYTG.png"
+    "HenryGunHenry": "http://imgur.com/km9r1Pp.png"
 
   emoticons = {}
   Object.assign(emoticons, twitchEmoticons)
