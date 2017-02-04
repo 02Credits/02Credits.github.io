@@ -280,5 +280,6 @@ define [], () ->
     false
   ourEmoticons: ourEmoticons
   twitchEmoticons: twitchEmoticons
+  textEmoticons: textEmoticons
   emoticons: emoticons
   genEmoticon: genEmoticon
