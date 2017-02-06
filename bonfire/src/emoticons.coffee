@@ -239,6 +239,7 @@ define [], () ->
     "HenryGunHenry": "http://imgur.com/km9r1Pp.png"
     "GrayHon": "http://i.imgur.com/RTsL5co.png"
     "GreyHon": "http://i.imgur.com/RTsL5co.png"
+    "JustFuckMyShitUp": "http://i.imgur.com/m0twmSj.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
