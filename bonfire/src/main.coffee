@@ -28,6 +28,7 @@ requirejs.config
     'dropzone': 'external/dropzone-amd-module'
     'spellcheck': 'external/spellcheck/include'
 requirejs [
+  'mithril'
   'errorLogger'
   'chatCommands'
   'emoticons'

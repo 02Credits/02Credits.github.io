@@ -10,9 +10,8 @@ define ["pouchdbManager",
     arbiter.publish "error", err
 
   arbiter.subscribe "error", (information) ->
-    info = JSON.stringify information
-    console.log info
+    console.log information
     errorDB.put
       "_id": moment().utc().valueOf().toString()
       "user": localStorage.displayName
-      "information": info
+      "information": information
