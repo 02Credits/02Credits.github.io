@@ -15,9 +15,12 @@
         <link rel="stylesheet" href="bin/external/hint.min.css">
         <link rel="stylesheet" href="bin/style.css">
         <script>
-         if (require) {
-             window.nodeRequire = require;
-         }
+            if (require) {
+                window.nodeRequire = require;
+                delete window.require;
+                delete window.exports;
+                delete window.module;
+            }
         </script>
         <script data-main="bin/main" src="bin/external/require.js"></script>
         <script src="bin/external/linkify.amd.min.js"></script>

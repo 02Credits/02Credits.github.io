@@ -8,13 +8,11 @@
       return arbiter.publish("error", err);
     };
     return arbiter.subscribe("error", function(information) {
-      var info;
-      info = JSON.stringify(information);
-      console.log(info);
+      console.log(information);
       return errorDB.put({
         "_id": moment().utc().valueOf().toString(),
         "user": localStorage.displayName,
-        "information": info
+        "information": information
       });
     });
   });
