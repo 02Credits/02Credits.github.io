@@ -240,6 +240,7 @@ define [], () ->
     "GrayHon": "http://i.imgur.com/RTsL5co.png"
     "GreyHon": "http://i.imgur.com/RTsL5co.png"
     "JustFuckMyShitUp": "http://i.imgur.com/m0twmSj.png"
+    "DrEvil": "http://i.imgur.com/vwsVEIr.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
