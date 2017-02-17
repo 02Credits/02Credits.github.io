@@ -1,0 +1,26 @@
+@import "materialize"
+@import "colors"
+
+$width: 168px
+$height: 244px
+$spacing: 40px
+
+img.memeCard
+  z-index: 50
+  transition: all 0.75s ease
+  height: $height
+  width: $width
+  right: 0.5*$spacing - $width
+  bottom: $height
+  position: absolute
+
+img.memeCard.open
+  transform: scale(1)
+
+img.memeCard.open:hover
+  bottom: 1.25 * $height + $spacing
+  transform: scale(1.1)
+  transform-origin: center
+
+img.memeCard:not(.open):hover
+  right: $spacing - $width
