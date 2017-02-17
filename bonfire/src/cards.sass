@@ -7,18 +7,18 @@ $spacing: 40px
 
 img.memeCard
   z-index: 50
-  transition: all 0.75s ease
+  transition: all 0.5s, right 1s
   height: $height
   width: $width
-  right: 0.5*$spacing - $width
-  bottom: $height
+  right: 0.5 * $spacing - $width
+  bottom: 0.5 * $height
   position: absolute
 
 img.memeCard.open
   transform: scale(1)
 
 img.memeCard.open:hover
-  bottom: 1.25 * $height + $spacing
+  bottom: 0.75 * $height
   transform: scale(1.1)
   transform-origin: center
 

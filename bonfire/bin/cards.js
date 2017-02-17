@@ -2,12 +2,11 @@
 (function() {
   define(["jquery", "mithril", "arbiter"], function($, m, arbiter) {
     var cardHeight, cardWidth, cards, clickCard, closeCards, openCards, render, spacing;
-    cards = ["http://i.imgur.com/FCKBSP0.jpg", "http://i.imgur.com/doHAiPD.jpg", "http://i.imgur.com/xmbl34o.jpg", "http://i.imgur.com/aZ7GpiQ.png", "http://i.imgur.com/cPwAnaL.jpg", "http://i.imgur.com/DIl4w3p.gif", "http://i.imgur.com/dVWdko8.jpg", "http://i.imgur.com/DieNi7L.jpg", "http://i.imgur.com/a1epPuB.jpg", "http://i.imgur.com/FCKBSP0.jpg"];
+    cards = ["http://i.imgur.com/aZ7GpiQ.png", "http://i.imgur.com/xmbl34o.jpg", "http://i.imgur.com/dVWdko8.jpg", "http://i.imgur.com/DieNi7L.jpg", "http://i.imgur.com/a1epPuB.jpg", "http://i.imgur.com/DIl4w3p.gif", "http://i.imgur.com/cPwAnaL.jpg", "http://i.imgur.com/doHAiPD.jpg", "http://i.imgur.com/FCKBSP0.jpg"];
     spacing = 40;
     cardWidth = 168;
     cardHeight = 244;
     closeCards = function(e) {
-      console.log("closed");
       $('.memeCard').css({
         'right': ""
       });
@@ -15,7 +14,6 @@
       return e.stopPropagation();
     };
     openCards = function() {
-      console.log("opened");
       return $('.memeCard').each(function(i) {
         $(this).css({
           'right': (spacing * i + cardWidth).toString() + "px"
@@ -24,9 +22,7 @@
       });
     };
     clickCard = function(card) {
-      console.log("curried");
       return function(e) {
-        console.log("clicked");
         if (e.target.className.indexOf('open') !== -1) {
           arbiter.publish("messages/send", {
             text: card,
@@ -42,7 +38,7 @@
     return render = function() {
       var card, cardList;
       cardList = $('#card-list');
-      $(':not(.memeCard)').click(closeCards);
+      $('body').click(closeCards);
       return m.render(cardList.get(0), (function() {
         var j, len, results;
         results = [];

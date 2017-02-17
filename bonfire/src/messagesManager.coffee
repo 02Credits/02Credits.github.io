@@ -82,7 +82,7 @@ define ["jquery",
              not preventCombining
             if message.doc.edited
               currentMessage.doc.edited = true
-            currentMessage.doc.time = message.doc.time
+            # currentMessage.doc.time = message.doc.time
             currentMessage.doc.text.push {text: message.doc.text, id: message.doc._id}
           else
             groupedMessages.push(currentMessage)

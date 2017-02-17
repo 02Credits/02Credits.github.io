@@ -8526,18 +8526,18 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 img.memeCard {
   z-index: 50;
-  transition: all 0.75s ease;
+  transition: all 0.5s, right 1s;
   height: 244px;
   width: 168px;
   right: -148px;
-  bottom: 244px;
+  bottom: 122px;
   position: absolute; }
 
 img.memeCard.open {
   transform: scale(1); }
 
 img.memeCard.open:hover {
-  bottom: 345px;
+  bottom: 183px;
   transform: scale(1.1);
   transform-origin: center; }
 
