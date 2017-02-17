@@ -8528,7 +8528,6 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   display: flex;
   flex-direction: column;
   position: absolute;
-  transform: scale(2);
   top: 24px;
   right: 24px; }
 
