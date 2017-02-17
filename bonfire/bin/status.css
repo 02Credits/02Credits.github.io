@@ -8529,10 +8529,8 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   flex-direction: column;
   position: absolute;
   transform: scale(2);
-  /* top: 24px */
-  /* right: 24px */
-  top: 50%;
-  right: 50%; }
+  top: 24px;
+  right: 24px; }
 
 .chip {
   float: right;
