@@ -1,4 +1,4 @@
-define [], () ->
+define ["markov"], (markov) ->
   # When henry whines go to https://static-cdn.jtvnw.net/emoticons
   twitchEmoticons =
     "4Head" : "https://static-cdn.jtvnw.net/emoticons/v1/354/1.0"
@@ -173,17 +173,12 @@ define [], () ->
     "MangoL8R" : "https://static-cdn.jtvnw.net/emoticons/v1/87498/1.0"
     "MangoDOWN" : "https://static-cdn.jtvnw.net/emoticons/v1/89561/1.0"
   ourEmoticons =
-    "Minihalk": "http://imgur.com/4hr3aIW.gif"
     "Halk": "http://smileys.emoticonsonly.com/emoticons/h/hawk-81.gif"
     "KDGI": "http://www.emotiyou.com/galerie/tv/dessins-animes/bob-eponge/bob/201109041811HBR.gif"
     "SloshedJon" : "http://i.imgur.com/AZK1PNX.png"
     "FattyFedora" : "http://i.imgur.com/jZa8JGR.png"
     "SadKeith" : "http://i.imgur.com/6Ji3SUv.png"
     "SadJonjo" : "http://i.imgur.com/YYvMFmU.png"
-    "MiniDerek" : "http://i.imgur.com/d1l7yQK.png"
-    "MiniHonry" : "http://i.imgur.com/dHdWrqj.png"
-    "MiniJonjo" : "http://i.imgur.com/fCYpvbZ.png"
-    "MiniKeith" : "http://i.imgur.com/qCxBqa5.png"
     "ShittersClogged" : "http://i.imgur.com/mawXVw5.png"
     "RipKeith" : "http://i.imgur.com/JEb2zrl.png"
     "BanePostCia" : "http://i.imgur.com/TxZfAFh.png"
@@ -244,10 +239,16 @@ define [], () ->
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
+  roboEmoticons =
+    "MiniDerek" : "http://i.imgur.com/d1l7yQK.png"
+    "MiniHonry" : "http://i.imgur.com/dHdWrqj.png"
+    "MiniJonjo" : "http://i.imgur.com/fCYpvbZ.png"
+    "MiniKeith" : "http://i.imgur.com/qCxBqa5.png"
 
   emoticons = {}
   Object.assign(emoticons, twitchEmoticons)
   Object.assign(emoticons, ourEmoticons)
+  Object.assign(emoticons, roboEmoticons)
 
   purgeRegex = new RegExp("Purge", 'g')
   purgeEmoticon = "<img src=\"http://imgur.com/VbXDnsr.png\" border=\"0\" text-align=\"center !important\" height=\"2000px\" alt=\"Purge\" title=\"Purge emoticon\" style=\"image-rendering: pixelated;\"/>"
@@ -258,10 +259,17 @@ define [], () ->
     else
       "<img src=\"#{emoticons[key]}\" border=\"0\" height=\"35\" alt=\"#{key}\" title=\"#{key} emoticon\"/>"
 
-  replace: (text, big) ->
+  replace: (text, id, big) ->
     if (purgeRegex.test(text) and big)
       text = text.replace(purgeRegex, purgeEmoticon)
     else
+      if big
+        for key, value of roboEmoticons
+          regex = new RegExp(key, 'g')
+          if regex.test(text)
+            author = text.substring(4)
+            markov(author, id)
+            return "#{genEmoticon(key, false)} is thinking..."
       for key, value of textEmoticons
         regex = new RegExp(key, 'g')
         text = text.replace(regex, value)

@@ -38,7 +38,7 @@
     }
   });
 
-  requirejs(['uuid', 'mithril', 'errorLogger', 'chatCommands', 'emoticons', 'plugins', 'promisePolyfill', 'messageRenderer', 'messagesManager', 'scrollManager', 'uiSetup', 'inputManager', 'idleManager', 'settings', 'fileManager'], function() {
+  requirejs(['uuid', 'mithril', 'errorLogger', 'chatCommands', 'emoticons', 'plugins', 'promisePolyfill', 'messageRenderer', 'messagesManager', 'scrollManager', 'uiSetup', 'inputManager', 'idleManager', 'settings', 'fileManager', 'markov'], function() {
     return window.baseTitle = "Bonfire";
   });
 

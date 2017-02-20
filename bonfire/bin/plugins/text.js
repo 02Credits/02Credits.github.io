@@ -16,9 +16,9 @@
             ondblclick: function() {
               return arbiter.publish("messages/startEdit", id);
             }
-          }, m.trust(emoticons.replace(text, true)));
+          }, m.trust(emoticons.replace(text, id, true)));
         } else {
-          text = emoticons.replace(text, false);
+          text = emoticons.replace(text, id, false);
         }
       }
       return m("p" + classText, {

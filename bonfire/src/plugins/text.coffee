@@ -7,9 +7,9 @@ define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linki
         return m ".emoticon", {
           style: {width: "100%", textAlign: "center"}
           ondblclick: -> arbiter.publish "messages/startEdit", id
-        }, m.trust(emoticons.replace(text, true))
+        }, m.trust(emoticons.replace(text, id, true))
       else
-        text = emoticons.replace(text, false)
+        text = emoticons.replace(text, id, false)
     m "p#{classText}", {
           ondblclick: -> arbiter.publish "messages/startEdit", id
       }, m.trust(text)

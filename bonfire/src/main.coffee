@@ -44,6 +44,7 @@ requirejs [
   'idleManager'
   'settings'
   'fileManager'
+  'markov'
   ],
 () ->
   window.baseTitle = "Bonfire"
