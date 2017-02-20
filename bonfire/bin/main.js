@@ -33,11 +33,12 @@
       'arbiter': 'external/promissory-arbiter',
       'es6-promise': 'external/es6-promise.min',
       'dropzone': 'external/dropzone-amd-module',
-      'spellcheck': 'external/spellcheck/include'
+      'spellcheck': 'external/spellcheck/include',
+      'uuid': 'external/uuid.min'
     }
   });
 
-  requirejs(['mithril', 'errorLogger', 'chatCommands', 'emoticons', 'plugins', 'promisePolyfill', 'messageRenderer', 'messagesManager', 'scrollManager', 'uiSetup', 'inputManager', 'idleManager', 'settings', 'fileManager'], function() {
+  requirejs(['uuid', 'mithril', 'errorLogger', 'chatCommands', 'emoticons', 'plugins', 'promisePolyfill', 'messageRenderer', 'messagesManager', 'scrollManager', 'uiSetup', 'inputManager', 'idleManager', 'settings', 'fileManager'], function() {
     return window.baseTitle = "Bonfire";
   });
 

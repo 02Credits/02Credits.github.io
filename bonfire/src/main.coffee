@@ -27,7 +27,9 @@ requirejs.config
     'es6-promise': 'external/es6-promise.min'
     'dropzone': 'external/dropzone-amd-module'
     'spellcheck': 'external/spellcheck/include'
+    'uuid': 'external/uuid.min'
 requirejs [
+  'uuid'
   'mithril'
   'errorLogger'
   'chatCommands'

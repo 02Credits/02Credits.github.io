@@ -32,11 +32,31 @@ define [
   clickCard = (card) ->
     (e) ->
       if e.target.className.indexOf('open') != -1
-        arbiter.publish("messages/send", {text: card, author: localStorage.displayName})
+        cardElement = '<img src="#{card}" width="260px" style="margin: 0px -10px -11px -10px">'
+        arbiter.publish("messages/send", {text: cardElement, author: localStorage.displayName})
         closeCards(e)
       else
         openCards()
       e.stopPropagation()
+
+  if not localStorage.cardsEnabled?
+    localStorage.cardsEnabled = true
+
+  if localStorage.cardsEnabled
+    $('#cards-enabled').prop("checked", true)
+    $('.memeCard').show()
+  else
+    $('#cards-enabled').prop("checked", false)
+    $('.memeCard').hide()
+
+  $('#cards-enabled').click(() ->
+    if this.checked
+      localStorage.cardsEnabled = true
+      $('.memeCard').show()
+    else
+      localStorage.cardsEnabled = false
+      $('.memeCard').hide()
+  )
 
   render = ->
     cardList = $('#card-list')

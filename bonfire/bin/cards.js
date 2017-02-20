@@ -23,9 +23,11 @@
     };
     clickCard = function(card) {
       return function(e) {
+        var cardElement;
         if (e.target.className.indexOf('open') !== -1) {
+          cardElement = '<img src="#{card}" width="260px" style="margin: 0px -10px -11px -10px">';
           arbiter.publish("messages/send", {
-            text: card,
+            text: cardElement,
             author: localStorage.displayName
           });
           closeCards(e);
@@ -35,6 +37,25 @@
         return e.stopPropagation();
       };
     };
+    if (localStorage.cardsEnabled == null) {
+      localStorage.cardsEnabled = true;
+    }
+    if (localStorage.cardsEnabled) {
+      $('#cards-enabled').prop("checked", true);
+      $('.memeCard').show();
+    } else {
+      $('#cards-enabled').prop("checked", false);
+      $('.memeCard').hide();
+    }
+    $('#cards-enabled').click(function() {
+      if (this.checked) {
+        localStorage.cardsEnabled = true;
+        return $('.memeCard').show();
+      } else {
+        localStorage.cardsEnabled = false;
+        return $('.memeCard').hide();
+      }
+    });
     return render = function() {
       var card, cardList;
       cardList = $('#card-list');
