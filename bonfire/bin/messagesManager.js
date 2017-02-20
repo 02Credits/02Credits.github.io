@@ -163,14 +163,17 @@
       }
     });
     arbiter.subscribe("messages/edit", function(args) {
-      var id, text;
+      var id, skipMarkEdit, text;
       id = args.id;
       text = args.text;
+      skipMarkEdit = args.skipMarkEdit;
       $('.progress').fadeIn();
       return currentDB.get(id).then(function(doc) {
         $('.progress').fadeOut();
         doc.text = text;
-        doc.edited = true;
+        if (!skipMarkEdit) {
+          doc.edited = true;
+        }
         return currentDB.put(doc);
       })["catch"](function(err) {
         arbiter.publish("error", err);

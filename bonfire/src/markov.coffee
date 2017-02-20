@@ -91,9 +91,11 @@ define ["pouchdbManager", "arbiter"],
 
         arbiter.publish "messages/edit",
           id: id
-          text: "Mini#{author} says: " + line
+          text: "Mini#{author} says: " + line.charAt(0).toUpperCase() + line.slice(1)
+          skipMarkEdit: true
       .catch (reason) ->
         console.log(reason)
         arbiter.publish "messages/edit",
           id: id
           text: "Mini#{author} had an error..."
+          skipMarkEdit: true

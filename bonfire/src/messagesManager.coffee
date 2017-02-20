@@ -143,12 +143,14 @@ define ["jquery",
   arbiter.subscribe "messages/edit", (args) ->
     id = args.id
     text = args.text
+    skipMarkEdit = args.skipMarkEdit
     $('.progress').fadeIn()
     currentDB.get(id)
     .then (doc) ->
       $('.progress').fadeOut()
       doc.text = text
-      doc.edited = true
+      if not skipMarkEdit
+        doc.edited = true
       currentDB.put doc
     .catch (err) ->
       arbiter.publish "error", err

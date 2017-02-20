@@ -132,13 +132,15 @@
           }
           return arbiter.publish("messages/edit", {
             id: id,
-            text: ("Mini" + author + " says: ") + line
+            text: ("Mini" + author + " says: ") + line.charAt(0).toUpperCase() + line.slice(1),
+            skipMarkEdit: true
           });
         })["catch"](function(reason) {
           console.log(reason);
           return arbiter.publish("messages/edit", {
             id: id,
-            text: "Mini" + author + " had an error..."
+            text: "Mini" + author + " had an error...",
+            skipMarkEdit: true
           });
         });
       }
