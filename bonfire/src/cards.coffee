@@ -32,7 +32,7 @@ define [
   clickCard = (card) ->
     (e) ->
       if e.target.className.indexOf('open') != -1
-        cardElement = '<img src="#{card}" width="260px" style="margin: 0px -10px -11px -10px">'
+        cardElement = "<img src='#{card}' width='260px' style='margin: 0px -10px -11px -10px'>"
         arbiter.publish("messages/send", {text: cardElement, author: localStorage.displayName})
         closeCards(e)
       else
