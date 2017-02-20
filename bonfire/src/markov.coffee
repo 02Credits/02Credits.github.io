@@ -65,10 +65,9 @@ define ["pouchdbManager", "arbiter"],
     data: data
     starters: starters
 
-  (author, id) ->
-    if author of authorMappings
+  attempts = 0
+  tryGenerate = (author, id) ->
       actualNames = authorMappings[author]
-
       Promise.all(messages.query("by_author", {key: alternateName}) for alternateName in actualNames)
       .then (results) ->
         lines = []
@@ -94,8 +93,18 @@ define ["pouchdbManager", "arbiter"],
           text: "Mini#{author} says: " + line.charAt(0).toUpperCase() + line.slice(1)
           skipMarkEdit: true
       .catch (reason) ->
-        console.log(reason)
-        arbiter.publish "messages/edit",
-          id: id
-          text: "Mini#{author} had an error..."
-          skipMarkEdit: true
+        if attempts > 4
+          console.log(reason)
+          arbiter.publish "messages/edit",
+            id: id
+            text: "Mini#{author} had an error..."
+            skipMarkEdit: true
+        else
+          attempts = attempts + 1
+          tryGenerate(author, id)
+
+  (author, id) ->
+    if author of authorMappings
+      attempts = 0
+      tryGenerate author, id
+

@@ -264,12 +264,12 @@
       }
     };
     return {
-      replace: function(text, id, big) {
-        var author, key, link, regex, value;
+      replace: function(text, id, author, big) {
+        var key, link, regex, value;
         if (purgeRegex.test(text) && big) {
           return text = text.replace(purgeRegex, purgeEmoticon);
         } else {
-          if (big) {
+          if (big && author === localStorage.displayName) {
             for (key in roboEmoticons) {
               value = roboEmoticons[key];
               regex = new RegExp(key, 'g');

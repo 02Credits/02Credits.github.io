@@ -1,5 +1,5 @@
 define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linkify, emoticons) ->
-  renderText = (text, id) ->
+  renderText = (text, author, id) ->
     classText = if text.indexOf(">") == 0 then ".greentext" else ""
     if text.indexOf("<") != 0
       text = linkify("#{text}")
@@ -7,9 +7,9 @@ define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linki
         return m ".emoticon", {
           style: {width: "100%", textAlign: "center"}
           ondblclick: -> arbiter.publish "messages/startEdit", id
-        }, m.trust(emoticons.replace(text, id, true))
+        }, m.trust(emoticons.replace(text, id, author, true))
       else
-        text = emoticons.replace(text, id, false)
+        text = emoticons.replace(text, id, author, false)
     m "p#{classText}", {
           ondblclick: -> arbiter.publish "messages/startEdit", id
       }, m.trust(text)
@@ -22,12 +22,12 @@ define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linki
     else if Array.isArray(doc.text)
       elements = [renderBefore doc]
       for text in doc.text
-        elements.push(renderText(text.text, text.id))
+        elements.push(renderText(text.text, doc.author, text.id))
       elements.push(renderAfter doc)
       elements
     else
       [
           renderBefore doc
-          renderText(doc.text, doc._id)
+          renderText(doc.text, doc.author, doc._id)
           renderAfter doc
       ]

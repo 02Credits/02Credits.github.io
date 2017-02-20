@@ -259,11 +259,11 @@ define ["markov"], (markov) ->
     else
       "<img src=\"#{emoticons[key]}\" border=\"0\" height=\"35\" alt=\"#{key}\" title=\"#{key} emoticon\"/>"
 
-  replace: (text, id, big) ->
+  replace: (text, id, author, big) ->
     if (purgeRegex.test(text) and big)
       text = text.replace(purgeRegex, purgeEmoticon)
     else
-      if big
+      if big and author == localStorage.displayName
         for key, value of roboEmoticons
           regex = new RegExp(key, 'g')
           if regex.test(text)

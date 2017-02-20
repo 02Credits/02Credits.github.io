@@ -2,7 +2,7 @@
 (function() {
   define(["mithril", "arbiter", "linkify-string", "emoticons"], function(m, arbiter, linkify, emoticons) {
     var renderText;
-    renderText = function(text, id) {
+    renderText = function(text, author, id) {
       var classText;
       classText = text.indexOf(">") === 0 ? ".greentext" : "";
       if (text.indexOf("<") !== 0) {
@@ -16,9 +16,9 @@
             ondblclick: function() {
               return arbiter.publish("messages/startEdit", id);
             }
-          }, m.trust(emoticons.replace(text, id, true)));
+          }, m.trust(emoticons.replace(text, id, author, true)));
         } else {
-          text = emoticons.replace(text, id, false);
+          text = emoticons.replace(text, id, author, false);
         }
       }
       return m("p" + classText, {
@@ -39,12 +39,12 @@
           ref = doc.text;
           for (i = 0, len = ref.length; i < len; i++) {
             text = ref[i];
-            elements.push(renderText(text.text, text.id));
+            elements.push(renderText(text.text, doc.author, text.id));
           }
           elements.push(renderAfter(doc));
           return elements;
         } else {
-          return [renderBefore(doc), renderText(doc.text, doc._id), renderAfter(doc)];
+          return [renderBefore(doc), renderText(doc.text, doc.author, doc._id), renderAfter(doc)];
         }
       }
     };

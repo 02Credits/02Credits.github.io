@@ -3,7 +3,7 @@
   var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   define(["pouchdbManager", "arbiter"], function(PouchDB, arbiter) {
-    var authorMappings, messages, pickWeighted, setupData, stepObject;
+    var attempts, authorMappings, messages, pickWeighted, setupData, stepObject, tryGenerate;
     messages = new PouchDB('http://uwhouse.ddns.net:5984/messages');
     authorMappings = {
       Jonjo: ["JonJo"],
@@ -90,59 +90,69 @@
         starters: starters
       };
     };
-    return function(author, id) {
+    attempts = 0;
+    tryGenerate = function(author, id) {
       var actualNames, alternateName;
-      if (author in authorMappings) {
-        actualNames = authorMappings[author];
-        return Promise.all((function() {
-          var j, len, results1;
-          results1 = [];
-          for (j = 0, len = actualNames.length; j < len; j++) {
-            alternateName = actualNames[j];
-            results1.push(messages.query("by_author", {
-              key: alternateName
-            }));
+      actualNames = authorMappings[author];
+      return Promise.all((function() {
+        var j, len, results1;
+        results1 = [];
+        for (j = 0, len = actualNames.length; j < len; j++) {
+          alternateName = actualNames[j];
+          results1.push(messages.query("by_author", {
+            key: alternateName
+          }));
+        }
+        return results1;
+      })()).then(function(results) {
+        var j, k, last, len, len1, line, lines, next, ref, response, result, row, secondToLast, starter, starterWords;
+        lines = [];
+        for (j = 0, len = results.length; j < len; j++) {
+          result = results[j];
+          ref = result.rows;
+          for (k = 0, len1 = ref.length; k < len1; k++) {
+            row = ref[k];
+            lines.push(row.value);
           }
-          return results1;
-        })()).then(function(results) {
-          var j, k, last, len, len1, line, lines, next, ref, response, result, row, secondToLast, starter, starterWords;
-          lines = [];
-          for (j = 0, len = results.length; j < len; j++) {
-            result = results[j];
-            ref = result.rows;
-            for (k = 0, len1 = ref.length; k < len1; k++) {
-              row = ref[k];
-              lines.push(row.value);
-            }
+        }
+        response = setupData(lines);
+        starter = pickWeighted(response.starters);
+        starterWords = starter.split(" ");
+        secondToLast = starterWords[0];
+        last = starterWords[1];
+        line = starter;
+        while (true) {
+          next = pickWeighted(response.data[secondToLast + " " + last]);
+          line += " " + next;
+          if (next.endsWith("\n")) {
+            break;
           }
-          response = setupData(lines);
-          starter = pickWeighted(response.starters);
-          starterWords = starter.split(" ");
-          secondToLast = starterWords[0];
-          last = starterWords[1];
-          line = starter;
-          while (true) {
-            next = pickWeighted(response.data[secondToLast + " " + last]);
-            line += " " + next;
-            if (next.endsWith("\n")) {
-              break;
-            }
-            secondToLast = last;
-            last = next;
-          }
-          return arbiter.publish("messages/edit", {
-            id: id,
-            text: ("Mini" + author + " says: ") + line.charAt(0).toUpperCase() + line.slice(1),
-            skipMarkEdit: true
-          });
-        })["catch"](function(reason) {
+          secondToLast = last;
+          last = next;
+        }
+        return arbiter.publish("messages/edit", {
+          id: id,
+          text: ("Mini" + author + " says: ") + line.charAt(0).toUpperCase() + line.slice(1),
+          skipMarkEdit: true
+        });
+      })["catch"](function(reason) {
+        if (attempts > 4) {
           console.log(reason);
           return arbiter.publish("messages/edit", {
             id: id,
             text: "Mini" + author + " had an error...",
             skipMarkEdit: true
           });
-        });
+        } else {
+          attempts = attempts + 1;
+          return tryGenerate(author, id);
+        }
+      });
+    };
+    return function(author, id) {
+      if (author in authorMappings) {
+        attempts = 0;
+        return tryGenerate(author, id);
       }
     };
   });
