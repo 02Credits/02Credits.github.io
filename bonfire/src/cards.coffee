@@ -7,6 +7,7 @@ define [
     "http://i.imgur.com/ircucO0.png",
     "http://i.imgur.com/1kFeLly.png",
     "http://i.imgur.com/aZ7GpiQ.png",
+    "http://i.imgur.com/rOYS9Sm.png",
     "http://i.imgur.com/xmbl34o.jpg",
     "http://i.imgur.com/dVWdko8.jpg",
     "http://i.imgur.com/DieNi7L.jpg",
