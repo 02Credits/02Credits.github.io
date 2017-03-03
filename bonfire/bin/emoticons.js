@@ -239,7 +239,8 @@
       "GreyHon": "http://i.imgur.com/RTsL5co.png",
       "JustFuckMyShitUp": "http://i.imgur.com/m0twmSj.png",
       "DrEvil": "http://i.imgur.com/vwsVEIr.png",
-      "ForgetPast": "http://wiki.dfo-world.com/images/c/c4/BottomsUpAni.gif"
+      "ForgetPast": "http://wiki.dfo-world.com/images/c/c4/BottomsUpAni.gif",
+      "CrashDance": "http://i.imgur.com/L9JsSdw.gif"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",
