@@ -7,7 +7,7 @@
     if (localStorage.displayName != null) {
       nameInput.val(localStorage.displayName);
     } else {
-      dumbNames = ["Village Idiot", "Dirty Peasant", "Dumbster", "assfaggot"];
+      dumbNames = ["anon"];
       randomIndex = Math.floor(Math.random() * dumbNames.length);
       nameInput.val(dumbNames[randomIndex]);
       localStorage.displayName = dumbNames[randomIndex];
