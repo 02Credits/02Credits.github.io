@@ -64,6 +64,6 @@ define [
   render = ->
     cardList = $('#card-list')
     $('body').click(closeCards)
-    # m.render cardList.get(0),
-    #   for card in cards
-    #     m "img.memeCard", {src: card, onclick: clickCard(card)}
+    m.render cardList.get(0),
+      for card in cards
+        m "img.memeCard", {src: card, onclick: clickCard(card)}

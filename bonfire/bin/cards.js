@@ -57,9 +57,21 @@
       }
     });
     return render = function() {
-      var cardList;
+      var card, cardList;
       cardList = $('#card-list');
-      return $('body').click(closeCards);
+      $('body').click(closeCards);
+      return m.render(cardList.get(0), (function() {
+        var j, len, results;
+        results = [];
+        for (j = 0, len = cards.length; j < len; j++) {
+          card = cards[j];
+          results.push(m("img.memeCard", {
+            src: card,
+            onclick: clickCard(card)
+          }));
+        }
+        return results;
+      })());
     };
   });
 
