@@ -239,6 +239,8 @@ define ["markov"], (markov) ->
     "ForgetPast": "http://wiki.dfo-world.com/images/c/c4/BottomsUpAni.gif"
     "CrashDance": "http://i.imgur.com/L9JsSdw.gif"
     "HMMM": "http://imgur.com/HzhlCPK.png"
+    "Goteem": "http://i.imgur.com/V0jH3HG.png"
+    "GotEem": "http://i.imgur.com/V0jH3HG.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
