@@ -241,6 +241,7 @@ define ["markov"], (markov) ->
     "HMMM": "http://imgur.com/HzhlCPK.png"
     "Goteem": "http://i.imgur.com/V0jH3HG.png"
     "GotEem": "http://i.imgur.com/V0jH3HG.png"
+    "Humanity": "http://i.imgur.com/7Sh9H13.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
