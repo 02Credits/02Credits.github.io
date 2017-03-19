@@ -244,7 +244,21 @@
       "HMMM": "http://imgur.com/HzhlCPK.png",
       "Goteem": "http://i.imgur.com/V0jH3HG.png",
       "GotEem": "http://i.imgur.com/V0jH3HG.png",
-      "Humanity": "http://i.imgur.com/7Sh9H13.png"
+      "Humanity": "http://i.imgur.com/7Sh9H13.png",
+      "tpWhite": "http://i.imgur.com/3nqrrth.png",
+      "tpBLBLBL": "http://i.imgur.com/ZqgXfBK.png",
+      "tpGG": "http://i.imgur.com/ZqgXfBK.png",
+      "tpFX1": "http://i.imgur.com/LxxSL8o.png",
+      "tpAIYIYI": "http://i.imgur.com/h7acPhf.png",
+      "MorphinTime": "http://i.imgur.com/HXB8MLJ.png",
+      "tpFree": "http://i.imgur.com/eVq6f6X.png",
+      "tpBlue": "http://i.imgur.com/JaHoijB.png",
+      "tpYellow": "http://i.imgur.com/JaHoijB.png",
+      "tpRed": "http://i.imgur.com/WyxioZv.png",
+      "tpPink": "http://i.imgur.com/Q3Kl2j6.png",
+      "tpBlack": "http://i.imgur.com/bjMlP03.png",
+      "tpGreen": "http://i.imgur.com/m0XlGmG.png",
+      "tpHeresTommy": "http://i.imgur.com/bSQJb1w.png"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",
