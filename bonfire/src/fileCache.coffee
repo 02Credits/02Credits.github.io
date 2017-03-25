@@ -18,7 +18,7 @@ define ["arbiter", "pouchdbManager"], (arbiter, PouchDB) ->
         .then (doc) ->
           for name, attachment of doc["_attachments"]
             currentSize += attachment.data.size
-            while maxSize > currentSize
+            while currentSize > currentSize
               poppedId = idQueue.shift()
               poppedData = fileMap[poppedId]
               delete fileMap[poppedId]

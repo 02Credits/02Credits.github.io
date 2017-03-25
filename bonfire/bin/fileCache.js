@@ -24,7 +24,7 @@
           for (name in ref) {
             attachment = ref[name];
             currentSize += attachment.data.size;
-            while (maxSize > currentSize) {
+            while (currentSize > currentSize) {
               poppedId = idQueue.shift();
               poppedData = fileMap[poppedId];
               delete fileMap[poppedId];
