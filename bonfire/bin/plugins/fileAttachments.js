@@ -25,12 +25,14 @@
                   var id;
                   arbiter.publish("files/fetch", file);
                   return id = arbiter.subscribe("file/data", function(fileData) {
-                    renderedFiles.push(m("p", m("a", {
-                      href: URL.createObjectURL(fileData.attachment.data),
-                      download: name
-                    }, [name])));
-                    arbiter.unsubscribe(id);
-                    return resolve();
+                    if (fileData.id === file) {
+                      renderedFiles.push(m("p", m("a", {
+                        href: URL.createObjectURL(fileData.attachment.data),
+                        download: fileData.name
+                      }, [fileData.name])));
+                      arbiter.unsubscribe(id);
+                      return resolve();
+                    }
                   });
                 }));
               }

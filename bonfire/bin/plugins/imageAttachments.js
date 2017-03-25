@@ -24,11 +24,15 @@
                   var id;
                   arbiter.publish("files/fetch", file);
                   return id = arbiter.subscribe("file/data", function(fileData) {
-                    renderedFiles.push(m("img.materialboxed", {
-                      src: URL.createObjectURL(fileData.attachment.data)
-                    }));
-                    arbiter.unsubscribe(id);
-                    return resolve();
+                    if (fileData.id === file) {
+                      if (fileData.attachment.content_type.startsWith("image")) {
+                        renderedFiles.push(m("img.materialboxed", {
+                          src: URL.createObjectURL(fileData.attachment.data)
+                        }));
+                      }
+                      arbiter.unsubscribe(id);
+                      return resolve();
+                    }
                   });
                 }));
               }

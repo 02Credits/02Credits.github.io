@@ -13,11 +13,12 @@ define ["mithril", "arbiter", "pouchdbManager"], (m, arbiter, PouchDB) ->
           new Promise (resolve, reject) ->
             arbiter.publish "files/fetch", file
             id = arbiter.subscribe "file/data", (fileData) ->
-              renderedFiles.push (m "p", (m "a", {href: URL.createObjectURL(fileData.attachment.data), download: name}, [
-                  name
-                ]))
-              arbiter.unsubscribe id
-              resolve()
+              if fileData.id == file
+                renderedFiles.push (m "p", (m "a", {href: URL.createObjectURL(fileData.attachment.data), download: fileData.name}, [
+                    fileData.name
+                  ]))
+                arbiter.unsubscribe id
+                resolve()
         Promise.all(thenables).then () ->
           [
             renderedFiles
