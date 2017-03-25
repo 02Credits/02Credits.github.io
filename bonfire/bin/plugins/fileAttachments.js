@@ -21,21 +21,17 @@
               results = [];
               for (i = 0, len = ref.length; i < len; i++) {
                 file = ref[i];
-                results.push(db.get(file, {
-                  attachments: true,
-                  binary: true
-                }).then(function(doc) {
-                  var attachment, name, ref1, results1;
-                  ref1 = doc["_attachments"];
-                  results1 = [];
-                  for (name in ref1) {
-                    attachment = ref1[name];
-                    results1.push(renderedFiles.push(m("p", m("a", {
-                      href: URL.createObjectURL(attachment.data),
+                results.push(new Promise(function(resolve, reject) {
+                  var id;
+                  arbiter.publish("files/fetch", file);
+                  return id = arbiter.subscribe("file/data", function(fileData) {
+                    renderedFiles.push(m("p", m("a", {
+                      href: URL.createObjectURL(fileData.attachment.data),
                       download: name
-                    }, [name]))));
-                  }
-                  return results1;
+                    }, [name])));
+                    arbiter.unsubscribe(id);
+                    return resolve();
+                  });
                 }));
               }
               return results;

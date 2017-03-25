@@ -9,10 +9,7 @@
     fileMap = {};
     return arbiter.subscribe("files/fetch", function(fileId) {
       if (fileId in fileMap) {
-        return arbiter.publish("file/data", {
-          id: fileId,
-          attachment: fileMap[fileId]
-        });
+        return arbiter.publish("file/data", fileMap[fileId]);
       } else {
         return db.get(fileId, {
           attachments: true,
@@ -32,13 +29,11 @@
             }
             idQueue.push(fileId);
             fileMap[fileId] = {
+              id: fileId,
               name: name,
               attachment: attachment
             };
-            results.push(arbiter.publish("file/data", {
-              id: fileId,
-              attachment: fileMap[fileId]
-            }));
+            results.push(arbiter.publish("file/data", fileMap[fileId]));
           }
           return results;
         });

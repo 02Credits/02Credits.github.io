@@ -6,13 +6,14 @@ define ["arbiter", "pouchdbManager"], (arbiter, PouchDB) ->
   idQueue = []
   # object of string to
   #   name: string
+  #   fileId: string
   #   attachment:
   #     data: blob
   #     content_type: number
   fileMap = {}
   arbiter.subscribe "files/fetch", (fileId) ->
     if fileId of fileMap
-      arbiter.publish "file/data", {id: fileId, attachment: fileMap[fileId]}
+      arbiter.publish "file/data", fileMap[fileId]
     else
       db.get(fileId, {attachments: true, binary: true})
         .then (doc) ->
@@ -24,5 +25,5 @@ define ["arbiter", "pouchdbManager"], (arbiter, PouchDB) ->
               delete fileMap[poppedId]
               currentSize = currentSize - poppedData.attachment.data.size
             idQueue.push(fileId)
-            fileMap[fileId] = {name: name, attachment: attachment}
-            arbiter.publish "file/data", {id: fileId, attachment: fileMap[fileId]}
+            fileMap[fileId] = {id: fileId, name: name, attachment: attachment}
+            arbiter.publish "file/data", fileMap[fileId]

@@ -12,7 +12,7 @@ define ["mithril", "arbiter", "pouchdbManager"], (m, arbiter, PouchDB) ->
           new Promise (resolve, reject) ->
             arbiter.publish "files/fetch", file
             id = arbiter.subscribe "file/data", (fileData) ->
-              renderedFiles.push (m "img.materialboxed", {src: URL.createObjectURL(attachment.data)})
+              renderedFiles.push (m "img.materialboxed", {src: URL.createObjectURL(fileData.attachment.data)})
               arbiter.unsubscribe id
               resolve()
         Promise.all(thenables).then () ->

@@ -10,12 +10,14 @@ define ["mithril", "arbiter", "pouchdbManager"], (m, arbiter, PouchDB) ->
           doc.files = [doc.file]
         renderedFiles = []
         thenables = for file in doc.files
-          db.get(file, {attachments: true, binary: true})
-          .then (doc) ->
-            for name, attachment of doc["_attachments"]
-              renderedFiles.push (m "p", (m "a", {href: URL.createObjectURL(attachment.data), download: name}, [
+          new Promise (resolve, reject) ->
+            arbiter.publish "files/fetch", file
+            id = arbiter.subscribe "file/data", (fileData) ->
+              renderedFiles.push (m "p", (m "a", {href: URL.createObjectURL(fileData.attachment.data), download: name}, [
                   name
                 ]))
+              arbiter.unsubscribe id
+              resolve()
         Promise.all(thenables).then () ->
           [
             renderedFiles
