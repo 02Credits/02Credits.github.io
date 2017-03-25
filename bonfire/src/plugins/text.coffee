@@ -17,17 +17,23 @@ define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linki
   name: "text"
   parent: "container"
   render: (doc, renderBefore, renderAfter) ->
-    if !doc.text?
-      renderText("error", doc._id)
-    else if Array.isArray(doc.text)
-      elements = [renderBefore doc]
-      for text in doc.text
-        elements.push(renderText(text.text, doc.author, text.id))
-      elements.push(renderAfter doc)
-      elements
-    else
-      [
-          renderBefore doc
-          renderText(doc.text, doc.author, doc._id)
-          renderAfter doc
-      ]
+    (renderBefore doc).then (beforeChildren) ->
+      (renderAfter doc).then (afterChildren) ->
+        if doc.text?
+          if Array.isArray(doc.text)
+            elements = [beforeChildren]
+            for text in doc.text
+              elements.push(renderText(text.text, doc.author, text.id))
+            elements.push(afterChildren)
+            elements
+          else
+            [
+              beforeChildren
+              renderText(doc.text, doc.author, doc._id)
+              afterChildren
+            ]
+        else
+          [
+            beforeChildren
+            afterChildren
+          ]

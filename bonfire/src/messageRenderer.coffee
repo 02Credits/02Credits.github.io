@@ -1,4 +1,4 @@
-define ["plugins", "arbiter"], (pluginsList, arbiter) ->
+define ["plugins", "arbiter", "underscore"], (pluginsList, arbiter, _) ->
   plugins = []
   for pluginList in pluginsList
     plugins = plugins.concat pluginList
@@ -33,28 +33,29 @@ define ["plugins", "arbiter"], (pluginsList, arbiter) ->
 
   generateRenderChildren = (children) ->
     (context) ->
-      for plugin in children
-        renderPlugin context, plugin
+      Promise.all (renderPlugin context, plugin for plugin in children)
 
   renderPlugin = (context, plugin) ->
     renderBefore = generateRenderChildren plugin.beforePlugins
     renderInner = generateRenderChildren plugin.innerPlugins
     renderAfter = generateRenderChildren plugin.afterPlugins
-    vEl = {}
+    vEl = []
     if plugin.render.length == 4
       vEl = plugin.render(context, renderBefore, renderInner, renderAfter)
     else if plugin.render.length == 3
       renderInnerAndAfter = (context) ->
-        []
+        children = []
         .concat renderInner(context)
         .concat renderAfter(context)
+        Promise.all(children)
       vEl = plugin.render(context, renderBefore, renderInnerAndAfter)
     else
       renderAll = (context) ->
-        []
+        children = []
         .concat renderBefore(context)
         .concat renderInner(context)
         .concat renderAfter(context)
+        Promise.all(children)
       vEl = plugin.render(context, renderAll)
     vEl
 

@@ -5,5 +5,7 @@ define [
   "plugins/time"
   "plugins/images"
   "plugins/dubs"
+  "plugins/imageAttachments"
+  "plugins/fileAttachments"
   ], ->
     arguments

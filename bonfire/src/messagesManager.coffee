@@ -63,14 +63,13 @@ define ["jquery",
   renderMessages = (messages, preventCombining) ->
     messages = _.filter(messages, (message) ->
       doc = message.doc
-      doc.text? and
       doc.author?
     )
     groupedMessages = []
     currentAuthor = {}
     currentMessage = null
     for message in messages
-      if message.doc.text.startsWith("<")
+      if !message.doc.text? or message.doc.text.startsWith("<")
         if currentMessage?
           groupedMessages.push(currentMessage)
           currentMessage = null
@@ -82,7 +81,6 @@ define ["jquery",
              not preventCombining
             if message.doc.edited
               currentMessage.doc.edited = true
-            # currentMessage.doc.time = message.doc.time
             currentMessage.doc.text.push {text: message.doc.text, id: message.doc._id}
           else
             groupedMessages.push(currentMessage)
@@ -94,12 +92,16 @@ define ["jquery",
     if currentMessage?
       groupedMessages.push(currentMessage)
 
-    m.render $('#messages').get(0),
-      m "div",
-        for message in groupedMessages
-          doc = message.doc
-          messageRenderer.render(doc)
-    arbiter.publish("messages/rendered")
+    messagePromises = []
+    for message in groupedMessages
+      renderedMessage = messageRenderer.render(message.doc)
+      if renderedMessage?
+        messagePromises.push(renderedMessage)
+    (Promise.all messagePromises).then (renderedMessages) ->
+      m.render $('#messages').get(0),
+        m "div",
+          renderedMessages
+      arbiter.publish("messages/rendered")
 
   render()
   remoteChanges = remoteDB.changes
@@ -174,30 +176,22 @@ define ["jquery",
       Materialize.toast("Sync still in progress")
 
   arbiter.subscribe "messages/send", (args) ->
-    text = args.text
-    author = args.author
-    if text? and author?
-      currentDB.allDocs
-        include_docs: true
-        conflicts: false
-        limit: 1
-        descending: true
-        startkey: "_design"
-      .then (results) ->
-        doc = results.rows[0].doc
-        now = moment().utc()
-        time = now.valueOf()
-        messageNumber = (parseInt(doc.messageNumber) + 1).toString()
-        idNumber = parseInt(messageNumber.toString() + time.toString())
-        id = collate.toIndexableString(idNumber).replace(/\u0000/g, '\u0001');
-        currentDB.put
-          "_id": id
-          "messageNumber": messageNumber
-          "time": time
-          "author": author
-          "text": text
-      .catch (err) ->
-        arbiter.publish "error", err
+    currentDB.allDocs
+      include_docs: true
+      conflicts: false
+      limit: 1
+      descending: true
+      startkey: "_design"
+    .then (results) ->
+      lastDoc = results.rows[0].doc
+      now = moment().utc()
+      args.time = now.valueOf()
+      args.messageNumber = (parseInt(lastDoc.messageNumber) + 1).toString()
+      idNumber = parseInt(args.messageNumber.toString() + args.time.toString())
+      args["_id"] = collate.toIndexableString(idNumber).replace(/\u0000/g, '\u0001');
+      currentDB.put args
+    .catch (err) ->
+      arbiter.publish "error", err
 
   arbiter.subscribe "messages/getLast", (callback) ->
     if caughtUp
