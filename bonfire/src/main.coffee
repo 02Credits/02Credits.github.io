@@ -43,6 +43,7 @@ requirejs [
   'inputManager'
   'idleManager'
   'settings'
+  'fileCache'
   'fileManager'
   'markov'
   ],
