@@ -262,7 +262,7 @@
       "tpHeresTommy": "http://i.imgur.com/bSQJb1w.png",
       "WitherJonWither": "http://i.imgur.com/hHzI8pj.gif",
       "JonjoWitherJonjo": "http://i.imgur.com/hHzI8pj.gif",
-      "HenryPepe": "http://imgur.com/q6ANjU4.png",
+      "PeHenryPe": "http://imgur.com/q6ANjU4.png",
       "HappyLark": "http://imgur.com/Rc0ooTm.png"
     };
     textEmoticons = {
