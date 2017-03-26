@@ -257,6 +257,8 @@ define ["markov"], (markov) ->
     "tpBlack": "http://i.imgur.com/bjMlP03.png"
     "tpGreen": "http://i.imgur.com/m0XlGmG.png"
     "tpHeresTommy": "http://i.imgur.com/bSQJb1w.png"
+    "WitherJonWither": "http://i.imgur.com/hHzI8pj.gif"
+    "JonjoWitherJonjo": "http://i.imgur.com/hHzI8pj.gif"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"

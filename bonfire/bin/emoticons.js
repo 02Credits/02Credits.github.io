@@ -259,7 +259,9 @@
       "tpPink": "http://i.imgur.com/Q3Kl2j6.png",
       "tpBlack": "http://i.imgur.com/bjMlP03.png",
       "tpGreen": "http://i.imgur.com/m0XlGmG.png",
-      "tpHeresTommy": "http://i.imgur.com/bSQJb1w.png"
+      "tpHeresTommy": "http://i.imgur.com/bSQJb1w.png",
+      "WitherJonWither": "http://i.imgur.com/hHzI8pj.gif",
+      "JonjoWitherJonjo": "http://i.imgur.com/hHzI8pj.gif"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",
