@@ -1,12 +1,18 @@
 {
-  "jspm": {
-    "dependencies": {
-      "pixi.js": "github:pixijs/pixi.js@^3.0.11",
-      "underscore": "npm:underscore@^1.8.3",
-      "underscore.string": "npm:underscore.string@^3.3.4"
-    },
-    "devDependencies": {
-      "typescript": "npm:typescript@^1.6.2"
-    }
+  "name": "Serial1",
+  "version": "0.0.1",
+  "description": "the first in the serial game series",
+  "author": "02Credits LLC",
+  "devDependencies": {
+    "@types/es6-promise": "0.0.32",
+    "@types/jquery": "^2.0.40",
+    "@types/underscore": "^1.7.36",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.4.1",
+    "gulp-typescript": "^3.1.5",
+    "gulp-webserver": "^0.9.1",
+    "typescript": "^2.2.1"
   }
 }

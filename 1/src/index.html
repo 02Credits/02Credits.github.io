@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <title>02Credits</title>
+  <script src="external/ace/ace.js"></script>
+  <script src="external/systemjs/system.js"></script>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #gameContainer {
+      position: absolute;
+      left: 50%;
+      margin-left: -400px;
+      margin-top: 100px;
+    }
+  </style>
+  <script>
+   SystemJS.config({
+       packages: {
+           '.': {
+               defaultExtension: 'js',
+               baseURL: "/js"
+           }
+       },
+       map: {
+           'pixi': '../deps/pixi/pixi.min.js',
+           'underscore': '../deps/underscore-min.js'
+       }
+   });
+  </script>
+  <script>
+  System.import('/js/bootstrap.js').then(null, console.error.bind(console));
+  </script>
+</head>
+<body>
+  <div id="gameContainer">
+  <div id="game">
+  </div>
+  <div id="editor">
+    This is a test.
+  </div>
+  </div>
+</body>
+</html>
