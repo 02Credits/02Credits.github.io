@@ -85,10 +85,7 @@ class EventManager {
                         if (!_.contains(calledEvents, sub)) {
                             let result = sub.callback(data, name);
                             if (result != undefined) {
-                                if (!("then" in result) || typeof result.then !== "function") {
-                                    result = Promise.resolve(result);
-                                }
-                                results.push(result);
+                                results.push(Promise.resolve(result));
                             }
                             calledEvents.push(sub);
                         }
