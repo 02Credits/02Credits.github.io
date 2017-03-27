@@ -1,12 +1,11 @@
-/// <reference path="../typings/index.d.ts"/>
+import ces from "./ces";
+import pixiManager from "./pixiManager";
+import playerManager from "./playerManager";
+import collisionManager from "./collisionManager";
 
-import ces from "./ces.js";
-import pixiManager from "./pixiManager.js";
-import editorManager from "./editorManager.js";
-import playerManager from "./playerManager.js";
-import collisionManager from "./collisionManager.js";
+import * as _ from "underscore";
 
-pixiManager(["Wall.png", "Player.png"], () => {
+pixiManager(["Wall.png", "Player.png"]).then(() => {
     collisionManager();
     playerManager();
 
@@ -113,6 +112,4 @@ pixiManager(["Wall.png", "Player.png"], () => {
     _(startEntities).each((entity) => {
         ces.AddEntity(entity);
     })
-
-    // editorManager();
 });

@@ -1,7 +1,56 @@
-import _ from "underscore";
+import * as _ from "underscore";
 import events from "./events.js";
 import input from "./inputManager.js";
 import ces from "./ces.js";
+
+function updateFeet(playerEntity) {
+    var feet = ces.GetEntities("foot");
+    var scale = 1;
+    if (_.has(playerEntity.player, "scale")) {
+        scale = playerEntity.player.scale;
+    }
+    _(feet).each(entity => {
+        entity.rendered.scale = scale;
+        entity.foot.y = entity.foot.x * Math.sin(playerEntity.player.walkAnimation) * playerEntity.player.stepSize * playerEntity.player.speed;
+        entity.position.rotation = playerEntity.position.rotation;
+        entity.position.x = playerEntity.position.x + (entity.foot.y * Math.cos(-entity.position.rotation + Math.PI / 2) + entity.foot.x * Math.sin(-entity.position.rotation + Math.PI / 2)) * scale;
+        entity.position.y = playerEntity.position.y + (entity.foot.x * Math.cos(-entity.position.rotation + Math.PI / 2) - entity.foot.y * Math.sin(-entity.position.rotation + Math.PI / 2)) * scale;
+        if (_.has(playerEntity.rendered, "alpha")) {
+            entity.rendered.alpha = playerEntity.rendered.alpha;
+        }
+    })
+        }
+
+function updatePlayer(entity) {
+    var mouseState = input.MouseState();
+    var dx = mouseState.x - entity.position.x;
+    var dy = mouseState.y - entity.position.y;
+
+    entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+
+    var length = Math.sqrt(dx * dx + dy * dy);
+    if (entity.dimensions && length > 30) {
+        dx = dx / length;
+        dy = dy / length;
+
+        entity.player.vx += dx * 0.8;
+        entity.player.vy += dy * 0.8;
+    }
+
+    if (_.has(entity.player, "scale")) {
+        entity.rendered.scale = entity.player.scale;
+    }
+
+    entity.player.vx *= 0.85;
+    entity.player.vy *= 0.85;
+
+    var playerSpeed = Math.sqrt(entity.player.vx * entity.player.vx + entity.player.vy * entity.player.vy)
+    entity.player.speed = playerSpeed;
+    entity.player.walkAnimation += playerSpeed * entity.player.stepSpeed;
+
+    entity.position.x += entity.player.vx;
+    entity.position.y += entity.player.vy;
+}
 
 export default () => {
     events.Subscribe("ces.checkEntity.player", (entity) => {
@@ -12,7 +61,6 @@ export default () => {
         entity.player.vx = 0;
         entity.player.vy = 0;
         entity.player.walkAnimation = 0;
-        return true;
     });
 
     events.Subscribe("ces.checkEntity.foot", (entity) => {
@@ -27,7 +75,6 @@ export default () => {
     events.Subscribe("ces.update.player", (entity: any) => {
         updatePlayer(entity);
         updateFeet(entity);
-        return true;
     });
 
     events.Subscribe("collision", (event: any) => {
@@ -68,55 +115,5 @@ export default () => {
                 }
             }
         }
-        return true;
     });
-
-    function updateFeet(playerEntity) {
-        var feet = ces.GetEntities("foot");
-        var scale = 1;
-        if (_.has(playerEntity.player, "scale")) {
-            scale = playerEntity.player.scale;
-        }
-        _(feet).each(entity => {
-            entity.rendered.scale = scale;
-            entity.foot.y = entity.foot.x * Math.sin(playerEntity.player.walkAnimation) * playerEntity.player.stepSize * playerEntity.player.speed;
-            entity.position.rotation = playerEntity.position.rotation;
-            entity.position.x = playerEntity.position.x + (entity.foot.y * Math.cos(-entity.position.rotation + Math.PI / 2) + entity.foot.x * Math.sin(-entity.position.rotation + Math.PI / 2)) * scale;
-            entity.position.y = playerEntity.position.y + (entity.foot.x * Math.cos(-entity.position.rotation + Math.PI / 2) - entity.foot.y * Math.sin(-entity.position.rotation + Math.PI / 2)) * scale;
-            if (_.has(playerEntity.rendered, "alpha")) {
-                entity.rendered.alpha = playerEntity.rendered.alpha;
-            }
-        })
-    }
-
-    function updatePlayer(entity) {
-        var mouseState = input.MouseState();
-        var dx = mouseState.x - entity.position.x;
-        var dy = mouseState.y - entity.position.y;
-
-        entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
-
-        var length = Math.sqrt(dx * dx + dy * dy);
-        if (entity.dimensions && length > 30) {
-            dx = dx / length;
-            dy = dy / length;
-
-            entity.player.vx += dx * 0.8;
-            entity.player.vy += dy * 0.8;
-        }
-
-        if (_.has(entity.player, "scale")) {
-            entity.rendered.scale = entity.player.scale;
-        }
-
-        entity.player.vx *= 0.85;
-        entity.player.vy *= 0.85;
-
-        var playerSpeed = Math.sqrt(entity.player.vx * entity.player.vx + entity.player.vy * entity.player.vy)
-        entity.player.speed = playerSpeed;
-        entity.player.walkAnimation += playerSpeed * entity.player.stepSpeed;
-
-        entity.position.x += entity.player.vx;
-        entity.position.y += entity.player.vy;
-    }
 }

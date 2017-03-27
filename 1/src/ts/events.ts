@@ -10,13 +10,11 @@ import * as _ from 'underscore';
 ///
 ////////////////////////////////////////////////////////////////
 
-
-
 /** Represents an event subscription. */
 interface Subscription {
     id: number;
     names: string[];
-    callback: (data: any, event?: string) => (Promise<any> | void);
+    callback: (data: any, event?: string) => (any | void);
 }
 
 class EventManager {
@@ -40,13 +38,13 @@ class EventManager {
         published event and down the chain.
 
         eg. Subscribe("foo.bar", fun...) will be called with Publish("foo.bar.bas") */
-    Subscribe(name: string, callback: (data: any, eventName?: string) => (Promise<any> | Promise<void> | void)) {
+    Subscribe(name: string, callback: (data: any, eventName?: string) => (any | void)) {
         return this.SubscribeMultiple([name], callback);
     }
 
     /** Allows you to subscribe to multiple different events with one handler.
         This event will get called for any of the passed in events. */
-    SubscribeMultiple(names: string[], callback: (data: any, eventName?: string) => (Promise<any> | void)) {
+    SubscribeMultiple(names: string[], callback: (data: any, eventName?: string) => (any | void)) {
         let sub: Subscription = {id: this.currentId, names: names, callback: callback}
         this.subscriptions[this.currentId] = sub;
         this.currentId++;
@@ -87,6 +85,9 @@ class EventManager {
                         if (!_.contains(calledEvents, sub)) {
                             let result = sub.callback(data, name);
                             if (result != undefined) {
+                                if (!("then" in result) || typeof result.then !== "function") {
+                                    result = Promise.resolve(result);
+                                }
                                 results.push(result);
                             }
                             calledEvents.push(sub);

@@ -1,11 +1,11 @@
-import events from "./events.js";
-import _ from "underscore";
-import ces from "./ces.js";
+import events from "./events";
+import ces from "./ces";
+import * as _ from "underscore";
 
 export default () => {
     events.Subscribe("ces.update.collider", (entity: any) => {
         var collidables = ces.GetEntities("collidable");
-        _(collidables).each((collidable) => {
+        for (let collidable of collidables) {
             if (collidable !== entity) {
                 var left = collidable.position.x + collidable.dimensions.width * collidable.position.cx;
                 var right = collidable.position.x - collidable.dimensions.width * (1 - collidable.position.cx);
@@ -43,7 +43,6 @@ export default () => {
                     events.Publish("collision", {collider: entity, collidable: collidable, xError: xError, yError: yError});
                 }
             }
-        });
-        return true;
+        }
     });
 };

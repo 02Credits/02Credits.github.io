@@ -1,9 +1,9 @@
-import events from "./events.js";
-import ces from "./ces.js";
+import events from "./events";
+import ces from "./ces";
 
 export default () => {
     events.Subscribe("ces.update.ghost", (entity: any) => {
-        var player = _(ces.GetEntities("player")).first();
+        var player = ces.GetEntities("player")[0];
         var dx = player.position.x - entity.position.x;
         var dy = player.position.y - entity.position.y;
         var length = Math.sqrt(dx * dx + dy * dy) / entity.ghost.speed;
@@ -26,6 +26,5 @@ export default () => {
                 bullet: true
             });
         }
-        return true;
     });
 };
