@@ -2,7 +2,9 @@ import events from "./events";
 import ces from "./ces";
 
 import * as pixi from "pixi.js";
-import * as _ from "underscore";
+import * as _ from "lodash";
+
+debugger;
 
 interface RenderInfo {
     texture: string;
@@ -37,7 +39,7 @@ var renderer = new pixi.CanvasRenderer(800, 600);
 var stages: { [id: number]: pixi.Container } =  { };
 var uiStages: { [id: number]: pixi.Container } = { };
 
-var textures = {};
+var textures: { [id: string]: pixi.loaders.Resource } = {};
 
 var root = new pixi.Container();
 var overlay = new pixi.Container();
@@ -151,9 +153,9 @@ export default async (texturePaths: string[]) => {
 
     return new Promise((resolve) => {
         _(texturePaths).each((path) => {
-            pixi.loader.add(path, window.location + "assets/" + path).load((loader, resources) => {
+            pixi.loader.add(path, window.location + "assets/" + path).load((loader: pixi.loaders.Loader, resources: { [id: string]: pixi.loaders.Resource }) => {
                 textures[path] = resources[path];
-                if (_(textures).keys().length == texturePaths.length) {
+                if (_(textures).keys().size() == texturePaths.length) {
                     afterLoad();
                     resolve();
                 }

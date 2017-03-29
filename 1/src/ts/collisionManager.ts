@@ -1,6 +1,5 @@
 import events from "./events";
 import ces from "./ces";
-import * as _ from "underscore";
 
 export default () => {
     events.Subscribe("ces.update.collider", (entity: any) => {

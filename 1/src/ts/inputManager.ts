@@ -1,5 +1,5 @@
 export module InputManager {
-    var keys: string[] = [];
+    let keys: { [key: string]: boolean } = {};
     var enabled = false;
     var mouseDown = false;
     var mouseX = 0;

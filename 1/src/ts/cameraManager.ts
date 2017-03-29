@@ -1,11 +1,9 @@
 import events from "./events";
 import ces from "./ces";
 
-import * as _ from "underscore";
-
 export default () => {
     events.Subscribe("collision", (event: any) => {
-        if (_.has(event.collidable, "cameraTrigger")) {
+        if ("cameraTrigger" in event.collidable) {
             var cameraTriggerEntity = event.collidable;
             var cameraEntity = ces.GetEntities("camera")[0];
             cameraEntity.camera.targetX = cameraTriggerEntity.cameraTrigger.targetX;

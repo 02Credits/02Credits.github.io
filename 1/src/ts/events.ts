@@ -1,5 +1,3 @@
-import * as _ from 'underscore';
-
 ////////////////////////////////////////////////////////////////
 ///
 ///   This is a simple event manager. you can subscribe to
@@ -25,13 +23,13 @@ class EventManager {
     private iterateOverEventName(name: string, callback:(namespace: string) => void) {
         let namespaces = name.split(".");
         let nameAcc = "";
-        _.each(namespaces, (name) => {
+        for (let name of namespaces) {
             if (nameAcc.length != 0) {
                 nameAcc = nameAcc + "."
             }
             nameAcc = nameAcc + name;
             callback(nameAcc);
-        });
+        }
     }
 
     /** Subscribe to a given event. Note that your event will get called for any
@@ -49,12 +47,12 @@ class EventManager {
         this.subscriptions[this.currentId] = sub;
         this.currentId++;
 
-        _(names).each((name) => {
-            if (!_.has(this.namespaces, name)) {
+        for (let name of names) {
+            if (name in this.namespaces) {
                 this.namespaces[name] = [];
             }
             this.namespaces[name].push(sub);
-        });
+        }
 
         return sub.id;
     }
@@ -63,9 +61,9 @@ class EventManager {
     Unsubscribe(id: number) {
         let sub = this.subscriptions[id];
         delete this.subscriptions[id];
-        _(sub.names).each((name) => {
-            this.namespaces[name] = _.without(this.namespaces[name], sub);
-        });
+        for (let name in sub.names) {
+            this.namespaces[name] = this.namespaces[name].filter(s => s != sub);
+        }
     }
 
     /** Publish the event with name: name and data: data. */
@@ -77,22 +75,22 @@ class EventManager {
         an event subscribed to multiple event names it will only get called once. */
     async PublishMultiple<T>(names: string[], data?: T): Promise<any[]> {
         let calledEvents: Subscription[] = [];
-        let results = [];
-        _(names).each((name) => {
+        let results: Promise<any>[] = [];
+        for (let name of names) {
             this.iterateOverEventName(name, (partialName) => {
-                if (_.isArray(this.namespaces[partialName])) {
-                    _.each(this.namespaces[partialName], (sub) => {
-                        if (!_.contains(calledEvents, sub)) {
+                if (Array.isArray(this.namespaces[partialName])) {
+                    for (let sub of this.namespaces[partialName]) {
+                        if (calledEvents.includes(sub)) {
                             let result = sub.callback(data, name);
                             if (result != undefined) {
                                 results.push(Promise.resolve(result));
                             }
                             calledEvents.push(sub);
                         }
-                    });
+                    }
                 }
             });
-        });
+        }
         if (_.any(results)) {
             return Promise.all(results);
         } else {

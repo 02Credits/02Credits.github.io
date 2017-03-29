@@ -3,13 +3,11 @@ import pixiManager from "./pixiManager";
 import playerManager from "./playerManager";
 import collisionManager from "./collisionManager";
 
-import * as _ from "underscore";
-
 pixiManager(["Wall.png", "Player.png"]).then(() => {
     collisionManager();
     playerManager();
 
-    var startEntities = JSON.parse(`[
+    var startEntities = [
         {
             "position": {
                 "x": 0,
@@ -107,9 +105,9 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
                 "x": 10
             }
         }
-    ]`)
+    ];
 
-    _(startEntities).each((entity) => {
+    for (let entity of startEntities) {
         ces.AddEntity(entity);
-    })
+    }
 });

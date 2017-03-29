@@ -1,16 +1,8 @@
 {
     "compilerOptions": {
-      "target": "es5",
-      "module": "system",
-      "sourceMap": true,
-      "isolatedModules": false,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "noImplicitAny": true,
-      "noImplicitUseStrict": true,
-      "removeComments": false,
-      "noLib": false,
-      "preserveConstEnums": true,
-      "suppressImplicitAnyIndexErrors": false,
+        "target": "es5",
+        "module": "system",
+        "sourceMap": true,
+        "noImplicitAny": true
     }
 }
