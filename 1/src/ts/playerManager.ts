@@ -10,15 +10,12 @@ function updateFeet(playerEntity: any) {
     }
 
     for (let entity of feet) {
-        entity.rendered.scale = scale;
-        entity.foot.y = entity.foot.x * Math.sin(playerEntity.player.walkAnimation) * playerEntity.player.stepSize * playerEntity.player.speed;
-        entity.position.rotation = playerEntity.position.rotation;
-        entity.position.x = playerEntity.position.x + (entity.foot.y * Math.cos(-entity.position.rotation + Math.PI / 2) + entity.foot.x * Math.sin(-entity.position.rotation + Math.PI / 2)) * scale;
-        entity.position.y = playerEntity.position.y + (entity.foot.x * Math.cos(-entity.position.rotation + Math.PI / 2) - entity.foot.y * Math.sin(-entity.position.rotation + Math.PI / 2)) * scale;
-
-        if ("alpha" in playerEntity.rendered) {
-            entity.rendered.alpha = playerEntity.rendered.alpha;
-        }
+        entity.child.relativePosition.y =
+            Math.sin(playerEntity.player.walkAnimation) * // Move steps by sin wave
+            playerEntity.player.stepSize *                // Account for settings
+            playerEntity.player.speed *                   // Step faster as you walk faster
+            entity.child.relativePosition.x *             // Account for which foot and scale a bit
+            scale;
     }
 }
 
@@ -30,12 +27,12 @@ function updatePlayer(entity: any) {
     entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
 
     var length = Math.sqrt(dx * dx + dy * dy);
-    if (entity.dimensions && length > 30) {
+    if (entity.dimensions && length > 3) {
         dx = dx / length;
         dy = dy / length;
 
-        entity.player.vx += dx * 0.8;
-        entity.player.vy += dy * 0.8;
+        entity.player.vx += dx * 0.1;
+        entity.player.vy += dy * 0.1;
     }
 
     entity.player.vx *= 0.85;
@@ -65,52 +62,8 @@ export default () => {
                "child" in entity;
     });
 
-    events.Subscribe("ces.checkEntity.wall", (entity) => {
-        return "position" in entity &&
-               "dimensions" in entity;
-    });
-
     events.Subscribe("ces.update.player", (entity: any) => {
         updatePlayer(entity);
         updateFeet(entity);
-    });
-
-    events.Subscribe("collision", (event: any) => {
-        var player = event.collider;
-        var collidable = event.collidable;
-        if ("player" in player) {
-            if ("wall" in collidable) {
-                if (Math.abs(event.xError) < Math.abs(event.yError)) {
-                    player.position.x -= event.xError;
-                } else {
-                    player.position.y -= event.yError;
-                }
-            } else if ("hole" in collidable) {
-                var minError = 0;
-                if (Math.abs(event.xError) < Math.abs(event.yError)) {
-                    minError = Math.abs(event.xError);
-                    player.position.x += event.xError * collidable.hole.steepness;
-                } else {
-                    minError = Math.abs(event.yError);
-                    player.position.y += event.yError * collidable.hole.steepness;
-                }
-
-                var factor = 1.2 - minError * 0.02;
-                if (factor < 0) {
-                    factor = 0;
-                }
-
-                if (factor > 1) {
-                    factor = 1;
-                }
-
-                player.rendered.alpha = factor;
-                player.rendered.scale = factor;
-
-                if (minError > 1) {
-                    events.Publish("fell")
-                }
-            }
-        }
     });
 }

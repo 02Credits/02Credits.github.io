@@ -1,45 +1,185 @@
 import events from "./events";
 import ces from "./ces";
+import {defaultValue} from "./utils";
+
+import {Dimensions, Position} from "./pixiManager"
+
+interface Circle {
+    kind: "circle"
+}
+
+interface Rectangle {
+    kind: "rectangle"
+}
+
+interface Polygon {
+    kind: "polygon"
+    points: number[][]
+}
+
+interface CollidableEntity {
+    position: Position;
+    dimensions: Dimensions;
+    renderer?: {
+        scale: number;
+    };
+    collisionShape?: Circle | Rectangle | Polygon;
+}
+
+// Algorithm modified from http://wiki.roblox.com/index.php?title=2D_Collision_Detection
+function getNormal(vec: number[]) {
+    return [vec[1], -vec[0]];
+}
+
+function subVec(vec1: number[], vec2: number[]) {
+    let retVec = [];
+    for (let i = 0; i < vec1.length; i++) {
+        retVec[i] = vec1[i] - vec2[i];
+    }
+    return retVec;
+}
+
+function dotVec(vec1: number[], vec2: number[]) {
+    let retVal = 0;
+    for (let i = 0; i < vec1.length; i++) {
+        retVal += vec1[i] * vec2[i];
+    }
+    return retVal;
+}
+
+function vecLength(vec: number[]) {
+    return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1]);
+}
+
+function unitVec(vec: number[]) {
+    let length = vecLength(vec);
+    return [
+        vec[0] / length,
+        vec[1] / length
+    ];
+}
+
+function rotateAndTranslate(entity: CollidableEntity, relativePoint: number[]) {
+    let center = [entity.position.x, entity.position.y];
+    let rotation = 0;
+    let scale = defaultValue(() => entity.renderer.scale, 1);
+    if ("rotation" in entity.position) {
+        rotation = entity.position.rotation;
+    }
+
+    let newX = center[0] + (relativePoint[0] * scale - center[0]) * Math.cos(rotation) - (relativePoint[1] * scale - center[1]) * Math.sin(rotation);
+    let newY = center[1] + (relativePoint[0] * scale - center[0]) * Math.sin(rotation) + (relativePoint[1] * scale - center[1]) * Math.cos(rotation);
+    relativePoint[0] = newX;
+    relativePoint[1] = newY;
+}
+
+function getCorners(entity: CollidableEntity) {
+    if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
+        let scale = defaultValue(() => entity.renderer.scale, 1);
+        let left = entity.position.x + entity.dimensions.width * entity.position.cx * scale;
+        let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx) * scale;
+        let bottom = entity.position.y + entity.dimensions.height * entity.position.cy * scale;
+        let top = entity.position.y - entity.dimensions.height * (1 - entity.position.cy) * scale;
+
+        let corners = [
+            [left, top],
+            [right, top],
+            [right, bottom],
+            [left, bottom]
+        ];
+
+        for (let corner of corners) {
+            rotateAndTranslate(entity, corner);
+        }
+        return corners;
+    } else if (entity.collisionShape.kind === "polygon") {
+        let corners = entity.collisionShape.points;
+        for (let corner of corners) {
+            rotateAndTranslate(entity, corner);
+        }
+    } else {
+        return [];
+    }
+}
+
+function getAxis(entity: CollidableEntity) {
+    if (entity.collisionShape == null || entity.collisionShape.kind != "circle") {
+        let corners = getCorners(entity);
+        return [
+            getNormal(unitVec(subVec(corners[0], corners[1]))),
+            getNormal(unitVec(subVec(corners[0], corners[3])))
+        ];
+    } else {
+        return [];
+    }
+}
+
+function projectedBounds(entity: CollidableEntity, axis: number[]) {
+    if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
+        let scale = defaultValue(() => entity.renderer.scale, 1);
+        let center = dotVec([entity.position.x, entity.position.y], axis);
+        let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
+        return {max: center + radius, min: center - radius};
+    } else {
+        let corners = getCorners(entity);
+        let min = dotVec(corners[0], axis);
+        let max = min;
+        for (let i = 1; i < corners.length; i++) {
+            let corner = corners[i];
+            let projectedCorner = dotVec(corner, axis);
+            if (projectedCorner > max) max = projectedCorner;
+            if (projectedCorner < min) min = projectedCorner;
+        }
+        return {min: min, max: max};
+    }
+}
+
+function calculateOverlap(e1: CollidableEntity, e2: CollidableEntity, axis: number[]) {
+    let b1 = projectedBounds(e1, axis);
+    let b2 = projectedBounds(e2, axis);
+    if (b2.min > b1.max || b2.max < b1.min) {
+        return null;
+    }
+    return b1.max > b2.max ? -(b2.max - b1.min) : (b1.max - b2.min);
+}
+
+function getOverlap(e1: CollidableEntity, e2: CollidableEntity) {
+    let c1 = getCorners(e1);
+    let c2 = getCorners(e2);
+    let result: {depth: number, normal: number[]} = null;
+    let normal: number[] = [];
+    for (let axis of getAxis(e1).concat(getAxis(e2))) {
+        let overlap = calculateOverlap(e1, e2, axis);
+        if (overlap == null) return null;
+
+        if (result == null || Math.abs(overlap) < result.depth) {
+            if (overlap < 0) {
+                result = {
+                    depth: -overlap,
+                    normal: [
+                        -axis[0],
+                        -axis[1]
+                    ]
+                }
+            } else {
+                result = {
+                    depth: overlap,
+                    normal: axis
+                }
+            }
+        }
+    }
+    return result;
+}
 
 export default () => {
     events.Subscribe("ces.update.collider", (entity: any) => {
-        var collidables = ces.GetEntities("collidable");
+        let collidables = ces.GetEntities("collidable");
         for (let collidable of collidables) {
             if (collidable !== entity) {
-                var left = collidable.position.x + collidable.dimensions.width * collidable.position.cx;
-                var right = collidable.position.x - collidable.dimensions.width * (1 - collidable.position.cx);
-                var bottom = collidable.position.y + collidable.dimensions.height * collidable.position.cy;
-                var top = collidable.position.y - collidable.dimensions.height * (1 - collidable.position.cy);
-
-                var position: {x: number, y: number} = entity.position;
-                var dimensions: {width: number, height: number} = entity.dimensions;
-
-                var xError = 0;
-                var yError = 0;
-
-                if (position.x > collidable.position.x && position.x - dimensions.width / 2 < left &&
-                    ((position.y > collidable.position.y && position.y - dimensions.height / 2 < bottom) ||
-                    (position.y < collidable.position.y && position.y + dimensions.height / 2 > top))) {
-                    xError = (position.x - dimensions.width / 2) - left;
-                }
-                if (position.x < collidable.position.x && position.x + dimensions.width / 2 > right &&
-                    ((position.y > collidable.position.y && position.y - dimensions.height / 2 < bottom) ||
-                    (position.y < collidable.position.y && position.y + dimensions.height / 2 > top))) {
-                    xError = (position.x + dimensions.width / 2) - right;
-                }
-                if (position.y < collidable.position.y && position.y + dimensions.height / 2 > top &&
-                    ((position.x < collidable.position.x && position.x + dimensions.width / 2 > right) ||
-                    (position.x > collidable.position.x && position.x - dimensions.width / 2 < left))) {
-                    yError = (position.y + dimensions.height / 2) - top;
-                }
-                if (position.y > collidable.position.y && position.y - dimensions.height / 2 < bottom &&
-                    ((position.x < collidable.position.x && position.x + dimensions.width / 2 > right) ||
-                    (position.x > collidable.position.x && position.x - dimensions.width / 2 < left))) {
-                    yError = (position.y - dimensions.height / 2) - bottom;
-                }
-
-                if (xError != 0 || yError != 0) {
-                    events.Publish("collision", {collider: entity, collidable: collidable, xError: xError, yError: yError});
+                let result = getOverlap(entity, collidable);
+                if (result !== null) {
+                    events.Publish("collision", {collider: entity, collidable: collidable, details: result});
                 }
             }
         }

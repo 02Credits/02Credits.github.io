@@ -2,17 +2,14 @@ import events from "./events";
 import ces from "./ces";
 
 import * as pixi from "pixi.js";
-import * as _ from "lodash";
 
-debugger;
-
-interface RenderInfo {
+export interface RenderInfo {
     texture: string;
     alpha?: number;
     scale?: number;
 }
 
-interface Position {
+export interface Position {
     x: number;
     y: number;
     cx?: number;
@@ -21,28 +18,29 @@ interface Position {
     z?: number;
 }
 
-interface Dimensions {
+export interface Dimensions {
     width: number;
     height: number;
 }
 
-interface RenderedEntity {
+export interface RenderedEntity {
     rendered: RenderInfo;
     position: Position;
     dimensions?: Dimensions;
     id: number;
 }
 
-var sprites: { [id: number]: pixi.Sprite }  = { };
-var renderer = new pixi.CanvasRenderer(800, 600);
+let sprites: { [id: number]: pixi.Sprite }  = { };
+let size = Math.min(window.innerWidth, window.innerHeight);
+export let renderer = new pixi.CanvasRenderer(size, size);
 
-var stages: { [id: number]: pixi.Container } =  { };
-var uiStages: { [id: number]: pixi.Container } = { };
+let stages: { [id: string]: pixi.Container } =  { };
+let uiStages: { [id: string]: pixi.Container } = { };
 
-var textures: { [id: string]: pixi.loaders.Resource } = {};
+let textures: { [id: string]: pixi.loaders.Resource } = {};
 
-var root = new pixi.Container();
-var overlay = new pixi.Container();
+export let root = new pixi.Container();
+let overlay = new pixi.Container();
 
 function afterLoad() {
     events.Subscribe("ces.removeEntity.rendered", (entity: RenderedEntity) => {
@@ -58,18 +56,18 @@ function afterLoad() {
     });
 
     events.Subscribe("ces.checkEntity.rendered", (entity: RenderedEntity) => {
-        return _(entity).has("position");
+        return "position" in entity;
     });
 
     events.Subscribe("ces.addEntity.rendered", (entity: RenderedEntity) => {
-        var rendered = entity.rendered;
+        let rendered = entity.rendered;
         sprites[entity.id] = new pixi.Sprite(textures[rendered.texture].texture);
         updateSprite(entity);
-        var stage;
-        if (!_.has(entity.position, "z")) {
+        let stage;
+        if (!("z" in entity.position)) {
             entity.position.z = 5;
         }
-        if (!_(stages).has(entity.position.z.toString())) {
+        if (!(entity.position.z.toString() in stages)) {
             stages[entity.position.z] = new pixi.Container();
             root.addChild(stages[entity.position.z]);
         }
@@ -86,24 +84,24 @@ function afterLoad() {
 
 function updateSprite(entity: RenderedEntity) {
     if (sprites[entity.id]) {
-        var rendered = entity.rendered;
-        var position = entity.position;
-        var sprite = sprites[entity.id];
+        let rendered = entity.rendered;
+        let position = entity.position;
+        let sprite = sprites[entity.id];
 
         sprite.x = position.x;
         sprite.y = position.y;
 
 
-        if (_.has(rendered, "alpha")) {
+        if ("alpha" in rendered) {
             sprite.alpha = rendered.alpha;
         }
 
-        var scale = 1;
-        if (_.has(rendered, "scale")) {
+        let scale = 1;
+        if ("scale" in rendered) {
             scale = rendered.scale;
         }
 
-        if (_.has(entity, "dimensions")) {
+        if ("dimensions" in entity) {
             sprite.width = entity.dimensions.width * scale;
             sprite.height = entity.dimensions.height * scale;
         } else {
@@ -113,15 +111,15 @@ function updateSprite(entity: RenderedEntity) {
             }
         }
 
-        if (_.has(position, "rotation")) {
+        if ("rotation" in position) {
             sprite.rotation = position.rotation;
         }
 
-        if (_.has(position, "cx")) {
+        if ("cx" in position) {
             sprite.anchor.x = position.cx;
         }
 
-        if (_.has(position, "cy")) {
+        if ("cy" in position) {
             sprite.anchor.y = position.cy;
         }
     }
@@ -132,18 +130,42 @@ function animate() {
 
     ces.PublishEvent("update");
 
-    var cameras = ces.GetEntities("camera");
+    let cameras = ces.GetEntities("camera");
     if (cameras.length > 0) {
-        var camera = cameras[0];
-        root.x = camera.position.x;
-        root.y = camera.position.y;
+        let cameraEntity = cameras[0];
+        let scale = 1;
+        if ("scale" in cameraEntity.camera) {
+            scale = cameraEntity.camera.scale;
+        }
+        root.x = -cameraEntity.position.x + (renderer.width / 2);
+        root.y = -cameraEntity.position.y + (renderer.height / 2);
+        root.scale.x = scale * renderer.width / 100;
+        root.scale.y = scale * renderer.height / 100;
     }
 
-    root.children = _(root.children).sortBy((stage) => {
-        return _(stages).pairs().filter((p) => p[1] === stage).map(p => p[0])[0];
+    root.children = root.children.sort((stage1, stage2) => {
+        let zIndex1, zIndex2;
+        for (let index of Object.keys(stages)) {
+            if (stages[index] === stage1) {
+                zIndex1 = index;
+            }
+            if (stages[index] === stage2) {
+                zIndex2 = index;
+            }
+        }
+        return zIndex1.localeCompare(zIndex2);
     });
 
     renderer.render(root);
+}
+
+function positionRenderer() {
+    let size = Math.min(window.innerWidth, window.innerHeight);
+    renderer.view.style.width = size + "px";
+    renderer.view.style.height = size + "px";
+    renderer.view.style.marginLeft = -size / 2 + "px";
+    renderer.view.style.marginTop = -size / 2 + "px";
+    renderer.resize(size, size);
 }
 
 
@@ -151,15 +173,18 @@ export default async (texturePaths: string[]) => {
     document.getElementById("game").appendChild(renderer.view);
     renderer.view.focus();
 
+    window.onresize = positionRenderer;
+    positionRenderer();
+
     return new Promise((resolve) => {
-        _(texturePaths).each((path) => {
+        for (let path of texturePaths) {
             pixi.loader.add(path, window.location + "assets/" + path).load((loader: pixi.loaders.Loader, resources: { [id: string]: pixi.loaders.Resource }) => {
                 textures[path] = resources[path];
-                if (_(textures).keys().size() == texturePaths.length) {
+                if (Object.keys(textures).length == texturePaths.length) {
                     afterLoad();
                     resolve();
                 }
             });
-        });
+        }
     });
 }

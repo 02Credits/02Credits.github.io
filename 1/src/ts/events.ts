@@ -48,7 +48,7 @@ class EventManager {
         this.currentId++;
 
         for (let name of names) {
-            if (name in this.namespaces) {
+            if (!(name in this.namespaces)) {
                 this.namespaces[name] = [];
             }
             this.namespaces[name].push(sub);
@@ -80,7 +80,7 @@ class EventManager {
             this.iterateOverEventName(name, (partialName) => {
                 if (Array.isArray(this.namespaces[partialName])) {
                     for (let sub of this.namespaces[partialName]) {
-                        if (calledEvents.includes(sub)) {
+                        if (!(calledEvents.some(s => s === sub))) {
                             let result = sub.callback(data, name);
                             if (result != undefined) {
                                 results.push(Promise.resolve(result));
@@ -91,7 +91,7 @@ class EventManager {
                 }
             });
         }
-        if (_.any(results)) {
+        if (results.length != 0) {
             return Promise.all(results);
         } else {
             return Promise.resolve([]);
