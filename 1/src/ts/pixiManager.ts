@@ -79,7 +79,35 @@ function afterLoad() {
         updateSprite(entity);
     });
 
-    animate();
+    events.Subscribe("update", () => {
+        let cameras = ces.GetEntities("camera");
+        if (cameras.length > 0) {
+            let cameraEntity = cameras[0];
+            let scale = 1;
+            if ("scale" in cameraEntity.camera) {
+                scale = cameraEntity.camera.scale;
+            }
+            root.x = -cameraEntity.position.x + (renderer.width / 2);
+            root.y = -cameraEntity.position.y + (renderer.height / 2);
+            root.scale.x = scale * renderer.width / 100;
+            root.scale.y = scale * renderer.height / 100;
+        }
+
+        root.children = root.children.sort((stage1, stage2) => {
+            let zIndex1, zIndex2;
+            for (let index of Object.keys(stages)) {
+                if (stages[index] === stage1) {
+                    zIndex1 = index;
+                }
+                if (stages[index] === stage2) {
+                    zIndex2 = index;
+                }
+            }
+            return zIndex1.localeCompare(zIndex2);
+        });
+
+        renderer.render(root);
+    });
 }
 
 function updateSprite(entity: RenderedEntity) {
@@ -91,6 +119,9 @@ function updateSprite(entity: RenderedEntity) {
         sprite.x = position.x;
         sprite.y = position.y;
 
+        if (sprite.texture !== textures[rendered.texture].texture) {
+            sprite.texture = textures[rendered.texture].texture;
+        }
 
         if ("alpha" in rendered) {
             sprite.alpha = rendered.alpha;
@@ -125,49 +156,14 @@ function updateSprite(entity: RenderedEntity) {
     }
 }
 
-function animate() {
-    requestAnimationFrame(animate);
-
-    ces.PublishEvent("update");
-
-    let cameras = ces.GetEntities("camera");
-    if (cameras.length > 0) {
-        let cameraEntity = cameras[0];
-        let scale = 1;
-        if ("scale" in cameraEntity.camera) {
-            scale = cameraEntity.camera.scale;
-        }
-        root.x = -cameraEntity.position.x + (renderer.width / 2);
-        root.y = -cameraEntity.position.y + (renderer.height / 2);
-        root.scale.x = scale * renderer.width / 100;
-        root.scale.y = scale * renderer.height / 100;
-    }
-
-    root.children = root.children.sort((stage1, stage2) => {
-        let zIndex1, zIndex2;
-        for (let index of Object.keys(stages)) {
-            if (stages[index] === stage1) {
-                zIndex1 = index;
-            }
-            if (stages[index] === stage2) {
-                zIndex2 = index;
-            }
-        }
-        return zIndex1.localeCompare(zIndex2);
-    });
-
-    renderer.render(root);
-}
-
 function positionRenderer() {
-    let size = Math.min(window.innerWidth, window.innerHeight);
+    let size = Math.min(window.innerWidth, window.innerHeight) - 100;
     renderer.view.style.width = size + "px";
     renderer.view.style.height = size + "px";
     renderer.view.style.marginLeft = -size / 2 + "px";
     renderer.view.style.marginTop = -size / 2 + "px";
     renderer.resize(size, size);
 }
-
 
 export default async (texturePaths: string[]) => {
     document.getElementById("game").appendChild(renderer.view);

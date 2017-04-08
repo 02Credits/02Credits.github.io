@@ -7,6 +7,9 @@ import cameraManager from "./cameraManager";
 import triggerManager from "./triggerManager";
 import wallManager from "./wallManager";
 import holeManager from "./holeManager";
+import statueManager from "./statueManager";
+import animationManager from "./animationManager";
+import timeManager from "./timeManager";
 import events from "./events";
 
 pixiManager(["Wall.png", "Player.png"]).then(() => {
@@ -17,6 +20,8 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
     triggerManager();
     wallManager();
     holeManager();
+    statueManager();
+    animationManager();
 
     ces.AddEntity({
         "position": {
@@ -26,6 +31,35 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
         "camera": {
             "targetX": 0,
             "targetY": 0
+        }
+    });
+
+    ces.AddEntity({
+        "rendered": {
+            "texture": "Player.png",
+        },
+        "position": {
+            "x": 40,
+            "y": 0,
+            "z": 5,
+            "cx": 0.5,
+            "cy": 0.5
+        },
+        "dimensions": {
+            "width": 5,
+            "height": 5
+        },
+        "fallable": true,
+        "collider": true,
+        "statue": {
+            "activationRadius": 30,
+            "timeBetweenJumps": 5,
+            "maxJumpDistance": 5,
+            "jumpTimeLength": 1,
+            "jumpScaling": 1.25,
+            "knockBack": 5,
+            "rotationSpeed": Math.PI / 100,
+            "rotationSlowdown": 0.9
         }
     });
 
@@ -56,6 +90,7 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
         "position": {
             "x": 40,
             "y": 20,
+            "z": 0,
             "cx": 0.5,
             "cy": 0.5
         },
@@ -88,6 +123,7 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
         "collisionShape": {
             "kind": "circle",
         },
+        "fallable": true,
         "player": {
             "stepSpeed": 0.3,
             "stepSize": 5

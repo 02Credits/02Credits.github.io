@@ -1,6 +1,6 @@
 import events from "./events";
 import ces from "./ces";
-import {defaultValue} from "./utils";
+import utils from "./utils";
 
 import {Dimensions, Position} from "./pixiManager"
 
@@ -62,7 +62,7 @@ function unitVec(vec: number[]) {
 function rotateAndTranslate(entity: CollidableEntity, relativePoint: number[]) {
     let center = [entity.position.x, entity.position.y];
     let rotation = 0;
-    let scale = defaultValue(() => entity.renderer.scale, 1);
+    let scale = utils.defaultValue(() => entity.renderer.scale, 1);
     if ("rotation" in entity.position) {
         rotation = entity.position.rotation;
     }
@@ -75,7 +75,7 @@ function rotateAndTranslate(entity: CollidableEntity, relativePoint: number[]) {
 
 function getCorners(entity: CollidableEntity) {
     if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-        let scale = defaultValue(() => entity.renderer.scale, 1);
+        let scale = utils.defaultValue(() => entity.renderer.scale, 1);
         let left = entity.position.x + entity.dimensions.width * entity.position.cx * scale;
         let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx) * scale;
         let bottom = entity.position.y + entity.dimensions.height * entity.position.cy * scale;
@@ -116,7 +116,7 @@ function getAxis(entity: CollidableEntity) {
 
 function projectedBounds(entity: CollidableEntity, axis: number[]) {
     if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
-        let scale = defaultValue(() => entity.renderer.scale, 1);
+        let scale = utils.defaultValue(() => entity.renderer.scale, 1);
         let center = dotVec([entity.position.x, entity.position.y], axis);
         let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
         return {max: center + radius, min: center - radius};
