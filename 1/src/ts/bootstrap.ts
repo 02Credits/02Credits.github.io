@@ -21,7 +21,6 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
     wallManager();
     holeManager();
     statueManager();
-    animationManager();
 
     ces.AddEntity({
         "position": {
