@@ -263,6 +263,7 @@ define ["markov"], (markov) ->
     "HappyLark": "http://imgur.com/Rc0ooTm.png"
     "WellMemed": "http://imgur.com/wZQoCDq.png"
     "Interdasting": "http://i.imgur.com/vg3TLNk.png"
+    "Bretonnia": "http://i.imgur.com/hfwJRFW.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
