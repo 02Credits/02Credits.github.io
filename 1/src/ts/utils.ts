@@ -1,7 +1,12 @@
 export module Utils {
-    export function defaultValue<T>(getX: () => T, defaultValue: T) {
+    export function defaultValue<T>(getX: T|(() => T), defaultValue: T) {
         try {
-            let x = getX();
+            let x: T;
+            if (typeof getX == "function") {
+                x = getX();
+            } else {
+                x = getX;
+            }
             if (x != null) {
                 return x;
             } else {

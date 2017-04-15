@@ -1,26 +1,24 @@
-import ces from "./ces";
-import pixiManager from "./pixiManager";
-import playerManager from "./playerManager";
-import collisionManager from "./collisionManager";
-import parentManager from "./parentManager";
-import cameraManager from "./cameraManager";
-import triggerManager from "./triggerManager";
-import wallManager from "./wallManager";
-import holeManager from "./holeManager";
-import statueManager from "./statueManager";
-import animationManager from "./animationManager";
-import timeManager from "./timeManager";
-import events from "./events";
+import * as ces from "./ces";
+import * as pixiManager from "./pixiManager";
+import * as playerManager from "./playerManager";
+import * as collisionManager from "./collisionManager";
+import * as parentManager from "./parentManager";
+import * as cameraManager from "./cameraManager";
+import * as triggerManager from "./triggerManager";
+import * as wallManager from "./wallManager";
+import * as holeManager from "./holeManager";
+import * as statueManager from "./statueManager";
+import * as animationManager from "./animationManager";
 
-pixiManager(["Wall.png", "Player.png"]).then(() => {
-    collisionManager();
-    playerManager();
-    parentManager();
-    cameraManager();
-    triggerManager();
-    wallManager();
-    holeManager();
-    statueManager();
+pixiManager.Setup(["Wall.png", "Player.png"]).then(() => {
+    collisionManager.Setup();
+    playerManager.Setup();
+    parentManager.Setup();
+    cameraManager.Setup();
+    triggerManager.Setup();
+    wallManager.Setup();
+    holeManager.Setup();
+    statueManager.Setup();
 
     ces.AddEntity({
         "position": {
@@ -49,7 +47,7 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
             "height": 5
         },
         "fallable": true,
-        "collider": true,
+        "collidable": true,
         "statue": {
             "activationRadius": 30,
             "timeBetweenJumps": 5,
@@ -78,7 +76,7 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
         },
         "collidable": true,
         "trigger": {
-            "action":`events.Publish("camera.shake", 10);`
+            "action": () => cameraManager.Shake(10)
         }
     });
 
@@ -118,7 +116,7 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
             "width": 5,
             "height": 5
         },
-        "collider": true,
+        "collidable": true,
         "collisionShape": {
             "kind": "circle",
         },
@@ -177,10 +175,16 @@ pixiManager(["Wall.png", "Player.png"]).then(() => {
         "foot": true
     });
 
-    events.Subscribe("ces.update.collidable", (collidable: any) => {
-        if (!("rotation" in collidable.position)) {
-            collidable.position.rotation = 0;
-        }
-        collidable.position.rotation += 0.01
+    animationManager.Update.Subscribe(() => {
+        ces.GetEntities("collidable").forEach((collidable) => {
+            if (collisionManager.isCollidable(collidable)) {
+                if (!("rotation" in collidable.position)) {
+                    collidable.position.rotation = 0;
+                }
+                collidable.position.rotation += 0.01
+            }
+        });
     });
+
+    animationManager.Setup();
 });

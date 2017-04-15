@@ -1,6 +1,28 @@
-import events from "./events.js";
 import input from "./inputManager.js";
-import ces from "./ces.js";
+import * as ces from "./ces.js";
+import {Update} from "./animationManager";
+import {Entity as RenderedEntity} from "./pixiManager";
+import {Entity as ChildEntity} from "./parentManager";
+
+import {CombinedEntity} from "./entity";
+
+export interface PlayerEntity extends RenderedEntity {
+    player: {
+        stepSpeed: number,
+        stepSize: number,
+        vx?: number,
+        vy?: number,
+        walkAnimation?: number
+    }
+}
+export function isPlayer(entity: CombinedEntity): entity is PlayerEntity { return "player" in entity; };
+
+export interface FootEntity extends RenderedEntity, ChildEntity {
+    foot: boolean
+}
+export function isFoot(entity: CombinedEntity): entity is FootEntity { return "foot" in entity; }
+
+export type Entity = PlayerEntity | FootEntity;
 
 function updateFeet(playerEntity: any) {
     var feet = ces.GetEntities("foot");
@@ -10,12 +32,14 @@ function updateFeet(playerEntity: any) {
     }
 
     for (let entity of feet) {
-        entity.child.relativePosition.y =
-            Math.sin(playerEntity.player.walkAnimation) * // Move steps by sin wave
-            playerEntity.player.stepSize *                // Account for settings
-            playerEntity.player.speed *                   // Step faster as you walk faster
-            entity.child.relativePosition.x *             // Account for which foot and scale a bit
-            scale;
+        if (isFoot(entity)) {
+            entity.child.relativePosition.y =
+                Math.sin(playerEntity.player.walkAnimation) * // Move steps by sin wave
+                playerEntity.player.stepSize *                // Account for settings
+                playerEntity.player.speed *                   // Step faster as you walk faster
+                entity.child.relativePosition.x *             // Account for which foot and scale a bit
+                scale;
+        }
     }
 }
 
@@ -46,24 +70,19 @@ function updatePlayer(entity: any) {
     entity.position.y += entity.player.vy;
 }
 
-export default () => {
-    events.Subscribe("ces.checkEntity.player", (entity) => {
-        return "rendered" in entity;
+export function Setup() {
+    ces.EntityAdded.Subscribe((entity) => {
+        if (isPlayer(entity)) {
+            entity.player.vx = 0;
+            entity.player.vy = 0;
+            entity.player.walkAnimation = 0;
+        }
     });
 
-    events.Subscribe("ces.addEntity.player", (entity: any) => {
-        entity.player.vx = 0;
-        entity.player.vy = 0;
-        entity.player.walkAnimation = 0;
-    });
-
-    events.Subscribe("ces.checkEntity.foot", (entity) => {
-        return "rendered" in entity &&
-               "child" in entity;
-    });
-
-    events.Subscribe("ces.update.player", (entity: any) => {
-        updatePlayer(entity);
-        updateFeet(entity);
+    Update.Subscribe(() => {
+        for (let entity of ces.GetEntities("player")) {
+            updatePlayer(entity);
+            updateFeet(entity);
+        }
     });
 }

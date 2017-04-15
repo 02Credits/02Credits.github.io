@@ -1,8 +1,11 @@
-import events from "./events";
-import ces from "./ces";
+import * as ces from "./ces";
+import {Update} from "./animationManager";
 import utils from "./utils";
 
 import {Dimensions, Position} from "./pixiManager"
+import {EventManager3} from "./eventManager";
+
+import {CombinedEntity} from "./entity";
 
 interface Circle {
     kind: "circle"
@@ -17,7 +20,8 @@ interface Polygon {
     points: number[][]
 }
 
-interface CollidableEntity {
+export interface Entity {
+    collidable?: boolean;
     position: Position;
     dimensions: Dimensions;
     renderer?: {
@@ -25,6 +29,7 @@ interface CollidableEntity {
     };
     collisionShape?: Circle | Rectangle | Polygon;
 }
+export function isCollidable(entity: CombinedEntity): entity is Entity { return "collidable" in entity; }
 
 // Algorithm modified from http://wiki.roblox.com/index.php?title=2D_Collision_Detection
 function getNormal(vec: number[]) {
@@ -59,7 +64,7 @@ function unitVec(vec: number[]) {
     ];
 }
 
-function rotateAndTranslate(entity: CollidableEntity, relativePoint: number[]) {
+function rotateAndTranslate(entity: Entity, relativePoint: number[]) {
     let center = [entity.position.x, entity.position.y];
     let rotation = 0;
     let scale = utils.defaultValue(() => entity.renderer.scale, 1);
@@ -73,7 +78,7 @@ function rotateAndTranslate(entity: CollidableEntity, relativePoint: number[]) {
     relativePoint[1] = newY;
 }
 
-function getCorners(entity: CollidableEntity) {
+function getCorners(entity: Entity) {
     if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
         let scale = utils.defaultValue(() => entity.renderer.scale, 1);
         let left = entity.position.x + entity.dimensions.width * entity.position.cx * scale;
@@ -102,7 +107,7 @@ function getCorners(entity: CollidableEntity) {
     }
 }
 
-function getAxis(entity: CollidableEntity) {
+function getAxis(entity: Entity) {
     if (entity.collisionShape == null || entity.collisionShape.kind != "circle") {
         let corners = getCorners(entity);
         return [
@@ -114,7 +119,7 @@ function getAxis(entity: CollidableEntity) {
     }
 }
 
-function projectedBounds(entity: CollidableEntity, axis: number[]) {
+function projectedBounds(entity: Entity, axis: number[]) {
     if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
         let scale = utils.defaultValue(() => entity.renderer.scale, 1);
         let center = dotVec([entity.position.x, entity.position.y], axis);
@@ -134,7 +139,7 @@ function projectedBounds(entity: CollidableEntity, axis: number[]) {
     }
 }
 
-function calculateOverlap(e1: CollidableEntity, e2: CollidableEntity, axis: number[]) {
+function calculateOverlap(e1: Entity, e2: Entity, axis: number[]) {
     let b1 = projectedBounds(e1, axis);
     let b2 = projectedBounds(e2, axis);
     if (b2.min > b1.max || b2.max < b1.min) {
@@ -143,7 +148,7 @@ function calculateOverlap(e1: CollidableEntity, e2: CollidableEntity, axis: numb
     return b1.max > b2.max ? -(b2.max - b1.min) : (b1.max - b2.min);
 }
 
-function getOverlap(e1: CollidableEntity, e2: CollidableEntity) {
+function getOverlap(e1: Entity, e2: Entity) {
     let c1 = getCorners(e1);
     let c2 = getCorners(e2);
     let result: {depth: number, normal: number[]} = null;
@@ -172,16 +177,22 @@ function getOverlap(e1: CollidableEntity, e2: CollidableEntity) {
     return result;
 }
 
-export default () => {
-    events.Subscribe("ces.update.collider", (entity: any) => {
+export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: number[]}>();
+
+export function Setup() {
+    Update.Subscribe(() => {
         let collidables = ces.GetEntities("collidable");
-        for (let collidable of collidables) {
-            if (collidable !== entity) {
-                let result = getOverlap(entity, collidable);
-                if (result !== null) {
-                    events.Publish("collision", {collider: entity, collidable: collidable, details: result});
+        for (let collider of collidables) {
+            for (let collidable of collidables) {
+                if (isCollidable(collider) && isCollidable(collidable)) {
+                    if (collidable !== collider) {
+                        let result = getOverlap(collider, collidable);
+                        if (result !== null) {
+                            Collision.Publish(collider, collidable, result);
+                        }
+                    }
                 }
             }
         }
     });
-};
+}

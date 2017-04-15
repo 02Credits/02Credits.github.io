@@ -1,5 +1,8 @@
-import events from "./events";
-import ces from "./ces";
+import * as ces from "./ces";
+import {Update} from "./animationManager";
+import {isCamera} from "./cameraManager";
+
+import {CombinedEntity} from "./entity";
 
 import * as pixi from "pixi.js";
 
@@ -23,14 +26,14 @@ export interface Dimensions {
     height: number;
 }
 
-export interface RenderedEntity {
+export interface Entity {
     rendered: RenderInfo;
     position: Position;
     dimensions?: Dimensions;
-    id: number;
 }
+export function isRenderable(entity: CombinedEntity): entity is Entity { return "rendered" in entity; }
 
-let sprites: { [id: number]: pixi.Sprite }  = { };
+let sprites: { [id: string]: pixi.Sprite }  = { };
 let size = Math.min(window.innerWidth, window.innerHeight);
 export let renderer = new pixi.CanvasRenderer(size, size);
 
@@ -43,54 +46,58 @@ export let root = new pixi.Container();
 let overlay = new pixi.Container();
 
 function afterLoad() {
-    events.Subscribe("ces.removeEntity.rendered", (entity: RenderedEntity) => {
-        if (sprites[entity.id]) {
+    ces.EntityRemoved.Subscribe((entity) => {
+        if (isRenderable(entity) && sprites[entity.id]) {
             stages[entity.position.z].removeChild(sprites[entity.id]);
         }
     });
 
-    events.Subscribe("ces.removeEntity.renderedUI", (entity: RenderedEntity) => {
-        if (sprites[entity.id]) {
+    ces.EntityRemoved.Subscribe((entity) => {
+        if (isRenderable(entity) && sprites[entity.id]) {
             uiStages[entity.position.z].removeChild(sprites[entity.id]);
         }
     });
 
-    events.Subscribe("ces.checkEntity.rendered", (entity: RenderedEntity) => {
-        return "position" in entity;
-    });
-
-    events.Subscribe("ces.addEntity.rendered", (entity: RenderedEntity) => {
-        let rendered = entity.rendered;
-        sprites[entity.id] = new pixi.Sprite(textures[rendered.texture].texture);
-        updateSprite(entity);
-        let stage;
-        if (!("z" in entity.position)) {
-            entity.position.z = 5;
+    ces.EntityAdded.Subscribe((entity) => {
+        if (isRenderable(entity)) {
+            let rendered = entity.rendered;
+            sprites[entity.id] = new pixi.Sprite(textures[rendered.texture].texture);
+            updateSprite(entity);
+            let stage;
+            if (!("z" in entity.position)) {
+                entity.position.z = 5;
+            }
+            if (!(entity.position.z.toString() in stages)) {
+                stages[entity.position.z] = new pixi.Container();
+                root.addChild(stages[entity.position.z]);
+            }
+            stage = stages[entity.position.z];
+            stage.addChild(sprites[entity.id]);
         }
-        if (!(entity.position.z.toString() in stages)) {
-            stages[entity.position.z] = new pixi.Container();
-            root.addChild(stages[entity.position.z]);
+    });
+
+    Update.Subscribe(() => {
+        for (let entity of ces.GetEntities("rendered")) {
+            if (isRenderable(entity)) {
+                updateSprite(entity);
+            }
         }
-        stage = stages[entity.position.z];
-        stage.addChild(sprites[entity.id]);
     });
 
-    events.Subscribe("ces.update.rendered", (entity: RenderedEntity) => {
-        updateSprite(entity);
-    });
-
-    events.Subscribe("update", () => {
+    Update.Subscribe(() => {
         let cameras = ces.GetEntities("camera");
         if (cameras.length > 0) {
             let cameraEntity = cameras[0];
-            let scale = 1;
-            if ("scale" in cameraEntity.camera) {
-                scale = cameraEntity.camera.scale;
+            if (isCamera(cameraEntity)) {
+                let scale = 1;
+                if ("scale" in cameraEntity.camera) {
+                    scale = cameraEntity.camera.scale;
+                }
+                root.x = -cameraEntity.position.x + (renderer.width / 2);
+                root.y = -cameraEntity.position.y + (renderer.height / 2);
+                root.scale.x = scale * renderer.width / 100;
+                root.scale.y = scale * renderer.height / 100;
             }
-            root.x = -cameraEntity.position.x + (renderer.width / 2);
-            root.y = -cameraEntity.position.y + (renderer.height / 2);
-            root.scale.x = scale * renderer.width / 100;
-            root.scale.y = scale * renderer.height / 100;
         }
 
         root.children = root.children.sort((stage1, stage2) => {
@@ -110,7 +117,7 @@ function afterLoad() {
     });
 }
 
-function updateSprite(entity: RenderedEntity) {
+function updateSprite(entity: Entity & {id: string}) {
     if (sprites[entity.id]) {
         let rendered = entity.rendered;
         let position = entity.position;
@@ -165,7 +172,7 @@ function positionRenderer() {
     renderer.resize(size, size);
 }
 
-export default async (texturePaths: string[]) => {
+export async function Setup(texturePaths: string[]) {
     document.getElementById("game").appendChild(renderer.view);
     renderer.view.focus();
 

@@ -1,8 +1,10 @@
-import events from "./events";
-import timeManager from "./timeManager";
-import ces from "./ces";
+import * as ces from "./ces";
 import utils from "./utils";
-import {RenderInfo, Position, Dimensions, RenderedEntity} from "./pixiManager";
+import {Update} from "./animationManager";
+import {RenderInfo, Position, Dimensions, Entity as RenderedEntity} from "./pixiManager";
+import {isPlayer} from "./playerManager";
+
+import {CombinedEntity} from "./entity";
 
 export interface StatueComponent {
     // Current Jump progress
@@ -35,94 +37,99 @@ export interface StatueComponent {
     rotationSlowdown: number; // fraction to slow down by
 }
 
-interface StatueEntity extends RenderedEntity {
+export interface Entity extends RenderedEntity {
     statue: StatueComponent;
 }
+export function isStatue(entity: CombinedEntity): entity is Entity { return "statue" in entity; }
 
-export default () => {
-    events.Subscribe("ces.checkEntity.statue", (entity) => {
-        return "rendered" in entity;
+export function Setup() {
+    ces.EntityAdded.Subscribe((entity) => {
+        if (isStatue(entity)) {
+            let statue = entity.statue;
+            statue.jumpState = {jumpTime: 0, jumping: false, direction: {x:0, y:0}, jumpDistance: 0};
+            statue.active = false;
+            statue.home = utils.defaultValue(() => statue.home, {x: entity.position.x, y: entity.position.y});
+            statue.activeTexture = utils.defaultValue(() => statue.activeTexture, entity.rendered.texture);
+            statue.inactiveTexture = utils.defaultValue(() => statue.inactiveTexture, entity.rendered.texture);
+            statue.originalScale = utils.defaultValue(() => statue.originalScale, 1);
+            statue.lastJumped = 0;
+            entity.position = utils.defaultValue(() => entity.position, {x: 0, y: 0, rotation: 0});
+            entity.position.rotation = utils.defaultValue(() => entity.position.rotation, 0);
+        }
     });
 
-    events.Subscribe("ces.addEntity.statue", (entity: StatueEntity) => {
-        let statue = entity.statue;
-        statue.jumpState = {jumpTime: 0, jumping: false, direction: {x:0, y:0}, jumpDistance: 0};
-        statue.active = false;
-        statue.home = utils.defaultValue(() => statue.home, {x: entity.position.x, y: entity.position.y});
-        statue.activeTexture = utils.defaultValue(() => statue.activeTexture, entity.rendered.texture);
-        statue.inactiveTexture = utils.defaultValue(() => statue.inactiveTexture, entity.rendered.texture);
-        statue.originalScale = utils.defaultValue(() => statue.originalScale, 1);
-        statue.lastJumped = 0;
-        entity.position = utils.defaultValue(() => entity.position, {x: 0, y: 0, rotation: 0});
-        entity.position.rotation = utils.defaultValue(() => entity.position.rotation, 0);
-    });
-
-    events.Subscribe("ces.update.statue", (entity: StatueEntity) => {
-        let statue = entity.statue;
-        if (statue.jumpState.jumping) {
-            let state = statue.jumpState;
-            if (state.jumpTime > statue.jumpTimeLength) {     // Jump Finished
-                state.jumping = false;
-                statue.lastJumped = timeManager.time;
-                entity.rendered.scale = statue.originalScale;
-            } else {    // Jump in progress
-                state.jumpTime += 0.01667;
-                let jumpPosition = state.jumpTime / statue.jumpTimeLength; // calculate what part of the jump we are in.
-                // Effectively we are integrating the sin function. Since we want each jump to go the distance in the
-                // Statue component settings, and the integral of sin(x)dx from 0 to pi is 2. We need to divide the value
-                // we multiply with the direction by 2 so that we go the proper distance
-                let jumpAmount = Math.sin(jumpPosition * Math.PI) / 2;
-                let distanceScaling = state.jumpDistance / statue.maxJumpDistance;
-                entity.position.x += jumpAmount * state.direction.x * distanceScaling;
-                entity.position.y += jumpAmount * state.direction.y * distanceScaling;
-                entity.rendered.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
-            }
-        } else {
-            let playerEntities = ces.GetEntities("player");
-            let target = statue.home;
-            let homeDelta = utils.sub(target, entity.position);
-            let homeDistance = utils.distance(homeDelta);
-            // Dunno why I did this... There should only ever be one player. Oh well
-            let closestPlayerPosition;
-            let closestDistance = Number.MAX_VALUE;
-            for (let player of playerEntities) {
-                let playerDelta = utils.sub(player.position, entity.position);
-                let playerDistance = utils.distance(playerDelta);
-                if (playerDistance < statue.activationRadius) {
-                    if (closestDistance > playerDistance) {
-                        closestPlayerPosition = player.position;
-                        closestDistance = playerDistance;
+    Update.Subscribe((time) => {
+        for (let entity of ces.GetEntities("statue")) {
+            if (isStatue(entity)) {
+                let statue = entity.statue;
+                if (statue.jumpState.jumping) {
+                    let state = statue.jumpState;
+                    if (state.jumpTime > statue.jumpTimeLength) {     // Jump Finished
+                        state.jumping = false;
+                        statue.lastJumped = time;
+                        entity.rendered.scale = statue.originalScale;
+                    } else {    // Jump in progress
+                        state.jumpTime += 0.01667;
+                        let jumpPosition = state.jumpTime / statue.jumpTimeLength; // calculate what part of the jump we are in.
+                        // Effectively we are integrating the sin function. Since we want each jump to go the distance in the
+                        // Statue component settings, and the integral of sin(x)dx from 0 to pi is 2. We need to divide the value
+                        // we multiply with the direction by 2 so that we go the proper distance
+                        let jumpAmount = Math.sin(jumpPosition * Math.PI) / 2;
+                        let distanceScaling = state.jumpDistance / statue.maxJumpDistance;
+                        entity.position.x += jumpAmount * state.direction.x * distanceScaling;
+                        entity.position.y += jumpAmount * state.direction.y * distanceScaling;
+                        entity.rendered.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
                     }
-                }
-            }
-
-            let distance = homeDistance;
-            if (closestDistance != Number.MAX_VALUE) {
-                target = closestPlayerPosition;
-                distance = closestDistance;
-            }
-            if (distance > 0.01) {
-                let targetDelta = utils.sub(target, entity.position);
-                targetDelta = utils.div(targetDelta, distance);
-                let targetRotation = Math.atan2(targetDelta.y, targetDelta.x);
-                let r = entity.position.rotation;
-                let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
-                if (timeManager.time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
-                    statue.jumpState = {
-                        jumpTime: 0,
-                        jumping: true,
-                        direction: targetDelta,
-                        jumpDistance: Math.min(distance, statue.maxJumpDistance)
-                    };
                 } else {
-                    if (Math.abs(dr) > statue.rotationSpeed) {
-                        entity.position.rotation += dr * statue.rotationSpeed / Math.abs(dr);
+                    let playerEntities = ces.GetEntities("player");
+                    let target = statue.home;
+                    let homeDelta = utils.sub(target, entity.position);
+                    let homeDistance = utils.distance(homeDelta);
+                    // Dunno why I did this... There should only ever be one player. Oh well
+                    let closestPlayerPosition;
+                    let closestDistance = Number.MAX_VALUE;
+                    for (let player of playerEntities) {
+                        if (isPlayer(player)) {
+                            let playerDelta = utils.sub(player.position, entity.position);
+                            let playerDistance = utils.distance(playerDelta);
+                            if (playerDistance < statue.activationRadius) {
+                                if (closestDistance > playerDistance) {
+                                    closestPlayerPosition = player.position;
+                                    closestDistance = playerDistance;
+                                }
+                            }
+                        }
+                    }
+
+                    let distance = homeDistance;
+                    if (closestDistance != Number.MAX_VALUE) {
+                        target = closestPlayerPosition;
+                        distance = closestDistance;
+                    }
+                    if (distance > 0.01) {
+                        let targetDelta = utils.sub(target, entity.position);
+                        targetDelta = utils.div(targetDelta, distance);
+                        let targetRotation = Math.atan2(targetDelta.y, targetDelta.x);
+                        let r = entity.position.rotation;
+                        let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
+                        if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
+                            statue.jumpState = {
+                                jumpTime: 0,
+                                jumping: true,
+                                direction: targetDelta,
+                                jumpDistance: Math.min(distance, statue.maxJumpDistance)
+                            };
+                        } else {
+                            if (Math.abs(dr) > statue.rotationSpeed) {
+                                entity.position.rotation += dr * statue.rotationSpeed / Math.abs(dr);
+                            } else {
+                                entity.position.rotation += dr * statue.rotationSlowdown;
+                            }
+                        }
                     } else {
-                        entity.position.rotation += dr * statue.rotationSlowdown;
+                        statue.lastJumped = time;
                     }
                 }
-            } else {
-                statue.lastJumped = timeManager.time;
             }
         }
     });

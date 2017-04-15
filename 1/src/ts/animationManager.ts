@@ -1,15 +1,18 @@
-import {EventManager0} from "./eventManager";
+import {EventManager1} from "./eventManager";
 import ces from "./ces";
 
-export module AnimationManager {
-    export let UpdateEvent = new EventManager0();
+export let Time = 0;
+export let Running = true;
+export let Update = new EventManager1<number>();
 
-    export function animate() {
-        UpdateEvent.Publish();
-        ces.PublishEvent("update");
-        requestAnimationFrame(animate);
+function animate() {
+    if (Running) {
+        Time += 0.01667;
+        Update.Publish(Time);
     }
+    requestAnimationFrame(animate);
 }
 
-export default AnimationManager;
-
+export function Setup() {
+    requestAnimationFrame(animate);
+}

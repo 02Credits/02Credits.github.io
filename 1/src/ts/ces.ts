@@ -1,62 +1,48 @@
-import events from "./events.js";
+import {PollManager1, EventManager1} from "./eventManager";
+import {CombinedEntity} from "./entity";
 
-export module CES {
-    let currentId = 0;
-    export let paused = false;
-    export let entities: {[id: string]: any} = {};
+let currentId = 0;
+let entities: {[id: string]: TrackedEntity} = {};
 
-    export async function PublishEvent(eventName: string) {
-        if (!paused) {
-            let success = true;
-            let eventResults = await events.Publish("ces." + eventName + ".all");
-            if (eventResults.every(result => result)) {
-                for (let id in CES.entities) {
-                    let entity = CES.entities[id];
-                    let eventNames = Object.keys(entity).map(key => "ces." + eventName + "." + key)
-                    success = success && (await events.PublishMultiple(eventNames, entity)).every(result => result);
-                }
-            }
-            return success;
-        }
-    }
+export type TrackedEntity = { id: string } & CombinedEntity;
+function isTracked(entity: CombinedEntity | TrackedEntity): entity is TrackedEntity { return "id" in entity; }
 
-    export async function AddEntity(entity: any) {
-        let eventNames = Object.keys(entity).map(key => "ces.checkEntity." + key);
-        let eventResults = await events.PublishMultiple(eventNames, entity);
-        if (eventResults.every(result => result)) {
-            if ("id" in entity) {
-                if (entity.id in entities) {
-                    console.log("WARNING: repeat id for " + JSON.stringify(entity));
-                    return null;
-                } else {
-                    entities[entity.id] = entity;
-                }
+export let CheckEntity = new PollManager1<CombinedEntity, boolean>();
+export let EntityAdded = new EventManager1<TrackedEntity>();
+export let EntityRemoved = new EventManager1<TrackedEntity>();
+
+export async function AddEntity(entity: CombinedEntity | TrackedEntity) {
+    let results = await CheckEntity.Poll(entity);
+    if (results.every(result => result || result === undefined)) {
+        let trackedEntity: TrackedEntity;
+        if (isTracked(entity)) {
+            if (entity.id in entities) {
+                console.log("WARNING: repeat id for " + JSON.stringify(entity));
+                return null;
             } else {
-                entity.id = currentId;
-                entities[currentId] = entity;
-                currentId++;
+                entities[entity.id] = entity;
             }
-            eventNames = Object.keys(entity).map(key => "ces.addEntity." + key);
-            await events.PublishMultiple(eventNames, entity);
-            return entity;
+            trackedEntity = entity;
+        } else {
+            trackedEntity = {...entity, id: currentId.toString()};
+            entities[currentId] = trackedEntity;
+            currentId++;
         }
-        console.log("WARNING: " + JSON.stringify(entity) + " not added.");
-        return null;
+        await EntityAdded.Publish(trackedEntity);
+        return entity;
     }
-
-    export async function RemoveEntity(entity: any) {
-        let eventNames = Object.keys(entity).map(key => "ces.removeEntity." + key);
-        await events.PublishMultiple(eventNames, entity);
-        delete CES.entities[entity.id];
-    }
-
-    export function GetEntities(component: string) {
-        return Object.keys(CES.entities).map(key => CES.entities[key]).filter(e => component in e);
-    }
-
-    export function GetEntity(id: string) {
-        return entities[id];
-    }
+    return null;
 }
 
-export default CES;
+export async function RemoveEntity(entity: any) {
+    EntityRemoved.Publish(entity);
+    delete entities[entity.id];
+}
+
+export function GetEntities(component: string) {
+    return Object.keys(entities).map(key => entities[key]).filter(e => component in e);
+}
+
+export function GetEntity(id: string) {
+    return entities[id];
+}

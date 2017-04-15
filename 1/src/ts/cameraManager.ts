@@ -1,27 +1,47 @@
-import events from "./events";
-import ces from "./ces";
+import * as ces from "./ces";
+import {Update} from "./animationManager";
+
+import {Position} from "./pixiManager";
+import {CombinedEntity} from "./entity";
 
 let shake = 0;
 let shakeFade = 0.95;
 
-export default () => {
-    events.Subscribe("camera.shake", (amount: number) => {
-        shake = amount;
-    });
+export interface Entity {
+    camera: {
+        targetX: number,
+        targetY: number,
+        scale?: number
+    },
+    position: Position,
+}
+export function isCamera(entity: CombinedEntity): entity is Entity { return "camera" in entity; }
 
-    events.Subscribe("camera.retarget", (target: {targetX: number, targetY: number}) => {
-        var cameraEntity = ces.GetEntities("camera")[0];
+export function Shake(amount: number) {
+    shake = amount;
+}
+
+export function Retarget(target: {targetX: number, targetY: number}) {
+    var cameraEntity = ces.GetEntities("camera")[0];
+    if (isCamera(cameraEntity)) {
         cameraEntity.camera.targetX = target.targetX;
         cameraEntity.camera.targetY = target.targetY;
-    })
+    }
+}
 
-    events.Subscribe("ces.update.camera", (cameraEntity: any) => {
-        var dx = cameraEntity.camera.targetX - cameraEntity.position.x;
-        var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
+export function Setup() {
+    Update.Subscribe(() => {
+        let cameraEntities = ces.GetEntities("camera");
+        for (let cameraEntity of cameraEntities) {
+            if (isCamera(cameraEntity)) {
+                var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
+                var dx = cameraEntity.camera.targetX - cameraEntity.position.x;
 
-        cameraEntity.position.x += dx * 0.05 + (Math.random() - 0.5) * shake;
-        cameraEntity.position.y += dy * 0.05 + (Math.random() - 0.5) * shake;
+                cameraEntity.position.x += dx * 0.05 + (Math.random() - 0.5) * shake;
+                cameraEntity.position.y += dy * 0.05 + (Math.random() - 0.5) * shake;
 
-        shake = shake * shakeFade;
+                shake = shake * shakeFade;
+            }
+        }
     });
-};
+}

@@ -1,25 +1,31 @@
-import events from "./events";
+import {CheckEntity} from "./ces";
+import {Collision} from "./collisionManager";
+import {isPlayer} from "./playerManager";
 
-export default () => {
-    events.Subscribe("ces.checkEntity.trigger", (entity: any) => {
-        return "action" in entity.trigger;
-    });
+import {CombinedEntity} from "./entity";
 
-    events.Subscribe("collision", (event: any) => {
-        var player = event.collider;
-        var collidable = event.collidable;
-        var details = event.details;
-        if ("player" in player) {
-            if ("trigger" in collidable) {
+export interface Entity {
+    trigger: {
+        action: () => void
+        once?: boolean,
+        complete?: boolean
+    }
+}
+export function isTrigger(entity: CombinedEntity): entity is Entity { return "trigger" in entity; }
+
+export function Setup() {
+    Collision.Subscribe((player, collidable, details) => {
+        if (isPlayer(player)) {
+            if (isTrigger(collidable)) {
                 if (collidable.trigger.once) {
                     if (!collidable.trigger.complete) {
-                        new Function('events', 'player', collidable.trigger.action)(events, player);
+                        collidable.trigger.action();
                     }
                 } else {
-                    new Function('events', 'player', collidable.trigger.action)(events, player);
+                    collidable.trigger.action();
                 }
                 collidable.trigger.complete = true;
             }
         }
     });
-};
+}
