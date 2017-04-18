@@ -4,6 +4,7 @@ var sass = require('gulp-sass');
 var webserver = require('gulp-webserver');
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
+var fs = require('fs');
 
 var tsProject = ts.createProject('tsconfig.json');
 
@@ -38,6 +39,12 @@ gulp.task('watch', function () {
     gulp.watch(['src/sass/**/*.{sass,scss}'], ['build-sass']);
     gulp.watch('src/ts/**/*.ts', ['build-ts']);
     gulp.watch(['src/**/*', '!src/**/*.ts', '!src/**/*.sass', '!src/**/*.scss'], ['copy']);
+});
+
+gulp.task('genEntities', function () {
+    fs.readdir(path, function(err, items) {
+
+    });
 });
 
 gulp.task('webserver', function () {

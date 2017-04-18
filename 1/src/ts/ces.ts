@@ -39,7 +39,18 @@ export async function RemoveEntity(entity: any) {
     delete entities[entity.id];
 }
 
-export function GetEntities(component: string) {
+export function GetEntities<T extends CombinedEntity>(guard: (entity: CombinedEntity) => entity is T): (T & { id: string })[] {
+    let returnArray: (T & { id: string })[] = [];
+    for (let id of Object.keys(entities)) {
+        let entity = entities[id];
+        if (guard(entity)) {
+            returnArray.push(entity);
+        }
+    }
+    return returnArray;
+}
+
+export function GetEntitiesWith(component: string) {
     return Object.keys(entities).map(key => entities[key]).filter(e => component in e);
 }
 

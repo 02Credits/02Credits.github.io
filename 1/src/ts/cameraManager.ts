@@ -22,26 +22,21 @@ export function Shake(amount: number) {
 }
 
 export function Retarget(target: {targetX: number, targetY: number}) {
-    var cameraEntity = ces.GetEntities("camera")[0];
-    if (isCamera(cameraEntity)) {
-        cameraEntity.camera.targetX = target.targetX;
-        cameraEntity.camera.targetY = target.targetY;
-    }
+    var cameraEntity = ces.GetEntities(isCamera)[0];
+    cameraEntity.camera.targetX = target.targetX;
+    cameraEntity.camera.targetY = target.targetY;
 }
 
 export function Setup() {
     Update.Subscribe(() => {
-        let cameraEntities = ces.GetEntities("camera");
-        for (let cameraEntity of cameraEntities) {
-            if (isCamera(cameraEntity)) {
-                var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
-                var dx = cameraEntity.camera.targetX - cameraEntity.position.x;
+        for (let cameraEntity of ces.GetEntities(isCamera)) {
+            var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
+            var dx = cameraEntity.camera.targetX - cameraEntity.position.x;
 
-                cameraEntity.position.x += dx * 0.05 + (Math.random() - 0.5) * shake;
-                cameraEntity.position.y += dy * 0.05 + (Math.random() - 0.5) * shake;
+            cameraEntity.position.x += dx * 0.05 + (Math.random() - 0.5) * shake;
+            cameraEntity.position.y += dy * 0.05 + (Math.random() - 0.5) * shake;
 
-                shake = shake * shakeFade;
-            }
+            shake = shake * shakeFade;
         }
     });
 }

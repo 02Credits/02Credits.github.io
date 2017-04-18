@@ -181,15 +181,13 @@ export let Collision = new EventManager3<Entity, Entity, {depth: number, normal:
 
 export function Setup() {
     Update.Subscribe(() => {
-        let collidables = ces.GetEntities("collidable");
+        let collidables = ces.GetEntities(isCollidable);
         for (let collider of collidables) {
             for (let collidable of collidables) {
-                if (isCollidable(collider) && isCollidable(collidable)) {
-                    if (collidable !== collider) {
-                        let result = getOverlap(collider, collidable);
-                        if (result !== null) {
-                            Collision.Publish(collider, collidable, result);
-                        }
+                if (collidable !== collider) {
+                    let result = getOverlap(collider, collidable);
+                    if (result !== null) {
+                        Collision.Publish(collider, collidable, result);
                     }
                 }
             }

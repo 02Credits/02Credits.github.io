@@ -77,27 +77,23 @@ function afterLoad() {
     });
 
     Update.Subscribe(() => {
-        for (let entity of ces.GetEntities("rendered")) {
-            if (isRenderable(entity)) {
-                updateSprite(entity);
-            }
+        for (let entity of ces.GetEntities(isRenderable)) {
+            updateSprite(entity);
         }
     });
 
     Update.Subscribe(() => {
-        let cameras = ces.GetEntities("camera");
+        let cameras = ces.GetEntities(isCamera);
         if (cameras.length > 0) {
             let cameraEntity = cameras[0];
-            if (isCamera(cameraEntity)) {
-                let scale = 1;
-                if ("scale" in cameraEntity.camera) {
-                    scale = cameraEntity.camera.scale;
-                }
-                root.x = -cameraEntity.position.x + (renderer.width / 2);
-                root.y = -cameraEntity.position.y + (renderer.height / 2);
-                root.scale.x = scale * renderer.width / 100;
-                root.scale.y = scale * renderer.height / 100;
+            let scale = 1;
+            if ("scale" in cameraEntity.camera) {
+                scale = cameraEntity.camera.scale;
             }
+            root.x = -cameraEntity.position.x + (renderer.width / 2);
+            root.y = -cameraEntity.position.y + (renderer.height / 2);
+            root.scale.x = scale * renderer.width / 100;
+            root.scale.y = scale * renderer.height / 100;
         }
 
         root.children = root.children.sort((stage1, stage2) => {

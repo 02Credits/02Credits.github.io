@@ -10,6 +10,7 @@ export interface PlayerEntity extends RenderedEntity {
     player: {
         stepSpeed: number,
         stepSize: number,
+        speed: number,
         vx?: number,
         vy?: number,
         walkAnimation?: number
@@ -24,26 +25,24 @@ export function isFoot(entity: CombinedEntity): entity is FootEntity { return "f
 
 export type Entity = PlayerEntity | FootEntity;
 
-function updateFeet(playerEntity: any) {
-    var feet = ces.GetEntities("foot");
+function updateFeet(playerEntity: PlayerEntity) {
     var scale = 1;
     if ("scale" in playerEntity.rendered) {
         scale = playerEntity.rendered.scale;
     }
 
+    var feet = ces.GetEntities(isFoot);
     for (let entity of feet) {
-        if (isFoot(entity)) {
-            entity.child.relativePosition.y =
-                Math.sin(playerEntity.player.walkAnimation) * // Move steps by sin wave
-                playerEntity.player.stepSize *                // Account for settings
-                playerEntity.player.speed *                   // Step faster as you walk faster
-                entity.child.relativePosition.x *             // Account for which foot and scale a bit
-                scale;
-        }
+        entity.child.relativePosition.y =
+            Math.sin(playerEntity.player.walkAnimation) * // Move steps by sin wave
+            playerEntity.player.stepSize *                // Account for settings
+            playerEntity.player.speed *                   // Step faster as you walk faster
+            entity.child.relativePosition.x *             // Account for which foot and scale a bit
+            scale;
     }
 }
 
-function updatePlayer(entity: any) {
+function updatePlayer(entity: PlayerEntity) {
     var mouseState = input.MouseState();
     var dx = mouseState.x - entity.position.x;
     var dy = mouseState.y - entity.position.y;
@@ -80,7 +79,7 @@ export function Setup() {
     });
 
     Update.Subscribe(() => {
-        for (let entity of ces.GetEntities("player")) {
+        for (let entity of ces.GetEntities(isPlayer)) {
             updatePlayer(entity);
             updateFeet(entity);
         }
