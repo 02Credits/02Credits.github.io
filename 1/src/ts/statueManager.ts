@@ -3,6 +3,7 @@ import utils from "./utils";
 import {Update} from "./animationManager";
 import {RenderInfo, Position, Dimensions, Entity as RenderedEntity} from "./pixiManager";
 import {isPlayer} from "./playerManager";
+import {Collision} from "./collisionManager";
 
 import {CombinedEntity} from "./entity";
 
@@ -55,6 +56,13 @@ export function Setup() {
             statue.lastJumped = 0;
             entity.position = utils.defaultValue(() => entity.position, {x: 0, y: 0, rotation: 0});
             entity.position.rotation = utils.defaultValue(() => entity.position.rotation, 0);
+        }
+    });
+
+    Collision.Subscribe((collider, collidee, details) => {
+        if (isPlayer(collider) && isStatue(collidee)) {
+            collider.player.vx -= details.normal[0] * 2;
+            collider.player.vy -= details.normal[1] * 2;
         }
     });
 

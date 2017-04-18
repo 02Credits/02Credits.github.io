@@ -175,16 +175,5 @@ pixiManager.Setup(["Wall.png", "Player.png"]).then(() => {
         "foot": true
     });
 
-    animationManager.Update.Subscribe(() => {
-        ces.GetEntities("collidable").forEach((collidable) => {
-            if (collisionManager.isCollidable(collidable)) {
-                if (!("rotation" in collidable.position)) {
-                    collidable.position.rotation = 0;
-                }
-                collidable.position.rotation += 0.01
-            }
-        });
-    });
-
     animationManager.Setup();
 });
