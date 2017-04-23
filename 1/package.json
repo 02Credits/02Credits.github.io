@@ -4,7 +4,6 @@
   "description": "the first in the serial game series",
   "author": "02Credits LLC",
   "devDependencies": {
-    "@types/es6-promise": "0.0.32",
     "@types/jquery": "^2.0.40",
     "@types/pixi.js": "^4.4.0",
     "del": "^2.2.2",
