@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <title>02Credits</title>
+  <script src="deps/systemjs/system.js"></script>
+  <style>
+   body {
+       margin: 0;
+   }
+
+   #gameContainer {
+       position: absolute;
+       left: 50%;
+       top: 50%;
+       margin-left: 0px;
+       margin-top: 0px;
+   }
+  </style>
+  <script>
+   SystemJS.config({
+       packages: {
+           '.': {
+               defaultExtension: 'js',
+               baseURL: "/js"
+           }
+       },
+       map: {
+           'pixi.js': '../deps/pixi/pixi.min.js',
+           'underscore': '../deps/underscore-min.js'
+       }
+   });
+  </script>
+  <script>
+  System.import('/js/bootstrap.js').then(null, console.error.bind(console));
+  </script>
+</head>
+<body>
+  <div id="gameContainer">
+      <div id="game">
+      </div>
+  </div>
+</body>
+</html>
