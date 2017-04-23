@@ -177,7 +177,8 @@ export async function Setup(texturePaths: string[]) {
 
     return new Promise((resolve) => {
         for (let path of texturePaths) {
-            pixi.loader.add(path, window.location + "assets/" + path).load((loader: pixi.loaders.Loader, resources: { [id: string]: pixi.loaders.Resource }) => {
+            let location = window.location.href.replace(/[^/]*$/, '');
+            pixi.loader.add(path, location + "assets/" + path).load((loader: pixi.loaders.Loader, resources: { [id: string]: pixi.loaders.Resource }) => {
                 textures[path] = resources[path];
                 if (Object.keys(textures).length == texturePaths.length) {
                     afterLoad();

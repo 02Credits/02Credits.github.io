@@ -21,17 +21,17 @@
        packages: {
            '.': {
                defaultExtension: 'js',
-               baseURL: "/1/pub/js"
+               baseURL: "/js"
            }
        },
        map: {
-           'pixi.js': '../deps/pixi/pixi.min.js',
-           'underscore': '../deps/underscore-min.js'
+           'pixi.js': './deps/pixi/pixi.min.js',
+           'underscore': './deps/underscore-min.js'
        }
    });
   </script>
   <script>
-  System.import('/pub/js/bootstrap.js').then(null, console.error.bind(console));
+  System.import('./js/bootstrap.js').then(null, console.error.bind(console));
   </script>
 </head>
 <body>

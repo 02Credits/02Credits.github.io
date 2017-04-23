@@ -126,7 +126,8 @@ System.register(["./ces", "./animationManager", "./cameraManager", "pixi.js"], f
             positionRenderer();
             return new Promise((resolve) => {
                 for (let path of texturePaths) {
-                    pixi.loader.add(path, window.location + "assets/" + path).load((loader, resources) => {
+                    let location = window.location.href.replace(/[^/]*$/, '');
+                    pixi.loader.add(path, location + "assets/" + path).load((loader, resources) => {
                         textures[path] = resources[path];
                         if (Object.keys(textures).length == texturePaths.length) {
                             afterLoad();
