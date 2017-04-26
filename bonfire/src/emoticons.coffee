@@ -264,6 +264,10 @@ define ["markov"], (markov) ->
     "WellMemed": "http://imgur.com/wZQoCDq.png"
     "Interdasting": "http://i.imgur.com/vg3TLNk.png"
     "Bretonnia": "http://i.imgur.com/hfwJRFW.png"
+    "WinkJon": "http://imgur.com/kZn71iY.gif"
+    "INTERDASTING": "http://imgur.com/38xrKvJ.png"
+    "DERKISFINE": "http://imgur.com/Jk6wVxf.gif"
+    "DerkIsFine": "http://imgur.com/LcS3JMn.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"

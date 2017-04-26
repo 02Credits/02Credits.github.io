@@ -1,4 +1,4 @@
-System.register(["./ces", "./animationManager", "./utils", "./eventManager"], function (exports_1, context_1) {
+System.register(["./ces", "./animationManager", "./eventManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isCollidable(entity) { return "collidable" in entity; }
@@ -34,7 +34,7 @@ System.register(["./ces", "./animationManager", "./utils", "./eventManager"], fu
     function rotateAndTranslate(entity, relativePoint) {
         let center = [entity.position.x, entity.position.y];
         let rotation = 0;
-        let scale = utils_1.default.defaultValue(() => entity.renderer.scale, 1);
+        let scale = ((entity || obj).renderer || obj).scale || 1;
         if ("rotation" in entity.position) {
             rotation = entity.position.rotation;
         }
@@ -45,7 +45,7 @@ System.register(["./ces", "./animationManager", "./utils", "./eventManager"], fu
     }
     function getCorners(entity) {
         if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-            let scale = utils_1.default.defaultValue(() => entity.renderer.scale, 1);
+            let scale = ((entity || obj).renderer || obj).scale || 1;
             let left = entity.position.x + entity.dimensions.width * entity.position.cx * scale;
             let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx) * scale;
             let bottom = entity.position.y + entity.dimensions.height * entity.position.cy * scale;
@@ -85,7 +85,7 @@ System.register(["./ces", "./animationManager", "./utils", "./eventManager"], fu
     }
     function projectedBounds(entity, axis) {
         if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
-            let scale = utils_1.default.defaultValue(() => entity.renderer.scale, 1);
+            let scale = ((entity || obj).renderer || obj).scale || 1;
             let center = dotVec([entity.position.x, entity.position.y], axis);
             let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
             return { max: center + radius, min: center - radius };
@@ -158,7 +158,7 @@ System.register(["./ces", "./animationManager", "./utils", "./eventManager"], fu
         });
     }
     exports_1("Setup", Setup);
-    var ces, animationManager_1, utils_1, eventManager_1, Collision;
+    var ces, animationManager_1, eventManager_1, obj, Collision;
     return {
         setters: [
             function (ces_1) {
@@ -167,14 +167,12 @@ System.register(["./ces", "./animationManager", "./utils", "./eventManager"], fu
             function (animationManager_1_1) {
                 animationManager_1 = animationManager_1_1;
             },
-            function (utils_1_1) {
-                utils_1 = utils_1_1;
-            },
             function (eventManager_1_1) {
                 eventManager_1 = eventManager_1_1;
             }
         ],
         execute: function () {
+            obj = {};
             exports_1("Collision", Collision = new eventManager_1.EventManager3());
         }
     };

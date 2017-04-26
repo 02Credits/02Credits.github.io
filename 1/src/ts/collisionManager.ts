@@ -1,6 +1,5 @@
 import * as ces from "./ces";
 import {Update} from "./animationManager";
-import utils from "./utils";
 
 import {Dimensions, Position} from "./pixiManager"
 import {EventManager3} from "./eventManager";
@@ -19,6 +18,8 @@ interface Polygon {
     kind: "polygon"
     points: number[][]
 }
+
+const obj: any = {};
 
 export interface Entity {
     collidable?: boolean;
@@ -67,7 +68,7 @@ function unitVec(vec: number[]) {
 function rotateAndTranslate(entity: Entity, relativePoint: number[]) {
     let center = [entity.position.x, entity.position.y];
     let rotation = 0;
-    let scale = utils.defaultValue(() => entity.renderer.scale, 1);
+    let scale = ((entity || obj).renderer || obj).scale || 1;
     if ("rotation" in entity.position) {
         rotation = entity.position.rotation;
     }
@@ -80,7 +81,7 @@ function rotateAndTranslate(entity: Entity, relativePoint: number[]) {
 
 function getCorners(entity: Entity) {
     if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-        let scale = utils.defaultValue(() => entity.renderer.scale, 1);
+        let scale = ((entity || obj).renderer || obj).scale || 1;
         let left = entity.position.x + entity.dimensions.width * entity.position.cx * scale;
         let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx) * scale;
         let bottom = entity.position.y + entity.dimensions.height * entity.position.cy * scale;
@@ -121,7 +122,7 @@ function getAxis(entity: Entity) {
 
 function projectedBounds(entity: Entity, axis: number[]) {
     if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
-        let scale = utils.defaultValue(() => entity.renderer.scale, 1);
+        let scale = ((entity || obj).renderer || obj).scale || 1;
         let center = dotVec([entity.position.x, entity.position.y], axis);
         let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
         return {max: center + radius, min: center - radius};

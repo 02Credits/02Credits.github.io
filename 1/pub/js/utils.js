@@ -6,27 +6,23 @@ System.register([], function (exports_1, context_1) {
         setters: [],
         execute: function () {
             (function (Utils) {
-                function defaultValue(getX, defaultValue) {
-                    try {
-                        let x;
-                        if (typeof getX == "function") {
-                            x = getX();
-                        }
-                        else {
-                            x = getX;
-                        }
-                        if (x != null) {
-                            return x;
-                        }
-                        else {
-                            return defaultValue;
-                        }
-                    }
-                    catch (e) {
-                        return defaultValue;
-                    }
-                }
-                Utils.defaultValue = defaultValue;
+                // export function defaultValue<T>(getX: T|(() => T), defaultValue: T) {
+                //     try {
+                //         let x: T;
+                //         if (typeof getX == "function") {
+                //             x = getX();
+                //         } else {
+                //             x = getX;
+                //         }
+                //         if (x != null) {
+                //             return x;
+                //         } else {
+                //             return defaultValue;
+                //         }
+                //     } catch (e) {
+                //         return defaultValue;
+                //     }
+                // }
                 function absoluteMin(xs) {
                     let currentMin = xs[0];
                     for (let i = 1; i < xs.length; i++) {

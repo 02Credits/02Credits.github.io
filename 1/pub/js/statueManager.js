@@ -9,13 +9,13 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                 let statue = entity.statue;
                 statue.jumpState = { jumpTime: 0, jumping: false, direction: { x: 0, y: 0 }, jumpDistance: 0 };
                 statue.active = false;
-                statue.home = utils_1.default.defaultValue(() => statue.home, { x: entity.position.x, y: entity.position.y });
-                statue.activeTexture = utils_1.default.defaultValue(() => statue.activeTexture, entity.rendered.texture);
-                statue.inactiveTexture = utils_1.default.defaultValue(() => statue.inactiveTexture, entity.rendered.texture);
-                statue.originalScale = utils_1.default.defaultValue(() => statue.originalScale, 1);
+                statue.home = (statue || obj).home || { x: entity.position.x, y: entity.position.y };
+                statue.activeTexture = (statue || obj).activeTexture || entity.rendered.texture;
+                statue.inactiveTexture = (statue || obj).inactiveTexture || entity.rendered.texture;
+                statue.originalScale = (statue || obj).originalScale || 1;
                 statue.lastJumped = 0;
-                entity.position = utils_1.default.defaultValue(() => entity.position, { x: 0, y: 0, rotation: 0 });
-                entity.position.rotation = utils_1.default.defaultValue(() => entity.position.rotation, 0);
+                entity.position = (entity.position || obj) || { x: 0, y: 0, rotation: 0 };
+                entity.position.rotation = ((entity || obj).position || obj).rotation || 0;
             }
         });
         collisionManager_1.Collision.Subscribe((collider, collidee, details) => {
@@ -101,7 +101,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
         });
     }
     exports_1("Setup", Setup);
-    var ces, utils_1, animationManager_1, playerManager_1, collisionManager_1;
+    var ces, utils_1, animationManager_1, playerManager_1, collisionManager_1, obj;
     return {
         setters: [
             function (ces_1) {
@@ -121,6 +121,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
             }
         ],
         execute: function () {
+            obj = {};
         }
     };
 });

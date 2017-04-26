@@ -1,21 +1,21 @@
 export module Utils {
-    export function defaultValue<T>(getX: T|(() => T), defaultValue: T) {
-        try {
-            let x: T;
-            if (typeof getX == "function") {
-                x = getX();
-            } else {
-                x = getX;
-            }
-            if (x != null) {
-                return x;
-            } else {
-                return defaultValue;
-            }
-        } catch (e) {
-            return defaultValue;
-        }
-    }
+    // export function defaultValue<T>(getX: T|(() => T), defaultValue: T) {
+    //     try {
+    //         let x: T;
+    //         if (typeof getX == "function") {
+    //             x = getX();
+    //         } else {
+    //             x = getX;
+    //         }
+    //         if (x != null) {
+    //             return x;
+    //         } else {
+    //             return defaultValue;
+    //         }
+    //     } catch (e) {
+    //         return defaultValue;
+    //     }
+    // }
 
     export function absoluteMin(xs: number[]) {
         let currentMin = xs[0];

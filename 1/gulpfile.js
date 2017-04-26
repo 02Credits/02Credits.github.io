@@ -48,9 +48,8 @@ gulp.task('genEntities', function () {
 });
 
 gulp.task('webserver', function () {
-    return gulp.src('pub')
+    return gulp.src('..')
         .pipe(webserver({
-            livereload: true,
             port: 8080
         }));
 })

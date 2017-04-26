@@ -43,19 +43,20 @@ export interface Entity extends RenderedEntity {
 }
 export function isStatue(entity: CombinedEntity): entity is Entity { return "statue" in entity; }
 
+const obj: any = {};
 export function Setup() {
     ces.EntityAdded.Subscribe((entity) => {
         if (isStatue(entity)) {
             let statue = entity.statue;
             statue.jumpState = {jumpTime: 0, jumping: false, direction: {x:0, y:0}, jumpDistance: 0};
             statue.active = false;
-            statue.home = utils.defaultValue(() => statue.home, {x: entity.position.x, y: entity.position.y});
-            statue.activeTexture = utils.defaultValue(() => statue.activeTexture, entity.rendered.texture);
-            statue.inactiveTexture = utils.defaultValue(() => statue.inactiveTexture, entity.rendered.texture);
-            statue.originalScale = utils.defaultValue(() => statue.originalScale, 1);
+            statue.home = (statue || obj).home || {x: entity.position.x, y: entity.position.y};
+            statue.activeTexture = (statue || obj).activeTexture || entity.rendered.texture;
+            statue.inactiveTexture = (statue || obj).inactiveTexture || entity.rendered.texture;
+            statue.originalScale = (statue || obj).originalScale || 1;
             statue.lastJumped = 0;
-            entity.position = utils.defaultValue(() => entity.position, {x: 0, y: 0, rotation: 0});
-            entity.position.rotation = utils.defaultValue(() => entity.position.rotation, 0);
+            entity.position = (entity.position || obj) || {x: 0, y: 0, rotation: 0};
+            entity.position.rotation = ((entity || obj).position || obj).rotation || 0;
         }
     });
 
