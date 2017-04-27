@@ -268,6 +268,7 @@ define ["markov"], (markov) ->
     "INTERDASTING": "http://imgur.com/38xrKvJ.png"
     "DERKISFINE": "http://imgur.com/Jk6wVxf.gif"
     "DerkIsFine": "http://imgur.com/LcS3JMn.png"
+    "AnimeKeith": "http://imgur.com/dUOfnNV.gif"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
