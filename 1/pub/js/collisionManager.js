@@ -1,83 +1,53 @@
-System.register(["./ces", "./animationManager", "./eventManager"], function (exports_1, context_1) {
+System.register(["pixi.js", "./ces", "./animationManager", "./pixiManager", "./eventManager", "./geometryUtils"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isCollidable(entity) { return "collidable" in entity; }
     exports_1("isCollidable", isCollidable);
     // Algorithm modified from http://wiki.roblox.com/index.php?title=2D_Collision_Detection
-    function getNormal(vec) {
-        return [vec[1], -vec[0]];
-    }
-    function subVec(vec1, vec2) {
-        let retVec = [];
-        for (let i = 0; i < vec1.length; i++) {
-            retVec[i] = vec1[i] - vec2[i];
-        }
-        return retVec;
-    }
-    function dotVec(vec1, vec2) {
-        let retVal = 0;
-        for (let i = 0; i < vec1.length; i++) {
-            retVal += vec1[i] * vec2[i];
-        }
-        return retVal;
-    }
-    function vecLength(vec) {
-        return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1]);
-    }
-    function unitVec(vec) {
-        let length = vecLength(vec);
-        return [
-            vec[0] / length,
-            vec[1] / length
-        ];
-    }
-    function rotateAndTranslate(entity, relativePoint) {
-        let center = [entity.position.x, entity.position.y];
-        let rotation = 0;
-        let scale = ((entity || obj).renderer || obj).scale || 1;
-        if ("rotation" in entity.position) {
-            rotation = entity.position.rotation;
-        }
-        let newX = center[0] + (relativePoint[0] * scale - center[0]) * Math.cos(rotation) - (relativePoint[1] * scale - center[1]) * Math.sin(rotation);
-        let newY = center[1] + (relativePoint[0] * scale - center[0]) * Math.sin(rotation) + (relativePoint[1] * scale - center[1]) * Math.cos(rotation);
-        relativePoint[0] = newX;
-        relativePoint[1] = newY;
-    }
     function getCorners(entity) {
+        let scale = (entity.renderer || obj).scale || 1;
+        let rotation = entity.position.rotation || 0;
+        let position = [entity.position.x, entity.position.y];
+        let corners = [];
         if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-            let scale = ((entity || obj).renderer || obj).scale || 1;
-            let left = entity.position.x + entity.dimensions.width * entity.position.cx * scale;
-            let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx) * scale;
-            let bottom = entity.position.y + entity.dimensions.height * entity.position.cy * scale;
-            let top = entity.position.y - entity.dimensions.height * (1 - entity.position.cy) * scale;
-            let corners = [
+            let left = entity.position.x + entity.dimensions.width * entity.position.cx;
+            let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx);
+            let bottom = entity.position.y + entity.dimensions.height * entity.position.cy;
+            let top = entity.position.y - entity.dimensions.height * (1 - entity.position.cy);
+            corners.push([
                 [left, top],
                 [right, top],
                 [right, bottom],
                 [left, bottom]
-            ];
-            for (let corner of corners) {
-                rotateAndTranslate(entity, corner);
-            }
-            return corners;
+            ]);
         }
         else if (entity.collisionShape.kind === "polygon") {
-            let corners = entity.collisionShape.points;
-            for (let corner of corners) {
-                rotateAndTranslate(entity, corner);
+            corners = [entity.collisionShape.points];
+        }
+        else if (entity.collisionShape.kind === "compound polygon") {
+            for (let child of entity.collisionShape.children) {
+                corners.push(child);
             }
         }
-        else {
-            return [];
+        let retList = [];
+        for (let cornersList of corners) {
+            retList.push(geometryUtils.transformPoly(cornersList, position, rotation, scale));
         }
+        return retList;
     }
+    exports_1("getCorners", getCorners);
     function getAxis(entity) {
         if (entity.collisionShape == null || entity.collisionShape.kind != "circle") {
-            let corners = getCorners(entity);
-            return [
-                getNormal(unitVec(subVec(corners[0], corners[1]))),
-                getNormal(unitVec(subVec(corners[0], corners[3])))
-            ];
+            let axis = [];
+            let childCorners = getCorners(entity);
+            for (let child of childCorners) {
+                let previous = child[child.length - 1];
+                for (let corner of child) {
+                    axis.push(geometryUtils.normal(geometryUtils.unit(geometryUtils.sub(corner, previous))));
+                    previous = corner;
+                }
+            }
+            return axis;
         }
         else {
             return [];
@@ -86,21 +56,22 @@ System.register(["./ces", "./animationManager", "./eventManager"], function (exp
     function projectedBounds(entity, axis) {
         if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
             let scale = ((entity || obj).renderer || obj).scale || 1;
-            let center = dotVec([entity.position.x, entity.position.y], axis);
+            let center = geometryUtils.dot([entity.position.x, entity.position.y], axis);
             let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
             return { max: center + radius, min: center - radius };
         }
         else {
             let corners = getCorners(entity);
-            let min = dotVec(corners[0], axis);
+            let min = geometryUtils.dot(corners[0][0], axis);
             let max = min;
-            for (let i = 1; i < corners.length; i++) {
-                let corner = corners[i];
-                let projectedCorner = dotVec(corner, axis);
-                if (projectedCorner > max)
-                    max = projectedCorner;
-                if (projectedCorner < min)
-                    min = projectedCorner;
+            for (let child of corners) {
+                for (let corner of child) {
+                    let projectedCorner = geometryUtils.dot(corner, axis);
+                    if (projectedCorner > max)
+                        max = projectedCorner;
+                    if (projectedCorner < min)
+                        min = projectedCorner;
+                }
             }
             return { min: min, max: max };
         }
@@ -143,8 +114,15 @@ System.register(["./ces", "./animationManager", "./eventManager"], function (exp
         return result;
     }
     function Setup() {
+        let physicsOverlay = new pixi.Graphics();
+        pixiManager_1.overlay.addChild(physicsOverlay);
         animationManager_1.Update.Subscribe(() => {
             let collidables = ces.GetEntities(isCollidable);
+            physicsOverlay.clear();
+            for (let collider of collidables) {
+                if (!collider.collisionShape || collider.collisionShape.kind === "rectangle") {
+                }
+            }
             for (let collider of collidables) {
                 for (let collidable of collidables) {
                     if (collidable !== collider) {
@@ -158,17 +136,26 @@ System.register(["./ces", "./animationManager", "./eventManager"], function (exp
         });
     }
     exports_1("Setup", Setup);
-    var ces, animationManager_1, eventManager_1, obj, Collision;
+    var pixi, ces, animationManager_1, pixiManager_1, eventManager_1, geometryUtils, obj, Collision;
     return {
         setters: [
+            function (pixi_1) {
+                pixi = pixi_1;
+            },
             function (ces_1) {
                 ces = ces_1;
             },
             function (animationManager_1_1) {
                 animationManager_1 = animationManager_1_1;
             },
+            function (pixiManager_1_1) {
+                pixiManager_1 = pixiManager_1_1;
+            },
             function (eventManager_1_1) {
                 eventManager_1 = eventManager_1_1;
+            },
+            function (geometryUtils_1) {
+                geometryUtils = geometryUtils_1;
             }
         ],
         execute: function () {
