@@ -9,12 +9,12 @@ import {Entity as TriggerManagerEntity} from "./triggerManager";
 import {Entity as WallManagerEntity} from "./wallManager";
 
 export type CombinedEntity =
-    CameraManagerEntity |
-    CollisionManagerEntity |
-    HoleManagerEntity |
-    ParentManagerEntity |
-    PixiManagerEntity |
-    PlayerManagerEntity |
-    StatueManagerEntity |
-    TriggerManagerEntity |
-    WallManagerEntity;
+  CameraManagerEntity |
+  CollisionManagerEntity |
+  HoleManagerEntity |
+  ParentManagerEntity |
+  PixiManagerEntity |
+  PlayerManagerEntity |
+  StatueManagerEntity |
+  TriggerManagerEntity |
+  WallManagerEntity;
