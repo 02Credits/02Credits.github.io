@@ -26,12 +26,10 @@
        },
        map: {
            'pixi.js': './deps/pixi/pixi.min.js',
-           'underscore': './deps/underscore-min.js'
+           'underscore': './deps/underscore-min.js',
+           'twgl': './deps/twgl/twgl-full.js'
        }
    });
-  </script>
-  <script>
-  System.import('./js/bootstrap.js').then(null, console.error.bind(console));
   </script>
 </head>
 <body>
@@ -39,5 +37,8 @@
       <div id="game">
       </div>
   </div>
+  <script>
+  System.import('./js/bootstrap.js').then(null, console.error.bind(console));
+  </script>
 </body>
 </html>

@@ -1,16 +1,9 @@
-System.register(["./pixiManager", "pixi.js"], function (exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var pixiManager_1, pixi, InputManager;
+    var InputManager;
     return {
-        setters: [
-            function (pixiManager_1_1) {
-                pixiManager_1 = pixiManager_1_1;
-            },
-            function (pixi_1) {
-                pixi = pixi_1;
-            }
-        ],
+        setters: [],
         execute: function () {
             (function (InputManager) {
                 let keys = {};
@@ -51,11 +44,17 @@ System.register(["./pixiManager", "pixi.js"], function (exports_1, context_1) {
                 InputManager.KeyDown = KeyDown;
                 function MouseState() {
                     // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
-                    let result = pixiManager_1.root.transform.worldTransform.invert().apply(new pixi.Point(mouseX, mouseY));
+                    // let result = root.transform.worldTransform.invert().apply(new pixi.Point(mouseX, mouseY));
+                    // return {
+                    //     mouseButtons: mouseButtons,
+                    //     x: result.x,
+                    //     y: result.y,
+                    //     enabled: enabled
+                    // };
                     return {
                         mouseButtons: mouseButtons,
-                        x: result.x,
-                        y: result.y,
+                        x: mouseX,
+                        y: mouseY,
                         enabled: enabled
                     };
                 }

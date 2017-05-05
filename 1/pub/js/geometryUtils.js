@@ -34,9 +34,11 @@ System.register([], function (exports_1, context_1) {
     }
     exports_1("unit", unit);
     function transform(vec, position, rotation = 0, scale = 1) {
+        let relX = vec[0] * scale - position[0];
+        let relY = vec[1] * scale - position[1];
         return [
-            position[0] + (vec[0] * scale - position[0]) * Math.cos(rotation) - (vec[1] * scale - position[1]) * Math.sin(rotation),
-            position[1] + (vec[0] * scale - position[0]) * Math.sin(rotation) - (vec[1] * scale - position[1]) * Math.cos(rotation)
+            position[0] + relX * Math.cos(rotation) - relY * Math.sin(rotation),
+            position[1] + relX * Math.sin(rotation) + relY * Math.cos(rotation)
         ];
     }
     exports_1("transform", transform);

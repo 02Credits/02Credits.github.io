@@ -17,6 +17,11 @@ System.register(["./ces", "./animationManager", "./cameraManager", "pixi.js"], f
                 stages[entity.position.z].removeChild(sprites[entity.id]);
             }
         });
+        ces.EntityRemoved.Subscribe((entity) => {
+            if (isRenderable(entity) && sprites[entity.id]) {
+                uiStages[entity.position.z].removeChild(sprites[entity.id]);
+            }
+        });
         ces.EntityAdded.Subscribe((entity) => {
             if (isRenderable(entity)) {
                 let rendered = entity.rendered;
@@ -38,6 +43,8 @@ System.register(["./ces", "./animationManager", "./cameraManager", "pixi.js"], f
             for (let entity of ces.GetEntities(isRenderable)) {
                 updateSprite(entity);
             }
+        });
+        animationManager_1.Update.Subscribe(() => {
             let cameras = ces.GetEntities(cameraManager_1.isCamera);
             if (cameras.length > 0) {
                 let cameraEntity = cameras[0];
@@ -119,13 +126,17 @@ System.register(["./ces", "./animationManager", "./cameraManager", "pixi.js"], f
     }
     function Setup(texturePaths) {
         return __awaiter(this, void 0, void 0, function* () {
+            exports_1("renderer", renderer = new pixi.CanvasRenderer(size, size));
+            exports_1("root", root = new pixi.Container());
+            exports_1("overlay", overlay = new pixi.Container());
+            root.addChild(overlay);
             document.getElementById("game").appendChild(renderer.view);
             renderer.view.focus();
             window.onresize = positionRenderer;
             positionRenderer();
             return new Promise((resolve) => {
                 for (let path of texturePaths) {
-                    let location = window.location.href.replace('[^/]*$', '');
+                    let location = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
                     pixi.loader.add(path, location + "assets/" + path).load((loader, resources) => {
                         textures[path] = resources[path];
                         if (Object.keys(textures).length == texturePaths.length) {
@@ -138,7 +149,7 @@ System.register(["./ces", "./animationManager", "./cameraManager", "pixi.js"], f
         });
     }
     exports_1("Setup", Setup);
-    var ces, animationManager_1, cameraManager_1, pixi, sprites, size, renderer, stages, textures, root, overlay;
+    var ces, animationManager_1, cameraManager_1, pixi, sprites, size, renderer, stages, uiStages, textures, root, overlay;
     return {
         setters: [
             function (ces_1) {
@@ -157,12 +168,9 @@ System.register(["./ces", "./animationManager", "./cameraManager", "pixi.js"], f
         execute: function () {
             sprites = {};
             size = Math.min(window.innerWidth, window.innerHeight);
-            exports_1("renderer", renderer = new pixi.CanvasRenderer(size, size));
             stages = {};
+            uiStages = {};
             textures = {};
-            exports_1("root", root = new pixi.Container());
-            exports_1("overlay", overlay = new pixi.Container());
-            root.addChild(overlay);
         }
     };
 });

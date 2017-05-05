@@ -1,4 +1,4 @@
-System.register(["pixi.js", "./ces", "./animationManager", "./pixiManager", "./eventManager", "./geometryUtils"], function (exports_1, context_1) {
+System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./geometryUtils"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isCollidable(entity) { return "collidable" in entity; }
@@ -115,12 +115,23 @@ System.register(["pixi.js", "./ces", "./animationManager", "./pixiManager", "./e
     }
     function Setup() {
         let physicsOverlay = new pixi.Graphics();
-        pixiManager_1.overlay.addChild(physicsOverlay);
+        // overlay.addChild(physicsOverlay);
         animationManager_1.Update.Subscribe(() => {
             let collidables = ces.GetEntities(isCollidable);
             physicsOverlay.clear();
             for (let collider of collidables) {
-                if (!collider.collisionShape || collider.collisionShape.kind === "rectangle") {
+                if (!collider.collisionShape || collider.collisionShape.kind !== "circle") {
+                    let corners = getCorners(collider);
+                    physicsOverlay.lineStyle(0.1, 0xFF0000, 1);
+                    for (let poly of corners) {
+                        let startCorner = poly[poly.length - 1];
+                        physicsOverlay.beginFill(0xFF0000, 0.5);
+                        physicsOverlay.moveTo(startCorner[0], startCorner[1]);
+                        for (let corner of poly) {
+                            physicsOverlay.lineTo(corner[0], corner[1]);
+                        }
+                        physicsOverlay.endFill();
+                    }
                 }
             }
             for (let collider of collidables) {
@@ -136,7 +147,7 @@ System.register(["pixi.js", "./ces", "./animationManager", "./pixiManager", "./e
         });
     }
     exports_1("Setup", Setup);
-    var pixi, ces, animationManager_1, pixiManager_1, eventManager_1, geometryUtils, obj, Collision;
+    var pixi, ces, animationManager_1, eventManager_1, geometryUtils, obj, Collision;
     return {
         setters: [
             function (pixi_1) {
@@ -147,9 +158,6 @@ System.register(["pixi.js", "./ces", "./animationManager", "./pixiManager", "./e
             },
             function (animationManager_1_1) {
                 animationManager_1 = animationManager_1_1;
-            },
-            function (pixiManager_1_1) {
-                pixiManager_1 = pixiManager_1_1;
             },
             function (eventManager_1_1) {
                 eventManager_1 = eventManager_1_1;

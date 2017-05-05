@@ -156,14 +156,24 @@ export let Collision = new EventManager3<Entity, Entity, {depth: number, normal:
 
 export function Setup() {
   let physicsOverlay = new pixi.Graphics();
-  overlay.addChild(physicsOverlay);
+  // overlay.addChild(physicsOverlay);
   Update.Subscribe(() => {
     let collidables = ces.GetEntities(isCollidable);
 
     physicsOverlay.clear();
     for (let collider of collidables) {
-      if (!collider.collisionShape || collider.collisionShape.kind === "rectangle") {
-        
+      if (!collider.collisionShape || collider.collisionShape.kind !== "circle") {
+        let corners = getCorners(collider);
+        physicsOverlay.lineStyle(0.1, 0xFF0000, 1);
+        for (let poly of corners) {
+          let startCorner = poly[poly.length - 1];
+          physicsOverlay.beginFill(0xFF0000, 0.5);
+          physicsOverlay.moveTo(startCorner[0], startCorner[1]);
+          for (let corner of poly) {
+            physicsOverlay.lineTo(corner[0], corner[1]);
+          }
+          physicsOverlay.endFill();
+        }
       }
     }
 

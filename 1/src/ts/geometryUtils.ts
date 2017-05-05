@@ -33,9 +33,11 @@ export function unit(vec: Vec) {
 }
 
 export function transform(vec: Vec, position: Vec, rotation: number = 0, scale: number = 1) {
+  let relX = vec[0] * scale - position[0];
+  let relY = vec[1] * scale - position[1];
   return [
-    position[0] + (vec[0] * scale - position[0]) * Math.cos(rotation) - (vec[1] * scale - position[1]) * Math.sin(rotation),
-    position[1] + (vec[0] * scale - position[0]) * Math.sin(rotation) - (vec[1] * scale - position[1]) * Math.cos(rotation)
+    position[0] + relX * Math.cos(rotation) - relY * Math.sin(rotation),
+    position[1] + relX * Math.sin(rotation) + relY * Math.cos(rotation)
   ];
 }
 

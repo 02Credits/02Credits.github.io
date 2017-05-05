@@ -1,3 +1,0 @@
-
-
-//# sourceMappingURL=lightManager.js.map

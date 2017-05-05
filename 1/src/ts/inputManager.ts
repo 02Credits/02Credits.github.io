@@ -45,11 +45,17 @@ export module InputManager {
 
     export function MouseState() {
         // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
-        let result = root.transform.worldTransform.invert().apply(new pixi.Point(mouseX, mouseY));
+        // let result = root.transform.worldTransform.invert().apply(new pixi.Point(mouseX, mouseY));
+        // return {
+        //     mouseButtons: mouseButtons,
+        //     x: result.x,
+        //     y: result.y,
+        //     enabled: enabled
+        // };
         return {
             mouseButtons: mouseButtons,
-            x: result.x,
-            y: result.y,
+            x: mouseX,
+            y: mouseY,
             enabled: enabled
         };
     }

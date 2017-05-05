@@ -35,20 +35,26 @@ export function isRenderable(entity: CombinedEntity): entity is Entity { return 
 
 let sprites: { [id: string]: pixi.Sprite }  = { };
 let size = Math.min(window.innerWidth, window.innerHeight);
-export let renderer = new pixi.CanvasRenderer(size, size);
+export let renderer: pixi.CanvasRenderer;
 
 let stages: { [id: string]: pixi.Container } =  { };
+let uiStages: { [id: string]: pixi.Container } = { };
 
 let textures: { [id: string]: pixi.loaders.Resource } = {};
 
-export let root = new pixi.Container();
-export let overlay = new pixi.Container();
-root.addChild(overlay);
+export let root: pixi.Container;
+export let overlay: pixi.Container;
 
 function afterLoad() {
   ces.EntityRemoved.Subscribe((entity) => {
     if (isRenderable(entity) && sprites[entity.id]) {
       stages[entity.position.z].removeChild(sprites[entity.id]);
+    }
+  });
+
+  ces.EntityRemoved.Subscribe((entity) => {
+    if (isRenderable(entity) && sprites[entity.id]) {
+      uiStages[entity.position.z].removeChild(sprites[entity.id]);
     }
   });
 
@@ -74,6 +80,9 @@ function afterLoad() {
     for (let entity of ces.GetEntities(isRenderable)) {
       updateSprite(entity);
     }
+  });
+
+  Update.Subscribe(() => {
     let cameras = ces.GetEntities(isCamera);
     if (cameras.length > 0) {
       let cameraEntity = cameras[0];
@@ -165,6 +174,11 @@ function positionRenderer() {
 }
 
 export async function Setup(texturePaths: string[]) {
+  renderer = new pixi.CanvasRenderer(size, size);
+  root = new pixi.Container();
+  overlay = new pixi.Container();
+  root.addChild(overlay);
+
   document.getElementById("game").appendChild(renderer.view);
   renderer.view.focus();
 
@@ -173,7 +187,7 @@ export async function Setup(texturePaths: string[]) {
 
   return new Promise((resolve) => {
     for (let path of texturePaths) {
-      let location = window.location.href.replace('[^/]*$', '');
+      let location = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
       pixi.loader.add(path, location + "assets/" + path).load((loader: pixi.loaders.Loader, resources: { [id: string]: pixi.loaders.Resource }) => {
         textures[path] = resources[path];
         if (Object.keys(textures).length == texturePaths.length) {

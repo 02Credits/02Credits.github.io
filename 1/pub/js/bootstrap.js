@@ -1,14 +1,14 @@
-System.register(["./ces", "./pixiManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager"], function (exports_1, context_1) {
+System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ces, pixiManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager;
+    var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager;
     return {
         setters: [
             function (ces_1) {
                 ces = ces_1;
             },
-            function (pixiManager_1) {
-                pixiManager = pixiManager_1;
+            function (webglManager_1) {
+                webglManager = webglManager_1;
             },
             function (playerManager_1) {
                 playerManager = playerManager_1;
@@ -39,7 +39,7 @@ System.register(["./ces", "./pixiManager", "./playerManager", "./collisionManage
             }
         ],
         execute: function () {
-            pixiManager.Setup(["Wall.png", "Player.png"]).then(() => {
+            webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
                 collisionManager.Setup();
                 playerManager.Setup();
                 parentManager.Setup();
@@ -48,6 +48,7 @@ System.register(["./ces", "./pixiManager", "./playerManager", "./collisionManage
                 wallManager.Setup();
                 holeManager.Setup();
                 statueManager.Setup();
+                animationManager.Setup();
                 ces.AddEntity({
                     "position": {
                         "x": 0,
@@ -197,6 +198,12 @@ System.register(["./ces", "./pixiManager", "./playerManager", "./collisionManage
                     "foot": true
                 });
                 animationManager.Setup();
+                animationManager.Update.Subscribe(() => {
+                    ces.GetEntities(collisionManager.isCollidable).forEach((entity) => {
+                        entity.position.rotation = entity.position.rotation || 0;
+                        entity.position.rotation += Math.PI / 20;
+                    });
+                });
             });
         }
     };
