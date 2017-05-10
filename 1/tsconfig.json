@@ -1,8 +1,12 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "system",
-        "sourceMap": true,
-        "noImplicitAny": true
-    }
+  "compilerOptions": {
+    "target": "es6",
+    "module": "system",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noEmitOnError": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

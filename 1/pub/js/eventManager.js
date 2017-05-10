@@ -20,9 +20,12 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish() {
+                    let promises = [];
                     for (let id in this.subscriptions) {
-                        this.subscriptions[id]();
+                        let sub = this.subscriptions[id];
+                        promises.push(Promise.resolve(sub()));
                     }
+                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager0", EventManager0);
@@ -41,10 +44,12 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg) {
+                    let promises = [];
                     for (let id in this.subscriptions) {
                         let sub = this.subscriptions[id];
-                        sub(arg);
+                        promises.push(Promise.resolve(sub(arg)));
                     }
+                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager1", EventManager1);
@@ -85,10 +90,12 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg1, arg2, arg3) {
+                    let promises = [];
                     for (let id in this.subscriptions) {
                         let sub = this.subscriptions[id];
-                        sub(arg1, arg2, arg3);
+                        promises.push(Promise.resolve(sub(arg1, arg2, arg3)));
                     }
+                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager3", EventManager3);
@@ -107,10 +114,12 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg1, arg2, arg3, arg4) {
+                    let promises = [];
                     for (let id in this.subscriptions) {
                         let sub = this.subscriptions[id];
-                        sub(arg1, arg2, arg3, arg4);
+                        promises.push(Promise.resolve(sub(arg1, arg2, arg3, arg4)));
                     }
+                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager4", EventManager4);
@@ -129,10 +138,12 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg1, arg2, arg3, arg4, arg5) {
+                    let promises = [];
                     for (let id in this.subscriptions) {
                         let sub = this.subscriptions[id];
-                        sub(arg1, arg2, arg3, arg4, arg5);
+                        promises.push(Promise.resolve(sub(arg1, arg2, arg3, arg4, arg5)));
                     }
+                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager5", EventManager5);

@@ -38,7 +38,8 @@
                   if (imageRegex.test(link.href)) {
                     images.push(m("img.materialboxed", {
                       config: imageConfig,
-                      src: "" + link.href
+                      src: "" + link.href,
+                      draggable: false
                     }));
                   } else if (gifvRegex.test(link.href)) {
                     link.href = link.href.substring(0, link.href.length - 4) + "mp4";
@@ -46,7 +47,8 @@
                     match = link.href.match(imgurRegex);
                     images.push(m("img.materialboxed", {
                       config: imageConfig,
-                      src: "http://i.imgur.com/" + match[3] + ".jpg"
+                      src: "http://i.imgur.com/" + match[3] + ".jpg",
+                      draggable: false
                     }));
                   }
                   if (gfycatRegex.test(link.href)) {
@@ -54,7 +56,8 @@
                     images.push(m("img.gfyitem#giphyId=" + id, {
                       config: gfycatConfig,
                       "data-id": id,
-                      "data-controls": true
+                      "data-controls": true,
+                      draggable: false
                     }));
                   }
                   if (videoRegex.test(link.href)) {

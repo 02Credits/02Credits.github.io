@@ -1,9 +1,19 @@
-System.register([], function (exports_1, context_1) {
+System.register(["./ces", "./cameraManager", "./webglManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var InputManager;
+    var ces, cameraManager_1, webglManager_1, InputManager;
     return {
-        setters: [],
+        setters: [
+            function (ces_1) {
+                ces = ces_1;
+            },
+            function (cameraManager_1_1) {
+                cameraManager_1 = cameraManager_1_1;
+            },
+            function (webglManager_1_1) {
+                webglManager_1 = webglManager_1_1;
+            }
+        ],
         execute: function () {
             (function (InputManager) {
                 let keys = {};
@@ -44,17 +54,11 @@ System.register([], function (exports_1, context_1) {
                 InputManager.KeyDown = KeyDown;
                 function MouseState() {
                     // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
-                    // let result = root.transform.worldTransform.invert().apply(new pixi.Point(mouseX, mouseY));
-                    // return {
-                    //     mouseButtons: mouseButtons,
-                    //     x: result.x,
-                    //     y: result.y,
-                    //     enabled: enabled
-                    // };
+                    let camera = ces.GetEntities(cameraManager_1.isCamera)[0];
                     return {
                         mouseButtons: mouseButtons,
-                        x: mouseX,
-                        y: mouseY,
+                        x: (mouseX - webglManager_1.canvasSize / 2) * camera.dimensions.width / webglManager_1.canvasSize,
+                        y: -(mouseY - webglManager_1.canvasSize / 2) * camera.dimensions.height / webglManager_1.canvasSize,
                         enabled: enabled
                     };
                 }

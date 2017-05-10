@@ -10,12 +10,12 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                 statue.jumpState = { jumpTime: 0, jumping: false, direction: { x: 0, y: 0 }, jumpDistance: 0 };
                 statue.active = false;
                 statue.home = (statue || obj).home || { x: entity.position.x, y: entity.position.y };
-                statue.activeTexture = (statue || obj).activeTexture || entity.rendered.texture;
-                statue.inactiveTexture = (statue || obj).inactiveTexture || entity.rendered.texture;
-                statue.originalScale = (statue || obj).originalScale || 1;
+                statue.activeTexture = (statue || obj).activeTexture || entity.texture;
+                statue.inactiveTexture = (statue || obj).inactiveTexture || entity.texture;
+                statue.originalScale = entity.scale || 1;
                 statue.lastJumped = 0;
                 entity.position = (entity.position || obj) || { x: 0, y: 0, rotation: 0 };
-                entity.position.rotation = ((entity || obj).position || obj).rotation || 0;
+                entity.rotation = ((entity || obj).position || obj).rotation || 0;
             }
         });
         collisionManager_1.Collision.Subscribe((collider, collidee, details) => {
@@ -32,7 +32,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                     if (state.jumpTime > statue.jumpTimeLength) {
                         state.jumping = false;
                         statue.lastJumped = time;
-                        entity.rendered.scale = statue.originalScale;
+                        entity.scale = statue.originalScale;
                     }
                     else {
                         state.jumpTime += 0.01667;
@@ -44,7 +44,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                         let distanceScaling = state.jumpDistance / statue.maxJumpDistance;
                         entity.position.x += jumpAmount * state.direction.x * distanceScaling;
                         entity.position.y += jumpAmount * state.direction.y * distanceScaling;
-                        entity.rendered.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
+                        entity.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
                     }
                 }
                 else {
@@ -74,7 +74,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                         let targetDelta = utils_1.default.sub(target, entity.position);
                         targetDelta = utils_1.default.div(targetDelta, distance);
                         let targetRotation = Math.atan2(targetDelta.y, targetDelta.x);
-                        let r = entity.position.rotation;
+                        let r = entity.rotation;
                         let dr = utils_1.default.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
                         if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
                             statue.jumpState = {
@@ -86,10 +86,11 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                         }
                         else {
                             if (Math.abs(dr) > statue.rotationSpeed) {
-                                entity.position.rotation += dr * statue.rotationSpeed / Math.abs(dr);
+                                entity.rotation += dr * statue.rotationSpeed / Math.abs(dr);
+                                entity.rotation = entity.rotation % (Math.PI * 2);
                             }
                             else {
-                                entity.position.rotation += dr * statue.rotationSlowdown;
+                                entity.rotation += dr * statue.rotationSlowdown;
                             }
                         }
                     }

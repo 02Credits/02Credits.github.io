@@ -22,15 +22,15 @@ define ["mithril"], (m) ->
           images = []
           for link in doc.links
             if imageRegex.test link.href
-              images.push (m "img.materialboxed", { config:imageConfig, src:"#{link.href}" })
+              images.push (m "img.materialboxed", { config:imageConfig, src:"#{link.href}", draggable: false })
             else if gifvRegex.test link.href
               link.href = link.href.substring(0, link.href.length - 4) + "mp4"
             else if imgurRegex.test link.href
               match = link.href.match imgurRegex
-              images.push (m "img.materialboxed", { config:imageConfig, src:"http://i.imgur.com/#{match[3]}.jpg"})
+              images.push (m "img.materialboxed", { config:imageConfig, src:"http://i.imgur.com/#{match[3]}.jpg", draggable: false})
             if gfycatRegex.test link.href
               id = link.href.replace gfycatRegex, ''
-              images.push (m "img.gfyitem#giphyId=#{id}", { config:gfycatConfig, "data-id":id, "data-controls":true })
+              images.push (m "img.gfyitem#giphyId=#{id}", { config:gfycatConfig, "data-id":id, "data-controls":true, draggable: false })
             if videoRegex.test link.href
               images.push (m "video.responsive-video", {
                 controls:true,

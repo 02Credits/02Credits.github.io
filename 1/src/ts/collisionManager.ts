@@ -3,7 +3,7 @@ import * as pixi from "pixi.js";
 import * as ces from "./ces";
 import {Update} from "./animationManager";
 
-import {Dimensions, Position, overlay} from "./pixiManager"
+import {Dimensions, Position, Entity as RenderableEntity} from "./webglManager";
 import {EventManager3} from "./eventManager";
 
 import {CombinedEntity} from "./entity";
@@ -30,12 +30,7 @@ interface CompoundPoly {
 
 const obj: any = {};
 
-export interface GeometryEntity {
-  position: Position;
-  dimensions: Dimensions;
-  renderer?: {
-    scale: number;
-  };
+export interface GeometryEntity extends RenderableEntity {
   collisionShape?: Circle | Rectangle | Poly | CompoundPoly;
 }
 
@@ -46,8 +41,8 @@ export function isCollidable(entity: CombinedEntity): entity is Entity { return 
 
 // Algorithm modified from http://wiki.roblox.com/index.php?title=2D_Collision_Detection
 export function getCorners(entity: GeometryEntity) : geometryUtils.Polygon[]{
-  let scale = (entity.renderer || obj).scale || 1;
-  let rotation = entity.position.rotation || 0;
+  let scale = entity.scale || 1;
+  let rotation = entity.rotation || 0;
   let position = [entity.position.x, entity.position.y];
   let corners: geometryUtils.Polygon[] = [];
   if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {

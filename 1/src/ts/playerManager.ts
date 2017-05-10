@@ -1,7 +1,7 @@
 import input from "./inputManager.js";
 import * as ces from "./ces.js";
 import {Update} from "./animationManager";
-import {Entity as RenderedEntity} from "./pixiManager";
+import {Entity as RenderedEntity} from "./webglManager";
 import {Entity as ChildEntity} from "./parentManager";
 
 import {CombinedEntity} from "./entity";
@@ -27,8 +27,8 @@ export type Entity = PlayerEntity | FootEntity;
 
 function updateFeet(playerEntity: PlayerEntity) {
     var scale = 1;
-    if ("scale" in playerEntity.rendered) {
-        scale = playerEntity.rendered.scale;
+    if ("scale" in playerEntity) {
+        scale = playerEntity.scale;
     }
 
     var feet = ces.GetEntities(isFoot);
@@ -47,7 +47,7 @@ function updatePlayer(entity: PlayerEntity) {
     var dx = mouseState.x - entity.position.x;
     var dy = mouseState.y - entity.position.y;
 
-    entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+    entity.rotation = Math.atan2(dy, dx) + Math.PI / 2;
 
     var length = Math.sqrt(dx * dx + dy * dy);
     if (entity.dimensions && length > 3) {

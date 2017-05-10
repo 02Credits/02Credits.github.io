@@ -1,4 +1,4 @@
-System.register(["./collisionManager", "./pixiManager", "./eventManager"], function (exports_1, context_1) {
+System.register(["./collisionManager", "./webglManager", "./eventManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isFallable(entity) { return "fallable" in entity; }
@@ -25,23 +25,25 @@ System.register(["./collisionManager", "./pixiManager", "./eventManager"], funct
                     if (factor > 1) {
                         factor = 1;
                     }
-                    if (pixiManager_1.isRenderable(fallable)) {
-                        fallable.rendered.alpha = factor;
-                        fallable.rendered.scale = factor;
+                    if (webglManager_1.isRenderable(fallable)) {
+                        if ("color" in fallable) {
+                            fallable.color.a = factor;
+                        }
+                        fallable.scale = factor;
                     }
                 }
             }
         });
     }
     exports_1("Setup", Setup);
-    var collisionManager_1, pixiManager_1, eventManager_1, Fell;
+    var collisionManager_1, webglManager_1, eventManager_1, Fell;
     return {
         setters: [
             function (collisionManager_1_1) {
                 collisionManager_1 = collisionManager_1_1;
             },
-            function (pixiManager_1_1) {
-                pixiManager_1 = pixiManager_1_1;
+            function (webglManager_1_1) {
+                webglManager_1 = webglManager_1_1;
             },
             function (eventManager_1_1) {
                 eventManager_1 = eventManager_1_1;

@@ -7,8 +7,8 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
     exports_1("isFoot", isFoot);
     function updateFeet(playerEntity) {
         var scale = 1;
-        if ("scale" in playerEntity.rendered) {
-            scale = playerEntity.rendered.scale;
+        if ("scale" in playerEntity) {
+            scale = playerEntity.scale;
         }
         var feet = ces.GetEntities(isFoot);
         for (let entity of feet) {
@@ -24,7 +24,7 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
         var mouseState = inputManager_js_1.default.MouseState();
         var dx = mouseState.x - entity.position.x;
         var dy = mouseState.y - entity.position.y;
-        entity.position.rotation = Math.atan2(dy, dx) + Math.PI / 2;
+        entity.rotation = Math.atan2(dy, dx) + Math.PI / 2;
         var length = Math.sqrt(dx * dx + dy * dy);
         if (entity.dimensions && length > 3) {
             dx = dx / length;

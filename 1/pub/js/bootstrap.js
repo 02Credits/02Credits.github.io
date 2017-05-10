@@ -54,15 +54,17 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "x": 0,
                         "y": 0
                     },
+                    "dimensions": {
+                        "width": 100,
+                        "height": 100
+                    },
                     "camera": {
                         "targetX": 0,
                         "targetY": 0
                     }
                 });
                 ces.AddEntity({
-                    "rendered": {
-                        "texture": "Player.png",
-                    },
+                    "texture": "Player.png",
                     "position": {
                         "x": 40,
                         "y": 0,
@@ -74,6 +76,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "width": 5,
                         "height": 5
                     },
+                    "scale": 2,
                     "fallable": true,
                     "collidable": true,
                     "statue": {
@@ -88,9 +91,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     }
                 });
                 ces.AddEntity({
-                    "rendered": {
-                        "texture": "Wall.png",
-                    },
+                    "texture": "Wall.png",
                     "position": {
                         "x": 20,
                         "y": 20,
@@ -107,9 +108,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     }
                 });
                 ces.AddEntity({
-                    "rendered": {
-                        "texture": "Wall.png"
-                    },
+                    "texture": "Wall.png",
                     "position": {
                         "x": 40,
                         "y": 20,
@@ -128,12 +127,11 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                 });
                 ces.AddEntity({
                     "id": "player",
-                    "rendered": {
-                        "texture": "Player.png",
-                    },
+                    "texture": "Player.png",
                     "position": {
                         "x": 0,
                         "y": 0,
+                        "z": 5,
                         "cx": 0.5,
                         "cy": 0.5
                     },
@@ -152,9 +150,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     }
                 });
                 ces.AddEntity({
-                    "rendered": {
-                        "texture": "Wall.png"
-                    },
+                    "texture": "Wall.png",
                     "position": {
                         "x": 0,
                         "y": 0,
@@ -175,9 +171,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "foot": true
                 });
                 ces.AddEntity({
-                    "rendered": {
-                        "texture": "Wall.png"
-                    },
+                    "texture": "Wall.png",
                     "position": {
                         "x": 0,
                         "y": 0,
@@ -198,12 +192,12 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "foot": true
                 });
                 animationManager.Setup();
-                animationManager.Update.Subscribe(() => {
-                    ces.GetEntities(collisionManager.isCollidable).forEach((entity) => {
-                        entity.position.rotation = entity.position.rotation || 0;
-                        entity.position.rotation += Math.PI / 20;
-                    });
-                });
+                // animationManager.Update.Subscribe(() => {
+                //   ces.GetEntities(collisionManager.isCollidable).forEach((entity) => {
+                //     entity.rotation = entity.rotation || 0;
+                //     entity.rotation += Math.PI / 20;
+                //   });
+                // })
             });
         }
     };

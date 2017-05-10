@@ -5,8 +5,8 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
     exports_1("isCollidable", isCollidable);
     // Algorithm modified from http://wiki.roblox.com/index.php?title=2D_Collision_Detection
     function getCorners(entity) {
-        let scale = (entity.renderer || obj).scale || 1;
-        let rotation = entity.position.rotation || 0;
+        let scale = entity.scale || 1;
+        let rotation = entity.rotation || 0;
         let position = [entity.position.x, entity.position.y];
         let corners = [];
         if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {

@@ -2,7 +2,7 @@ import {Entity as CameraManagerEntity} from "./cameraManager";
 import {Entity as CollisionManagerEntity} from "./collisionManager";
 import {Entity as HoleManagerEntity} from "./holeManager";
 import {Entity as ParentManagerEntity} from "./parentManager";
-import {Entity as PixiManagerEntity} from "./pixiManager";
+import {Entity as WebGLEntity} from "./webglManager";
 import {Entity as PlayerManagerEntity} from "./playerManager";
 import {Entity as StatueManagerEntity} from "./statueManager";
 import {Entity as TriggerManagerEntity} from "./triggerManager";
@@ -13,7 +13,7 @@ export type CombinedEntity =
   CollisionManagerEntity |
   HoleManagerEntity |
   ParentManagerEntity |
-  PixiManagerEntity |
+  WebGLEntity |
   PlayerManagerEntity |
   StatueManagerEntity |
   TriggerManagerEntity |
