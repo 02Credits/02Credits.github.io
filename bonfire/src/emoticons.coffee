@@ -270,6 +270,7 @@ define ["markov"], (markov) ->
     "DerkIsFine": "http://imgur.com/LcS3JMn.png"
     "AnimeKeith": "http://imgur.com/dUOfnNV.gif"
     "ScoffJon": "http://imgur.com/qSJN4zh.gif"
+    "Aeh": "http://imgur.com/bOxhqMy.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
