@@ -9,6 +9,8 @@ import * as wallManager from "./wallManager";
 import * as holeManager from "./holeManager";
 import * as statueManager from "./statueManager";
 import * as animationManager from "./animationManager";
+import * as interpolationManager from "./interpolationManager";
+import * as particleManager from "./particleManager";
 
 webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
   collisionManager.Setup();
@@ -20,6 +22,8 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
   holeManager.Setup();
   statueManager.Setup();
   animationManager.Setup();
+  interpolationManager.Setup();
+  particleManager.Setup();
 
   ces.AddEntity({
     "position": {
@@ -77,6 +81,22 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
       "height": 5
     },
     "collidable": true,
+    "interpolated": {
+      start: {
+        "dimensions": {
+          "width": [ 2, 5 ],
+          "height": [ 2, 5 ]
+        }
+      },
+      end: {
+        "dimensions": {
+          "width": [ 5, 10 ],
+          "height": [ 5, 10 ]
+        }
+      },
+      length: 5,
+      kill: true
+    },
     "trigger": {
       "action": () => cameraManager.Shake(10)
     }
@@ -123,6 +143,37 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     "player": {
       "stepSpeed": 0.3,
       "stepSize": 5
+    },
+    "particleGenerator": {
+      "relativeStart": {
+        "dimensions": {
+          "width": 3,
+          "height": 3
+        },
+        "position": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "relativeEnd": {
+        "dimensions": {
+          "width": 0,
+          "height": 0
+        },
+        "position": {
+          "x": [-5, 5],
+          "y": [-5, 5]
+        }
+      },
+      "constant": {
+        "texture": "Player.png",
+        "position": {
+          "cx": 0.5,
+          "cy": 0.5
+        }
+      },
+      "length": 1,
+      "frequency": 10
     }
   });
 
@@ -171,11 +222,4 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
   });
 
   animationManager.Setup();
-
-  // animationManager.Update.Subscribe(() => {
-  //   ces.GetEntities(collisionManager.isCollidable).forEach((entity) => {
-  //     entity.rotation = entity.rotation || 0;
-  //     entity.rotation += Math.PI / 20;
-  //   });
-  // })
 });

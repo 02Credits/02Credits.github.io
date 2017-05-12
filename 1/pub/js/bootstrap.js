@@ -1,7 +1,7 @@
-System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager"], function (exports_1, context_1) {
+System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager;
+    var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager;
     return {
         setters: [
             function (ces_1) {
@@ -36,6 +36,12 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             },
             function (animationManager_1) {
                 animationManager = animationManager_1;
+            },
+            function (interpolationManager_1) {
+                interpolationManager = interpolationManager_1;
+            },
+            function (particleManager_1) {
+                particleManager = particleManager_1;
             }
         ],
         execute: function () {
@@ -49,6 +55,8 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                 holeManager.Setup();
                 statueManager.Setup();
                 animationManager.Setup();
+                interpolationManager.Setup();
+                particleManager.Setup();
                 ces.AddEntity({
                     "position": {
                         "x": 0,
@@ -103,6 +111,22 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "height": 5
                     },
                     "collidable": true,
+                    "interpolated": {
+                        start: {
+                            "dimensions": {
+                                "width": [2, 5],
+                                "height": [2, 5]
+                            }
+                        },
+                        end: {
+                            "dimensions": {
+                                "width": [5, 10],
+                                "height": [5, 10]
+                            }
+                        },
+                        length: 5,
+                        kill: true
+                    },
                     "trigger": {
                         "action": () => cameraManager.Shake(10)
                     }
@@ -147,6 +171,37 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "player": {
                         "stepSpeed": 0.3,
                         "stepSize": 5
+                    },
+                    "particleGenerator": {
+                        "relativeStart": {
+                            "dimensions": {
+                                "width": 3,
+                                "height": 3
+                            },
+                            "position": {
+                                "x": 0,
+                                "y": 0
+                            }
+                        },
+                        "relativeEnd": {
+                            "dimensions": {
+                                "width": 0,
+                                "height": 0
+                            },
+                            "position": {
+                                "x": [-5, 5],
+                                "y": [-5, 5]
+                            }
+                        },
+                        "constant": {
+                            "texture": "Player.png",
+                            "position": {
+                                "cx": 0.5,
+                                "cy": 0.5
+                            }
+                        },
+                        "length": 1,
+                        "frequency": 10
                     }
                 });
                 ces.AddEntity({
@@ -192,12 +247,6 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "foot": true
                 });
                 animationManager.Setup();
-                // animationManager.Update.Subscribe(() => {
-                //   ces.GetEntities(collisionManager.isCollidable).forEach((entity) => {
-                //     entity.rotation = entity.rotation || 0;
-                //     entity.rotation += Math.PI / 20;
-                //   });
-                // })
             });
         }
     };
