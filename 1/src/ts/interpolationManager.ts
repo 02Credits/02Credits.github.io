@@ -36,6 +36,8 @@ export function collapseTarget(target: any) {
       returnTarget[id] = Math.random() * (max - min) + min;
     } else if (typeof value == "object") {
       returnTarget[id] = collapseTarget(value);
+    } else {
+      returnTarget[id] = target[id];
     }
   }
   return returnTarget;

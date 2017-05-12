@@ -175,8 +175,8 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "particleGenerator": {
                         "relativeStart": {
                             "dimensions": {
-                                "width": 3,
-                                "height": 3
+                                "width": 0,
+                                "height": 0
                             },
                             "position": {
                                 "x": 0,
@@ -185,8 +185,8 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         },
                         "relativeEnd": {
                             "dimensions": {
-                                "width": 0,
-                                "height": 0
+                                "width": -5,
+                                "height": -5
                             },
                             "position": {
                                 "x": [-5, 5],

@@ -147,8 +147,8 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     "particleGenerator": {
       "relativeStart": {
         "dimensions": {
-          "width": 3,
-          "height": 3
+          "width": 0,
+          "height": 0
         },
         "position": {
           "x": 0,
@@ -157,8 +157,8 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
       },
       "relativeEnd": {
         "dimensions": {
-          "width": 0,
-          "height": 0
+          "width": -5,
+          "height": -5
         },
         "position": {
           "x": [-5, 5],

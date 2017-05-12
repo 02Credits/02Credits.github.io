@@ -17,15 +17,16 @@ export function isGenerator(entity: CombinedEntity): entity is Entity { return "
 
 
 function makeRelative(entity: any, target: any) {
-  for (let id of target) {
+  for (let id in target) {
     if (id in entity) {
       if (!isNaN(target[id]) || !isNaN(entity[id])) {
         target[id] += entity[id];
-      } else if (!Array.isArray(entity[id]) && !Array.isArray(target[id])) {
+      } else if (typeof entity[id] == "object" && typeof target[id] == "object") {
         makeRelative(entity[id], target[id]);
       }
     }
   }
+  return target;
 }
 
 export function Setup() {
@@ -34,13 +35,16 @@ export function Setup() {
 
     for (let entity of generatorEntities) {
       let generator = entity.particleGenerator;
-      if (Math.random() * 0.01666 < 1 / generator.frequency) {
-        ces.AddEntity({...collapseTarget(generator.constant), "interpolated": {
-          start: makeRelative(entity, collapseTarget(generator.relativeStart)),
+      if (Math.random() < 0.01666 * generator.frequency) {
+        let relativeStart = makeRelative(entity, collapseTarget(generator.relativeStart));
+        let newParticle = {...collapseTarget(generator.constant), ...relativeStart, "interpolated": {
+          start: relativeStart,
           end: makeRelative(entity, collapseTarget(generator.relativeEnd)),
           length: generator.length,
           kill: true
-        }});
+        }};
+        console.log(newParticle);
+        ces.AddEntity(newParticle);
       }
     }
   })

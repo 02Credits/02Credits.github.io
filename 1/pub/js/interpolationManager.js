@@ -21,6 +21,9 @@ System.register(["./animationManager", "./ces"], function (exports_1, context_1)
             else if (typeof value == "object") {
                 returnTarget[id] = collapseTarget(value);
             }
+            else {
+                returnTarget[id] = target[id];
+            }
         }
         return returnTarget;
     }
