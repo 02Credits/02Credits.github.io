@@ -12,20 +12,20 @@ import * as animationManager from "./animationManager";
 import * as interpolationManager from "./interpolationManager";
 import * as particleManager from "./particleManager";
 
-webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
-  collisionManager.Setup();
-  playerManager.Setup();
-  parentManager.Setup();
-  cameraManager.Setup();
-  triggerManager.Setup();
-  wallManager.Setup();
-  holeManager.Setup();
-  statueManager.Setup();
-  animationManager.Setup();
-  interpolationManager.Setup();
-  particleManager.Setup();
+webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
+  await collisionManager.Setup();
+  await playerManager.Setup();
+  await parentManager.Setup();
+  await cameraManager.Setup();
+  await triggerManager.Setup();
+  await wallManager.Setup();
+  await holeManager.Setup();
+  await statueManager.Setup();
+  await animationManager.Setup();
+  await interpolationManager.Setup();
+  await particleManager.Setup();
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "position": {
       "x": 0,
       "y": 0
@@ -40,7 +40,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     }
   });
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "texture": "Player.png",
     "position": {
       "x": 40,
@@ -68,7 +68,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     }
   });
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "texture": "Wall.png",
     "position": {
       "x": 20,
@@ -82,27 +82,27 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     },
     "collidable": true,
     "interpolated": {
-      start: {
+      "start": {
         "dimensions": {
           "width": [ 2, 5 ],
           "height": [ 2, 5 ]
         }
       },
-      end: {
+      "end": {
         "dimensions": {
           "width": [ 5, 10 ],
           "height": [ 5, 10 ]
         }
       },
-      length: 5,
-      kill: true
+      "length": 5,
+      "kill": true
     },
     "trigger": {
       "action": () => cameraManager.Shake(10)
     }
   });
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "texture": "Wall.png",
     "position": {
       "x": 40,
@@ -121,7 +121,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     }
   });
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "id": "player",
     "texture": "Player.png",
     "position": {
@@ -161,8 +161,8 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
           "height": -5
         },
         "position": {
-          "x": [-5, 5],
-          "y": [-5, 5]
+          "x": [-50, 50],
+          "y": [-50, 50]
         }
       },
       "constant": {
@@ -173,11 +173,11 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
         }
       },
       "length": 1,
-      "frequency": 10
+      "frequency": 1000
     }
   });
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "texture": "Wall.png",
     "position": {
       "x": 0,
@@ -199,7 +199,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(() => {
     "foot": true
   });
 
-  ces.AddEntity({
+  await ces.AddEntity({
     "texture": "Wall.png",
     "position": {
       "x": 0,

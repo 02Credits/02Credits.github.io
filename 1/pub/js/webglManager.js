@@ -146,7 +146,6 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
     function drawSprites(gl, spriteProgram, textureInfo) {
         return __awaiter(this, void 0, void 0, function* () {
             gl.useProgram(spriteProgram.program);
-            setCameraUniforms(spriteProgram);
             let batchCount = 0;
             let coords = [];
             let positions = [];
@@ -156,10 +155,6 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             let centers = [];
             let scales = [];
             let indices = [];
-            twgl.setUniforms(spriteProgram, {
-                u_texmap: textureInfo.texture,
-                u_map_dimensions: textureInfo.size
-            });
             let drawBatch = () => {
                 let arrays = {
                     a_coord: { numComponents: 2, data: [].concat.apply([], coords) },
@@ -197,9 +192,6 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
                 let offset = batchCount * 4;
                 indices.push([0 + offset, 1 + offset, 2 + offset, 2 + offset, 1 + offset, 3 + offset]);
                 batchCount++;
-                if (batchCount > 200) {
-                    drawBatch();
-                }
             }
             drawBatch();
         });
@@ -207,14 +199,9 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
     function drawDebug(gl, debugProgram) {
         return __awaiter(this, void 0, void 0, function* () {
             gl.useProgram(debugProgram.program);
-            setCameraUniforms(debugProgram);
-            let batchCount = 0;
             let indexOffset = 0;
             let coords = [];
             let indices = [];
-            twgl.setUniforms(debugProgram, {
-                u_color: [1, 0, 0, 0.5]
-            });
             let drawBatch = () => {
                 let arrays = {
                     a_coord: { numComponents: 2, data: [].concat.apply([], coords) },
@@ -225,7 +212,6 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
                 let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
                 twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
                 twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
-                batchCount = 0;
             };
             for (let entity of ces.GetEntities(collisionManager_1.isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
                 let corners = collisionManager_1.getCorners(entity);
@@ -237,10 +223,6 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
                     }
                     indices.push(polyIndices);
                     indexOffset += poly.length;
-                }
-                batchCount++;
-                if (batchCount > 200) {
-                    drawBatch();
                 }
             }
             drawBatch();
@@ -256,6 +238,19 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             let textures = yield setupTextures(gl, basePath, texturePaths);
             let spriteProgram = yield compileProgram(gl, basePath, "Sprite");
             let debugProgram = yield compileProgram(gl, basePath, "Debug");
+            animationManager_1.Init.Subscribe(() => {
+                gl.useProgram(spriteProgram.program);
+                setCameraUniforms(spriteProgram);
+                twgl.setUniforms(spriteProgram, {
+                    u_texmap: textures.texture,
+                    u_map_dimensions: textures.size
+                });
+                gl.useProgram(debugProgram.program);
+                setCameraUniforms(debugProgram);
+                twgl.setUniforms(debugProgram, {
+                    u_color: [1, 0, 0, 0.5]
+                });
+            });
             ces.CheckEntity.Subscribe((entity) => {
                 if (isRenderable(entity)) {
                     entity.color = entity.color || { h: 1, s: 1, v: 1, a: 1 };

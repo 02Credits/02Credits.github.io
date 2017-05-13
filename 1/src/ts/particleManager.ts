@@ -35,16 +35,16 @@ export function Setup() {
 
     for (let entity of generatorEntities) {
       let generator = entity.particleGenerator;
-      if (Math.random() < 0.01666 * generator.frequency) {
-        let relativeStart = makeRelative(entity, collapseTarget(generator.relativeStart));
-        let newParticle = {...collapseTarget(generator.constant), ...relativeStart, "interpolated": {
-          start: relativeStart,
-          end: makeRelative(entity, collapseTarget(generator.relativeEnd)),
-          length: generator.length,
-          kill: true
-        }};
-        console.log(newParticle);
-        ces.AddEntity(newParticle);
+      for (let i = 0; i < 100; i++) {
+        if (Math.random() < 0.01666 * generator.frequency / 100) {
+          let relativeStart = makeRelative(entity, collapseTarget(generator.relativeStart));
+          ces.AddEntity({...collapseTarget(generator.constant), ...relativeStart, "interpolated": {
+            start: relativeStart,
+            end: makeRelative(entity, collapseTarget(generator.relativeEnd)),
+            length: generator.length,
+            kill: true
+          }});
+        }
       }
     }
   })

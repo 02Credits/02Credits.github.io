@@ -21,16 +21,16 @@ System.register(["./animationManager", "./ces", "./interpolationManager"], funct
             let generatorEntities = ces.GetEntities(isGenerator);
             for (let entity of generatorEntities) {
                 let generator = entity.particleGenerator;
-                if (Math.random() < 0.01666 * generator.frequency) {
-                    let relativeStart = makeRelative(entity, interpolationManager_1.collapseTarget(generator.relativeStart));
-                    let newParticle = Object.assign({}, interpolationManager_1.collapseTarget(generator.constant), relativeStart, { "interpolated": {
-                            start: relativeStart,
-                            end: makeRelative(entity, interpolationManager_1.collapseTarget(generator.relativeEnd)),
-                            length: generator.length,
-                            kill: true
-                        } });
-                    console.log(newParticle);
-                    ces.AddEntity(newParticle);
+                for (let i = 0; i < 100; i++) {
+                    if (Math.random() < 0.01666 * generator.frequency / 100) {
+                        let relativeStart = makeRelative(entity, interpolationManager_1.collapseTarget(generator.relativeStart));
+                        ces.AddEntity(Object.assign({}, interpolationManager_1.collapseTarget(generator.constant), relativeStart, { "interpolated": {
+                                start: relativeStart,
+                                end: makeRelative(entity, interpolationManager_1.collapseTarget(generator.relativeEnd)),
+                                length: generator.length,
+                                kill: true
+                            } }));
+                    }
                 }
             }
         });

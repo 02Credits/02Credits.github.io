@@ -1,5 +1,6 @@
 import {CombinedEntity} from "./entity";
 import {Update} from "./animationManager";
+import {EventManager1} from "./eventManager";
 import * as ces from "./ces";
 
 export interface Entity {
@@ -19,6 +20,8 @@ export interface Entity {
   }
 }
 export function isInterpolated(entity: CombinedEntity): entity is Entity { return "interpolated" in entity; }
+
+export let AnimationFinished = new EventManager1<Entity>();
 
 function mix(x: number, y: number, a: number) {
   return x * (1 - a) + y * a;
@@ -106,6 +109,8 @@ export function Setup() {
           } else {
             if (interpolated.kill) {
               ces.RemoveEntity(entity);
+            } else {
+              AnimationFinished.Publish(entity);
             }
           }
         } else {

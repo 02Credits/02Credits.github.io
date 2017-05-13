@@ -1,6 +1,6 @@
 import * as twgl from "twgl";
 
-import {Update} from "./animationManager";
+import {Init, Update} from "./animationManager";
 import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
@@ -184,7 +184,6 @@ async function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement)
 
 async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: TextureInfo) {
   gl.useProgram(spriteProgram.program);
-  setCameraUniforms(spriteProgram);
 
   let batchCount = 0;
   let coords: number[][] = [];
@@ -195,11 +194,6 @@ async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.Progra
   let centers: number[][] = [];
   let scales: number[][] = [];
   let indices: number[][] = [];
-
-  twgl.setUniforms(spriteProgram, {
-    u_texmap: textureInfo.texture,
-    u_map_dimensions: textureInfo.size
-  });
 
   let drawBatch = () => {
     let arrays = {
@@ -239,9 +233,6 @@ async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.Progra
     let offset = batchCount * 4;
     indices.push([0 + offset, 1 + offset, 2 + offset, 2 + offset, 1 + offset, 3 + offset]);
     batchCount++;
-    if (batchCount > 200) {
-      drawBatch();
-    }
   }
   drawBatch();
 }
@@ -249,16 +240,9 @@ async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.Progra
 async function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
   gl.useProgram(debugProgram.program);
 
-  setCameraUniforms(debugProgram);
-
-  let batchCount = 0;
   let indexOffset = 0;
   let coords: number[][] = [];
   let indices: number[][] = [];
-
-  twgl.setUniforms(debugProgram, {
-    u_color: [1, 0, 0, 0.5]
-  });
 
   let drawBatch = () => {
     let arrays = {
@@ -270,7 +254,6 @@ async function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramIn
     let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
     twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
-    batchCount = 0;
   }
 
   for (let entity of ces.GetEntities(isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
@@ -283,10 +266,6 @@ async function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramIn
       }
       indices.push(polyIndices);
       indexOffset += poly.length;
-    }
-    batchCount++;
-    if (batchCount > 200) {
-      drawBatch();
     }
   }
   drawBatch();
@@ -303,6 +282,23 @@ export async function Setup(texturePaths: string[]) {
 
   let spriteProgram = await compileProgram(gl, basePath, "Sprite");
   let debugProgram = await compileProgram(gl, basePath, "Debug");
+
+  Init.Subscribe(() => {
+    gl.useProgram(spriteProgram.program);
+
+    setCameraUniforms(spriteProgram);
+    twgl.setUniforms(spriteProgram, {
+      u_texmap: textures.texture,
+      u_map_dimensions: textures.size
+    });
+
+    gl.useProgram(debugProgram.program)
+
+    setCameraUniforms(debugProgram);
+    twgl.setUniforms(debugProgram, {
+      u_color: [1, 0, 0, 0.5]
+    });
+  })
 
   ces.CheckEntity.Subscribe((entity) => {
     if (isRenderable(entity)) {

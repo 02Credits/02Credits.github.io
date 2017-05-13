@@ -1,4 +1,4 @@
-System.register(["./animationManager", "./ces"], function (exports_1, context_1) {
+System.register(["./animationManager", "./eventManager", "./ces"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isInterpolated(entity) { return "interpolated" in entity; }
@@ -92,6 +92,9 @@ System.register(["./animationManager", "./ces"], function (exports_1, context_1)
                             if (interpolated.kill) {
                                 ces.RemoveEntity(entity);
                             }
+                            else {
+                                AnimationFinished.Publish(entity);
+                            }
                         }
                     }
                     else {
@@ -102,17 +105,21 @@ System.register(["./animationManager", "./ces"], function (exports_1, context_1)
         });
     }
     exports_1("Setup", Setup);
-    var animationManager_1, ces;
+    var animationManager_1, eventManager_1, ces, AnimationFinished;
     return {
         setters: [
             function (animationManager_1_1) {
                 animationManager_1 = animationManager_1_1;
+            },
+            function (eventManager_1_1) {
+                eventManager_1 = eventManager_1_1;
             },
             function (ces_1) {
                 ces = ces_1;
             }
         ],
         execute: function () {
+            exports_1("AnimationFinished", AnimationFinished = new eventManager_1.EventManager1());
         }
     };
 });

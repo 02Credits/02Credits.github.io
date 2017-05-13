@@ -9,10 +9,11 @@ System.register(["./eventManager"], function (exports_1, context_1) {
         requestAnimationFrame(animate);
     }
     function Setup() {
+        Init.Publish();
         requestAnimationFrame(animate);
     }
     exports_1("Setup", Setup);
-    var eventManager_1, Time, Running, Update;
+    var eventManager_1, Time, Running, Update, Init;
     return {
         setters: [
             function (eventManager_1_1) {
@@ -23,6 +24,7 @@ System.register(["./eventManager"], function (exports_1, context_1) {
             exports_1("Time", Time = 0);
             exports_1("Running", Running = true);
             exports_1("Update", Update = new eventManager_1.EventManager1());
+            exports_1("Init", Init = new eventManager_1.EventManager0());
         }
     };
 });
