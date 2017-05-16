@@ -4,9 +4,11 @@ import {Init, Update} from "./animationManager";
 import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
+import {spliceArray} from "./utils";
 
 import {CombinedEntity} from "./entity";
 
+const debug = false;
 const obj: any = {};
 
 export let canvasSize: number;
@@ -182,59 +184,63 @@ async function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement)
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 }
 
+function spliceData(array: {numComponents: number, data: number[]}, entityIndex: number, data: number[]) {
+  let expectedCount = array.numComponents * 4;
+  for (let i = 0; i < expectedCount; i += data.length) {
+    spliceArray(array.data, entityIndex * expectedCount + i, data);
+  }
+}
+
+let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
+  a_coord: {numComponents: 2, data: new Array(400)},
+  a_position: {numComponents: 3, data: new Array(400)},
+  a_texcoord: {numComponents: 2, data: new Array(400)},
+  a_rotation: {numComponents: 1, data: new Array(400)},
+  a_dimensions: {numComponents: 2, data: new Array(400)},
+  a_center: {numComponents: 2, data: new Array(400)},
+  a_scale: {numComponents: 1, data: new Array(400)},
+  indices: {numComponents: 3, data: new Array(400)}
+};
+
 async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: TextureInfo) {
   gl.useProgram(spriteProgram.program);
+  let renderables = ces.GetEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
 
-  let batchCount = 0;
-  let coords: number[][] = [];
-  let positions: number[][] = [];
-  let texCoords: number[][] = [];
-  let rotations: number[][] = [];
-  let dimensions: number[][] = [];
-  let centers: number[][] = [];
-  let scales: number[][] = [];
-  let indices: number[][] = [];
-
-  let drawBatch = () => {
-    let arrays = {
-      a_coord: {numComponents: 2, data: [].concat.apply([], coords)},
-      a_position: {numComponents: 3, data: [].concat.apply([], positions)},
-      a_texcoord: {numComponents: 2, data: [].concat.apply([], texCoords)},
-      a_rotation: {numComponents: 1, data: [].concat.apply([], rotations)},
-      a_dimensions: {numComponents: 2, data: [].concat.apply([], dimensions)},
-      a_center: {numComponents: 2, data: [].concat.apply([], centers)},
-      a_scale: {numComponents: 1, data: [].concat.apply([], scales)},
-      indices: {numComponents: 3, data: [].concat.apply([], indices)}
-    };
-    coords = positions = texCoords = rotations = dimensions = centers = scales = indices = [];
-    let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
-    twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
-    twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
-    batchCount = 0;
+  for (let id in spriteArrays) {
+    let expectedLength = renderables.length * spriteArrays[id].numComponents;
+    if (spriteArrays[id].data.length < expectedLength) {
+      spriteArrays[id].data = new Array(expectedLength);
+    }
   }
 
-  for (let entity of ces.GetEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
-    coords.push([0, 0, 1, 0, 0, 1, 1, 1]);
-    let x = entity.position.x;
-    let y = entity.position.y;
-    let z = entity.position.z || 0;
-    positions.push([x, y, z, x, y, z, x, y, z, x, y, z]);
-    texCoords.push(textureInfo.texCoords[entity.texture]);
-    let rotation = entity.rotation || 0;
-    rotations.push([rotation, rotation, rotation, rotation]);
-    let w = entity.dimensions.width;
-    let h = entity.dimensions.height;
-    dimensions.push([w, h, w, h, w, h, w, h]);
-    let scale = entity.scale || 1;
-    let cx = entity.position.cx || 0.5;
-    let cy = entity.position.cy || 0.5;
-    centers.push([cx, cy, cx, cy, cx, cy, cx, cy]);
-    scales.push([scale, scale, scale, scale]);
-    let offset = batchCount * 4;
-    indices.push([0 + offset, 1 + offset, 2 + offset, 2 + offset, 1 + offset, 3 + offset]);
-    batchCount++;
+  let index = 0;
+  for (let entity of renderables) {
+    spliceData(spriteArrays.a_coord, index, [ 0, 0, 1, 0, 0, 1, 1, 1 ]);
+    spliceData(spriteArrays.a_position, index, [
+      entity.position.x,
+      entity.position.y,
+      entity.position.z || 0
+    ]);
+    spliceData(spriteArrays.a_texcoord, index, textureInfo.texCoords[entity.texture]);
+    spliceData(spriteArrays.a_rotation, index, [entity.rotation || 0]);
+    spliceData(spriteArrays.a_dimensions, index, [
+      entity.dimensions.width,
+      entity.dimensions.height
+    ]);
+    spliceData(spriteArrays.a_center, index, [
+      entity.position.cx || 0.5,
+      entity.position.cy || 0.5
+    ]);
+    spliceData(spriteArrays.a_scale, index, [entity.scale || 1]);
+    let offset = index * 4;
+    spliceArray(spriteArrays.indices.data, index * 6,
+                [offset + 0, offset + 1, offset + 2, offset + 2, offset + 1, offset + 3]);
+    index++;
   }
-  drawBatch();
+
+  let bufferInfo = twgl.createBufferInfoFromArrays(gl, spriteArrays);
+  twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
+  twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo, renderables.length * 6);
 }
 
 async function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
@@ -250,7 +256,6 @@ async function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramIn
       indices: {numComponents: 3, data: [].concat.apply([], indices)}
     };
     coords = indices = [];
-    indexOffset = 0;
     let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
     twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
     twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
@@ -292,13 +297,15 @@ export async function Setup(texturePaths: string[]) {
       u_map_dimensions: textures.size
     });
 
-    gl.useProgram(debugProgram.program)
+    if (debug) {
+      gl.useProgram(debugProgram.program)
 
-    setCameraUniforms(debugProgram);
-    twgl.setUniforms(debugProgram, {
-      u_color: [1, 0, 0, 0.5]
-    });
-  })
+      setCameraUniforms(debugProgram);
+      twgl.setUniforms(debugProgram, {
+        u_color: [1, 0, 0, 0.5]
+      });
+    }
+  });
 
   ces.CheckEntity.Subscribe((entity) => {
     if (isRenderable(entity)) {
@@ -310,7 +317,9 @@ export async function Setup(texturePaths: string[]) {
   Update.Subscribe(async () => {
     clearCanvas(gl, canvas);
     await drawSprites(gl, spriteProgram, textures);
-    await drawDebug(gl, debugProgram);
+    if (debug) {
+      await drawDebug(gl, debugProgram);
+    }
   });
 
 }

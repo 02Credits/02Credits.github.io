@@ -1,47 +1,35 @@
 System.register(["./eventManager"], function (exports_1, context_1) {
     "use strict";
-    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    };
     var __moduleName = context_1 && context_1.id;
     function isTracked(entity) { return "id" in entity; }
-    function AddEntity(entity) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let results = yield CheckEntity.Poll(entity);
-            if (results.every(result => result || result === undefined)) {
-                let trackedEntity;
-                if (isTracked(entity)) {
-                    if (entity.id in entities) {
-                        console.log("WARNING: repeat id for " + JSON.stringify(entity));
-                        return null;
-                    }
-                    else {
-                        entities[entity.id] = entity;
-                    }
-                    trackedEntity = entity;
+    async function AddEntity(entity) {
+        let results = await CheckEntity.Poll(entity);
+        if (results.every(result => result || result === undefined)) {
+            let trackedEntity;
+            if (isTracked(entity)) {
+                if (entity.id in entities) {
+                    console.log("WARNING: repeat id for " + JSON.stringify(entity));
+                    return null;
                 }
                 else {
-                    trackedEntity = Object.assign({}, entity, { id: currentId.toString() });
-                    entities[currentId] = trackedEntity;
-                    currentId++;
+                    entities[entity.id] = entity;
                 }
-                yield EntityAdded.Publish(trackedEntity);
-                return entity;
+                trackedEntity = entity;
             }
-            return null;
-        });
+            else {
+                trackedEntity = Object.assign({}, entity, { id: currentId.toString() });
+                entities[currentId] = trackedEntity;
+                currentId++;
+            }
+            await EntityAdded.Publish(trackedEntity);
+            return entity;
+        }
+        return null;
     }
     exports_1("AddEntity", AddEntity);
-    function RemoveEntity(entity) {
-        return __awaiter(this, void 0, void 0, function* () {
-            EntityRemoved.Publish(entity);
-            delete entities[entity.id];
-        });
+    async function RemoveEntity(entity) {
+        EntityRemoved.Publish(entity);
+        delete entities[entity.id];
     }
     exports_1("RemoveEntity", RemoveEntity);
     function GetEntities(guard) {

@@ -6,44 +6,45 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
     function mix(x, y, a) {
         return x * (1 - a) + y * a;
     }
-    function collapseTarget(target) {
-        let returnTarget = {};
+    function collapseTarget(target, destination) {
         for (let id in target) {
             let value = target[id];
             if (!isNaN(value)) {
-                returnTarget[id] = value;
+                destination[id] = value;
             }
             else if (Array.isArray(value)) {
                 let max = Math.max(value[0], value[1]);
                 let min = Math.min(value[0], value[1]);
-                returnTarget[id] = Math.random() * (max - min) + min;
+                destination[id] = Math.random() * (max - min) + min;
             }
             else if (typeof value == "object") {
-                returnTarget[id] = collapseTarget(value);
+                if (!destination[id]) {
+                    destination[id] = {};
+                }
+                collapseTarget(value, destination[id]);
             }
             else {
-                returnTarget[id] = target[id];
+                destination[id] = target[id];
             }
         }
-        return returnTarget;
     }
     exports_1("collapseTarget", collapseTarget);
     function initializeState(entity, time) {
-        entity.interpolated.state = {
-            collapsedStart: collapseTarget(entity.interpolated.start),
-            collapsedEnd: collapseTarget(entity.interpolated.end),
-            timeStarted: time,
-            reverse: false
-        };
+        let state = entity.interpolated.state;
+        collapseTarget(entity.interpolated.start, state.collapsedStart);
+        collapseTarget(entity.interpolated.end, state.collapsedEnd);
+        state.timeStarted = time;
+        state.reverse = false;
+        state.initialized = true;
     }
     function repeat(entity, time) {
         if (entity.interpolated.reversable) {
             entity.interpolated.state.reverse = !entity.interpolated.state.reverse;
             if (entity.interpolated.state.reverse) {
-                entity.interpolated.state.collapsedStart = collapseTarget(entity.interpolated.start);
+                collapseTarget(entity.interpolated.start, entity.interpolated.state.collapsedStart);
             }
             else {
-                entity.interpolated.state.collapsedEnd = collapseTarget(entity.interpolated.end);
+                collapseTarget(entity.interpolated.end, entity.interpolated.state.collapsedEnd);
             }
         }
         else {
@@ -75,12 +76,24 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
         interpolate(start, end, entity, amount);
     }
     function Setup() {
+        ces.CheckEntity.Subscribe((entity) => {
+            if (isInterpolated(entity)) {
+                entity.interpolated.state = {
+                    collapsedStart: {},
+                    collapsedEnd: {},
+                    timeStarted: NaN,
+                    reverse: false,
+                    initialized: false
+                };
+            }
+            return true;
+        });
         animationManager_1.Update.Subscribe((time) => {
             let interpolatedEntities = ces.GetEntities(isInterpolated);
             for (let entity of interpolatedEntities) {
                 let interpolated = entity.interpolated;
                 let state = entity.interpolated.state;
-                if (!state) {
+                if (!state.initialized) {
                     initializeState(entity, time);
                 }
                 else {

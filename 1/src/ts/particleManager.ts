@@ -26,7 +26,6 @@ function makeRelative(entity: any, target: any) {
       }
     }
   }
-  return target;
 }
 
 export function Setup() {
@@ -37,10 +36,17 @@ export function Setup() {
       let generator = entity.particleGenerator;
       for (let i = 0; i < 100; i++) {
         if (Math.random() < 0.01666 * generator.frequency / 100) {
-          let relativeStart = makeRelative(entity, collapseTarget(generator.relativeStart));
-          ces.AddEntity({...collapseTarget(generator.constant), ...relativeStart, "interpolated": {
+          let constantValues = {};
+          let relativeStart = {};
+          let relativeEnd = {};
+          collapseTarget(generator.constant, constantValues);
+          collapseTarget(generator.relativeStart, relativeStart);
+          makeRelative(entity, relativeStart);
+          collapseTarget(generator.relativeEnd, relativeEnd);
+          makeRelative(entity, relativeEnd);
+          ces.AddEntity({...constantValues, ...relativeStart, "interpolated": {
             start: relativeStart,
-            end: makeRelative(entity, collapseTarget(generator.relativeEnd)),
+            end: relativeEnd,
             length: generator.length,
             kill: true
           }});

@@ -68,58 +68,58 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     }
   });
 
-  await ces.AddEntity({
-    "texture": "Wall.png",
-    "position": {
-      "x": 20,
-      "y": 20,
-      "cx": 0.5,
-      "cy": 0.5
-    },
-    "dimensions": {
-      "width": 5,
-      "height": 5
-    },
-    "collidable": true,
-    "interpolated": {
-      "start": {
-        "dimensions": {
-          "width": [ 2, 5 ],
-          "height": [ 2, 5 ]
-        }
-      },
-      "end": {
-        "dimensions": {
-          "width": [ 5, 10 ],
-          "height": [ 5, 10 ]
-        }
-      },
-      "length": 5,
-      "kill": true
-    },
-    "trigger": {
-      "action": () => cameraManager.Shake(10)
-    }
-  });
+  // await ces.AddEntity({
+  //   "texture": "Wall.png",
+  //   "position": {
+  //     "x": 20,
+  //     "y": 20,
+  //     "cx": 0.5,
+  //     "cy": 0.5
+  //   },
+  //   "dimensions": {
+  //     "width": 5,
+  //     "height": 5
+  //   },
+  //   "collidable": true,
+  //   "interpolated": {
+  //     "start": {
+  //       "dimensions": {
+  //         "width": [ 2, 5 ],
+  //         "height": [ 2, 5 ]
+  //       }
+  //     },
+  //     "end": {
+  //       "dimensions": {
+  //         "width": [ 5, 10 ],
+  //         "height": [ 5, 10 ]
+  //       }
+  //     },
+  //     "length": 5,
+  //     "kill": true
+  //   },
+  //   "trigger": {
+  //     "action": () => cameraManager.Shake(10)
+  //   }
+  // });
 
-  await ces.AddEntity({
-    "texture": "Wall.png",
-    "position": {
-      "x": 40,
-      "y": 20,
-      "z": 0,
-      "cx": 0.5,
-      "cy": 0.5
-    },
-    "dimensions": {
-      "width": 20,
-      "height": 20
-    },
-    "collidable": true,
-    "hole": {
-      "steepness": 0.1
-    }
-  });
+  // await ces.AddEntity({
+  //   "texture": "Wall.png",
+  //   "position": {
+  //     "x": 40,
+  //     "y": 20,
+  //     "z": 0,
+  //     "cx": 0.5,
+  //     "cy": 0.5
+  //   },
+  //   "dimensions": {
+  //     "width": 20,
+  //     "height": 20
+  //   },
+  //   "collidable": true,
+  //   "hole": {
+  //     "steepness": 0.1
+  //   }
+  // });
 
   await ces.AddEntity({
     "id": "player",
@@ -170,10 +170,11 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
         "position": {
           "cx": 0.5,
           "cy": 0.5
-        }
+        },
+        "rotation": 0
       },
       "length": 1,
-      "frequency": 1000
+      "frequency": 0
     }
   });
 

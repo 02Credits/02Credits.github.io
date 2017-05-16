@@ -1,5 +1,5 @@
 import * as ces from "./ces";
-import utils from "./utils";
+import * as utils from "./utils";
 import {Update} from "./animationManager";
 import {Position, Dimensions, Entity as RenderedEntity} from "./webglManager";
 import {isPlayer} from "./playerManager";

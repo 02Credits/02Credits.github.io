@@ -50,14 +50,14 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                 else {
                     let playerEntities = ces.GetEntities(playerManager_1.isPlayer);
                     let target = statue.home;
-                    let homeDelta = utils_1.default.sub(target, entity.position);
-                    let homeDistance = utils_1.default.distance(homeDelta);
+                    let homeDelta = utils.sub(target, entity.position);
+                    let homeDistance = utils.distance(homeDelta);
                     // Dunno why I did this... There should only ever be one player. Oh well
                     let closestPlayerPosition;
                     let closestDistance = Number.MAX_VALUE;
                     for (let player of playerEntities) {
-                        let playerDelta = utils_1.default.sub(player.position, entity.position);
-                        let playerDistance = utils_1.default.distance(playerDelta);
+                        let playerDelta = utils.sub(player.position, entity.position);
+                        let playerDistance = utils.distance(playerDelta);
                         if (playerDistance < statue.activationRadius) {
                             if (closestDistance > playerDistance) {
                                 closestPlayerPosition = player.position;
@@ -71,11 +71,11 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                         distance = closestDistance;
                     }
                     if (distance > 0.01) {
-                        let targetDelta = utils_1.default.sub(target, entity.position);
-                        targetDelta = utils_1.default.div(targetDelta, distance);
+                        let targetDelta = utils.sub(target, entity.position);
+                        targetDelta = utils.div(targetDelta, distance);
                         let targetRotation = Math.atan2(targetDelta.y, targetDelta.x);
                         let r = entity.rotation;
-                        let dr = utils_1.default.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
+                        let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
                         if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
                             statue.jumpState = {
                                 jumpTime: 0,
@@ -102,14 +102,14 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
         });
     }
     exports_1("Setup", Setup);
-    var ces, utils_1, animationManager_1, playerManager_1, collisionManager_1, obj;
+    var ces, utils, animationManager_1, playerManager_1, collisionManager_1, obj;
     return {
         setters: [
             function (ces_1) {
                 ces = ces_1;
             },
-            function (utils_1_1) {
-                utils_1 = utils_1_1;
+            function (utils_1) {
+                utils = utils_1;
             },
             function (animationManager_1_1) {
                 animationManager_1 = animationManager_1_1;

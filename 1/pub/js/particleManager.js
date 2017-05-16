@@ -14,7 +14,6 @@ System.register(["./animationManager", "./ces", "./interpolationManager"], funct
                 }
             }
         }
-        return target;
     }
     function Setup() {
         animationManager_1.Update.Subscribe((time) => {
@@ -23,10 +22,17 @@ System.register(["./animationManager", "./ces", "./interpolationManager"], funct
                 let generator = entity.particleGenerator;
                 for (let i = 0; i < 100; i++) {
                     if (Math.random() < 0.01666 * generator.frequency / 100) {
-                        let relativeStart = makeRelative(entity, interpolationManager_1.collapseTarget(generator.relativeStart));
-                        ces.AddEntity(Object.assign({}, interpolationManager_1.collapseTarget(generator.constant), relativeStart, { "interpolated": {
+                        let constantValues = {};
+                        let relativeStart = {};
+                        let relativeEnd = {};
+                        interpolationManager_1.collapseTarget(generator.constant, constantValues);
+                        interpolationManager_1.collapseTarget(generator.relativeStart, relativeStart);
+                        makeRelative(entity, relativeStart);
+                        interpolationManager_1.collapseTarget(generator.relativeEnd, relativeEnd);
+                        makeRelative(entity, relativeEnd);
+                        ces.AddEntity(Object.assign({}, constantValues, relativeStart, { "interpolated": {
                                 start: relativeStart,
-                                end: makeRelative(entity, interpolationManager_1.collapseTarget(generator.relativeEnd)),
+                                end: relativeEnd,
                                 length: generator.length,
                                 kill: true
                             } }));

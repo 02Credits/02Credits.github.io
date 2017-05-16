@@ -1,13 +1,5 @@
 System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager"], function (exports_1, context_1) {
     "use strict";
-    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    };
     var __moduleName = context_1 && context_1.id;
     var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager;
     return {
@@ -53,19 +45,19 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             }
         ],
         execute: function () {
-            webglManager.Setup(["Wall.png", "Player.png"]).then(() => __awaiter(this, void 0, void 0, function* () {
-                yield collisionManager.Setup();
-                yield playerManager.Setup();
-                yield parentManager.Setup();
-                yield cameraManager.Setup();
-                yield triggerManager.Setup();
-                yield wallManager.Setup();
-                yield holeManager.Setup();
-                yield statueManager.Setup();
-                yield animationManager.Setup();
-                yield interpolationManager.Setup();
-                yield particleManager.Setup();
-                yield ces.AddEntity({
+            webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
+                await collisionManager.Setup();
+                await playerManager.Setup();
+                await parentManager.Setup();
+                await cameraManager.Setup();
+                await triggerManager.Setup();
+                await wallManager.Setup();
+                await holeManager.Setup();
+                await statueManager.Setup();
+                await animationManager.Setup();
+                await interpolationManager.Setup();
+                await particleManager.Setup();
+                await ces.AddEntity({
                     "position": {
                         "x": 0,
                         "y": 0
@@ -79,7 +71,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "targetY": 0
                     }
                 });
-                yield ces.AddEntity({
+                await ces.AddEntity({
                     "texture": "Player.png",
                     "position": {
                         "x": 40,
@@ -106,58 +98,58 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "rotationSlowdown": 0.9
                     }
                 });
-                yield ces.AddEntity({
-                    "texture": "Wall.png",
-                    "position": {
-                        "x": 20,
-                        "y": 20,
-                        "cx": 0.5,
-                        "cy": 0.5
-                    },
-                    "dimensions": {
-                        "width": 5,
-                        "height": 5
-                    },
-                    "collidable": true,
-                    "interpolated": {
-                        "start": {
-                            "dimensions": {
-                                "width": [2, 5],
-                                "height": [2, 5]
-                            }
-                        },
-                        "end": {
-                            "dimensions": {
-                                "width": [5, 10],
-                                "height": [5, 10]
-                            }
-                        },
-                        "length": 5,
-                        "kill": true
-                    },
-                    "trigger": {
-                        "action": () => cameraManager.Shake(10)
-                    }
-                });
-                yield ces.AddEntity({
-                    "texture": "Wall.png",
-                    "position": {
-                        "x": 40,
-                        "y": 20,
-                        "z": 0,
-                        "cx": 0.5,
-                        "cy": 0.5
-                    },
-                    "dimensions": {
-                        "width": 20,
-                        "height": 20
-                    },
-                    "collidable": true,
-                    "hole": {
-                        "steepness": 0.1
-                    }
-                });
-                yield ces.AddEntity({
+                // await ces.AddEntity({
+                //   "texture": "Wall.png",
+                //   "position": {
+                //     "x": 20,
+                //     "y": 20,
+                //     "cx": 0.5,
+                //     "cy": 0.5
+                //   },
+                //   "dimensions": {
+                //     "width": 5,
+                //     "height": 5
+                //   },
+                //   "collidable": true,
+                //   "interpolated": {
+                //     "start": {
+                //       "dimensions": {
+                //         "width": [ 2, 5 ],
+                //         "height": [ 2, 5 ]
+                //       }
+                //     },
+                //     "end": {
+                //       "dimensions": {
+                //         "width": [ 5, 10 ],
+                //         "height": [ 5, 10 ]
+                //       }
+                //     },
+                //     "length": 5,
+                //     "kill": true
+                //   },
+                //   "trigger": {
+                //     "action": () => cameraManager.Shake(10)
+                //   }
+                // });
+                // await ces.AddEntity({
+                //   "texture": "Wall.png",
+                //   "position": {
+                //     "x": 40,
+                //     "y": 20,
+                //     "z": 0,
+                //     "cx": 0.5,
+                //     "cy": 0.5
+                //   },
+                //   "dimensions": {
+                //     "width": 20,
+                //     "height": 20
+                //   },
+                //   "collidable": true,
+                //   "hole": {
+                //     "steepness": 0.1
+                //   }
+                // });
+                await ces.AddEntity({
                     "id": "player",
                     "texture": "Player.png",
                     "position": {
@@ -206,13 +198,14 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                             "position": {
                                 "cx": 0.5,
                                 "cy": 0.5
-                            }
+                            },
+                            "rotation": 0
                         },
                         "length": 1,
-                        "frequency": 1000
+                        "frequency": 0
                     }
                 });
-                yield ces.AddEntity({
+                await ces.AddEntity({
                     "texture": "Wall.png",
                     "position": {
                         "x": 0,
@@ -233,7 +226,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     },
                     "foot": true
                 });
-                yield ces.AddEntity({
+                await ces.AddEntity({
                     "texture": "Wall.png",
                     "position": {
                         "x": 0,
@@ -255,7 +248,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "foot": true
                 });
                 animationManager.Setup();
-            }));
+            });
         }
     };
 });
