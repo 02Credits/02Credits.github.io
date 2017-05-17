@@ -2,7 +2,7 @@ import {PollManager1, EventManager1} from "./eventManager";
 import {CombinedEntity} from "./entity";
 
 let currentId = 0;
-let entities: {[id: string]: TrackedEntity} = {};
+export let entities: {[id: string]: TrackedEntity} = {};
 
 export type TrackedEntity = { id: string } & CombinedEntity;
 function isTracked(entity: CombinedEntity | TrackedEntity): entity is TrackedEntity { return "id" in entity; }
@@ -11,8 +11,8 @@ export let CheckEntity = new PollManager1<CombinedEntity, boolean>();
 export let EntityAdded = new EventManager1<TrackedEntity>();
 export let EntityRemoved = new EventManager1<TrackedEntity>();
 
-export async function AddEntity(entity: CombinedEntity | TrackedEntity) {
-    let results = await CheckEntity.Poll(entity);
+export function AddEntity(entity: CombinedEntity | TrackedEntity) {
+    let results = CheckEntity.Poll(entity);
     if (results.every(result => result || result === undefined)) {
         let trackedEntity: TrackedEntity;
         if (isTracked(entity)) {
@@ -28,13 +28,13 @@ export async function AddEntity(entity: CombinedEntity | TrackedEntity) {
             entities[currentId] = trackedEntity;
             currentId++;
         }
-        await EntityAdded.Publish(trackedEntity);
+        EntityAdded.Publish(trackedEntity);
         return trackedEntity;
     }
     return null;
 }
 
-export async function RemoveEntity(entity: any) {
+export function RemoveEntity(entity: any) {
     EntityRemoved.Publish(entity);
     delete entities[entity.id];
 }

@@ -17,7 +17,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         let result = await fetch(path);
         return await result.text();
     }
-    async function packTextures(images) {
+    function packTextures(images) {
         let imageArray = [];
         for (let id in images) {
             imageArray.push({ image: images[id], id: id });
@@ -103,7 +103,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             await fetchShader(basePath + "assets/Shaders/" + folder + "/frag.glsl")
         ]);
     }
-    async function setCameraUniforms(program) {
+    function setCameraUniforms(program) {
         let camera = ces.GetEntities(cameraManager_1.isCamera)[0];
         let cameraCX = camera.position.cx || 0.5;
         let cameraCY = camera.position.cy || 0.5;
@@ -114,7 +114,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         };
         twgl.setUniforms(program, cameraUniforms);
     }
-    async function clearCanvas(gl, canvas) {
+    function clearCanvas(gl, canvas) {
         positionCanvas(canvas, gl);
         gl.clearColor(1, 1, 1, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -127,7 +127,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             utils_1.spliceArray(array.data, entityIndex * expectedCount + i, data);
         }
     }
-    async function drawSprites(gl, spriteProgram, textureInfo) {
+    function drawSprites(gl, spriteProgram, textureInfo) {
         gl.useProgram(spriteProgram.program);
         let renderables = ces.GetEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
         for (let id in spriteArrays) {
@@ -163,7 +163,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
         twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo, renderables.length * 6);
     }
-    async function drawDebug(gl, debugProgram) {
+    function drawDebug(gl, debugProgram) {
         gl.useProgram(debugProgram.program);
         let indexOffset = 0;
         let coords = [];
@@ -222,11 +222,11 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             }
             return true;
         });
-        animationManager_1.Draw.Subscribe(async () => {
+        animationManager_1.Draw.Subscribe(() => {
             clearCanvas(gl, canvas);
-            await drawSprites(gl, spriteProgram, textures);
+            drawSprites(gl, spriteProgram, textures);
             if (debug) {
-                await drawDebug(gl, debugProgram);
+                drawDebug(gl, debugProgram);
             }
         });
     }

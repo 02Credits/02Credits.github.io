@@ -20,12 +20,9 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish() {
-                    let promises = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        promises.push(Promise.resolve(sub()));
+                        this.subscriptions[id]();
                     }
-                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager0", EventManager0);
@@ -44,12 +41,9 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg) {
-                    let promises = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        promises.push(Promise.resolve(sub(arg)));
+                        this.subscriptions[id](arg);
                     }
-                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager1", EventManager1);
@@ -69,8 +63,7 @@ System.register([], function (exports_1, context_1) {
                 }
                 Publish(arg1, arg2) {
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        sub(arg1, arg2);
+                        this.subscriptions[id](arg1, arg2);
                     }
                 }
             };
@@ -90,12 +83,9 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg1, arg2, arg3) {
-                    let promises = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        promises.push(Promise.resolve(sub(arg1, arg2, arg3)));
+                        this.subscriptions[id](arg1, arg2, arg3);
                     }
-                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager3", EventManager3);
@@ -114,12 +104,9 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg1, arg2, arg3, arg4) {
-                    let promises = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        promises.push(Promise.resolve(sub(arg1, arg2, arg3, arg4)));
+                        this.subscriptions[id](arg1, arg2, arg3, arg4);
                     }
-                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager4", EventManager4);
@@ -138,12 +125,9 @@ System.register([], function (exports_1, context_1) {
                     delete this.subscriptions[id];
                 }
                 Publish(arg1, arg2, arg3, arg4, arg5) {
-                    let promises = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        promises.push(Promise.resolve(sub(arg1, arg2, arg3, arg4, arg5)));
+                        this.subscriptions[id](arg1, arg2, arg3, arg4, arg5);
                     }
-                    return Promise.all(promises);
                 }
             };
             exports_1("EventManager5", EventManager5);
@@ -164,10 +148,9 @@ System.register([], function (exports_1, context_1) {
                 Poll() {
                     let result = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        result.push(Promise.resolve(sub()));
+                        result.push(this.subscriptions[id]());
                     }
-                    return Promise.all(result);
+                    return result;
                 }
             };
             exports_1("PollManager0", PollManager0);
@@ -188,10 +171,9 @@ System.register([], function (exports_1, context_1) {
                 Poll(arg) {
                     let result = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        result.push(Promise.resolve(sub(arg)));
+                        result.push(this.subscriptions[id](arg));
                     }
-                    return Promise.all(result);
+                    return result;
                 }
             };
             exports_1("PollManager1", PollManager1);
@@ -201,7 +183,6 @@ System.register([], function (exports_1, context_1) {
                     this.subscriptions = {};
                 }
                 Subscribe(callback) {
-                    this.subscriptions[this.currentId] = callback;
                     let id = this.currentId;
                     this.currentId++;
                     return id;
@@ -212,10 +193,9 @@ System.register([], function (exports_1, context_1) {
                 Poll(arg1, arg2) {
                     let result = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        result.push(Promise.resolve(sub(arg1, arg2)));
+                        result.push(this.subscriptions[id](arg1, arg2));
                     }
-                    return Promise.all(result);
+                    return result;
                 }
             };
             exports_1("PollManager2", PollManager2);
@@ -236,10 +216,9 @@ System.register([], function (exports_1, context_1) {
                 Poll(arg1, arg2, arg3) {
                     let result = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        result.push(Promise.resolve(sub(arg1, arg2, arg3)));
+                        result.push(this.subscriptions[id](arg1, arg2, arg3));
                     }
-                    return Promise.all(result);
+                    return result;
                 }
             };
             exports_1("PollManager3", PollManager3);
@@ -260,10 +239,9 @@ System.register([], function (exports_1, context_1) {
                 Poll(arg1, arg2, arg3, arg4) {
                     let result = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        result.push(Promise.resolve(sub(arg1, arg2, arg3, arg4)));
+                        result.push(this.subscriptions[id](arg1, arg2, arg3, arg4));
                     }
-                    return Promise.all(result);
+                    return result;
                 }
             };
             exports_1("PollManager4", PollManager4);
@@ -284,10 +262,9 @@ System.register([], function (exports_1, context_1) {
                 Poll(arg1, arg2, arg3, arg4, arg5) {
                     let result = [];
                     for (let id in this.subscriptions) {
-                        let sub = this.subscriptions[id];
-                        result.push(Promise.resolve(sub(arg1, arg2, arg3, arg4, arg5)));
+                        result.push(this.subscriptions[id](arg1, arg2, arg3, arg4, arg5));
                     }
-                    return Promise.all(result);
+                    return result;
                 }
             };
             exports_1("PollManager5", PollManager5);

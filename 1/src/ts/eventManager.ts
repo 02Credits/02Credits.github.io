@@ -6,9 +6,9 @@ export interface EventManager {
 
 export class EventManager0 implements EventManager {
   currentId = 0;
-  subscriptions: { [id: number]: () => void | Promise<void> } = { };
+  subscriptions: { [id: number]: () => void } = { };
 
-  Subscribe(callback: () => void | Promise<void>) {
+  Subscribe(callback: () => void) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -20,20 +20,17 @@ export class EventManager0 implements EventManager {
   }
 
   Publish() {
-    let promises = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      promises.push(Promise.resolve(sub()));
+      this.subscriptions[id]();
     }
-    return Promise.all(promises);
   }
 }
 
 export class EventManager1<A> implements EventManager {
   currentId = 0;
-  subscriptions: { [id: number]: (arg: A) => void | Promise<void> } = { };
+  subscriptions: { [id: number]: (arg: A) => void } = { };
 
-  Subscribe(callback: (arg: A) => void | Promise<void>) {
+  Subscribe(callback: (arg: A) => void) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -45,20 +42,17 @@ export class EventManager1<A> implements EventManager {
   }
 
   Publish(arg: A) {
-    let promises = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      promises.push(Promise.resolve(sub(arg)));
+      this.subscriptions[id](arg);
     }
-    return Promise.all(promises);
   }
 }
 
 export class EventManager2<A1, A2> implements EventManager {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2) => void | Promise<void> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2) => void } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2) => void | Promise<void> ) {
+  Subscribe(callback: (arg1: A1, arg2: A2) => void) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -71,17 +65,16 @@ export class EventManager2<A1, A2> implements EventManager {
 
   Publish(arg1: A1, arg2: A2) {
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      sub(arg1, arg2);
+      this.subscriptions[id](arg1, arg2);
     }
   }
 }
 
 export class EventManager3<A1, A2, A3> implements EventManager {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3) => void | Promise<void> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3) => void } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3) => void | Promise<void>) {
+  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3) => void) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -93,20 +86,17 @@ export class EventManager3<A1, A2, A3> implements EventManager {
   }
 
   Publish(arg1: A1, arg2: A2, arg3: A3) {
-    let promises = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      promises.push(Promise.resolve(sub(arg1, arg2, arg3)));
+      this.subscriptions[id](arg1, arg2, arg3);
     }
-    return Promise.all(promises);
   }
 }
 
 export class EventManager4<A1, A2, A3, A4> implements EventManager {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => void | Promise<void> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => void } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => void | Promise<void>) {
+  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => void) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -118,20 +108,17 @@ export class EventManager4<A1, A2, A3, A4> implements EventManager {
   }
 
   Publish(arg1: A1, arg2: A2, arg3: A3, arg4: A4) {
-    let promises = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      promises.push(Promise.resolve(sub(arg1, arg2, arg3, arg4)));
+      this.subscriptions[id](arg1, arg2, arg3, arg4);
     }
-    return Promise.all(promises);
   }
 }
 
 export class EventManager5<A1, A2, A3, A4, A5> implements EventManager {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => void | Promise<void> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => void } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => void | Promise<void>) {
+  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => void) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -143,26 +130,23 @@ export class EventManager5<A1, A2, A3, A4, A5> implements EventManager {
   }
 
   Publish(arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) {
-    let promises = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      promises.push(Promise.resolve(sub(arg1, arg2, arg3, arg4, arg5)));
+      this.subscriptions[id](arg1, arg2, arg3, arg4, arg5);
     }
-    return Promise.all(promises);
   }
 }
 
 export interface PollManager<R> {
-  Subscribe(callback: (...args: any[]) => R | Promise<R>): number;
+  Subscribe(callback: (...args: any[]) => R): number;
   Unsubscribe(id: number): void;
-  Poll(...args: any[]): Promise<R[]>;
+  Poll(...args: any[]): R[];
 }
 
 export class PollManager0<R> implements PollManager<R> {
   currentId = 0;
-  subscriptions: { [id: number]: () => R | Promise<R> } = { };
+  subscriptions: { [id: number]: () => R } = { };
 
-  Subscribe(callback: () => R | Promise<R>) {
+  Subscribe(callback: () => R) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -174,20 +158,19 @@ export class PollManager0<R> implements PollManager<R> {
   }
 
   Poll() {
-    let result: Promise<R>[] = [];
+    let result = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      result.push(Promise.resolve(sub()));
+      result.push(this.subscriptions[id]());
     }
-    return Promise.all(result);
+    return result;
   }
 }
 
 export class PollManager1<A, R> implements PollManager<R> {
   currentId = 0;
-  subscriptions: { [id: number]: (arg: A) => R | Promise<R> } = { };
+  subscriptions: { [id: number]: (arg: A) => R } = { };
 
-  Subscribe(callback: (arg: A) => R | Promise<R>) {
+  Subscribe(callback: (arg: A) => R) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -199,21 +182,19 @@ export class PollManager1<A, R> implements PollManager<R> {
   }
 
   Poll(arg: A) {
-    let result: Promise<R>[] = [];
+    let result = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      result.push(Promise.resolve(sub(arg)));
+      result.push(this.subscriptions[id](arg));
     }
-    return Promise.all(result);
+    return result;
   }
 }
 
 export class PollManager2<A1, A2, R> implements PollManager<R> {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2) => R | Promise<R> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2) => R } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2) => R | Promise<R>) {
-    this.subscriptions[this.currentId] = callback;
+  Subscribe(callback: (arg1: A1, arg2: A2) => R) {
     let id = this.currentId;
     this.currentId++;
     return id;
@@ -224,20 +205,19 @@ export class PollManager2<A1, A2, R> implements PollManager<R> {
   }
 
   Poll(arg1: A1, arg2: A2) {
-    let result: Promise<R>[] = [];
+    let result = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      result.push(Promise.resolve(sub(arg1, arg2)));
+      result.push(this.subscriptions[id](arg1, arg2));
     }
-    return Promise.all(result);
+    return result;
   }
 }
 
 export class PollManager3<A1, A2, A3, R> implements PollManager<R> {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3) => R | Promise<R> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3) => R } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3) => R | Promise<R>) {
+  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3) => R) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -249,20 +229,19 @@ export class PollManager3<A1, A2, A3, R> implements PollManager<R> {
   }
 
   Poll(arg1: A1, arg2: A2, arg3: A3) {
-    let result: Promise<R>[] = [];
+    let result = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      result.push(Promise.resolve(sub(arg1, arg2, arg3)));
+      result.push(this.subscriptions[id](arg1, arg2, arg3));
     }
-    return Promise.all(result);
+    return result;
   }
 }
 
 export class PollManager4<A1, A2, A3, A4, R> implements PollManager<R> {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => R | Promise<R> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => R } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => R | Promise<R>) {
+  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4) => R) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -274,20 +253,19 @@ export class PollManager4<A1, A2, A3, A4, R> implements PollManager<R> {
   }
 
   Poll(arg1: A1, arg2: A2, arg3: A3, arg4: A4) {
-    let result: Promise<R>[] = [];
+    let result = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      result.push(Promise.resolve(sub(arg1, arg2, arg3, arg4)));
+      result.push(this.subscriptions[id](arg1, arg2, arg3, arg4));
     }
-    return Promise.all(result);
+    return result;
   }
 }
 
 export class PollManager5<A1, A2, A3, A4, A5, R> implements PollManager<R> {
   currentId = 0;
-  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => R | Promise<R> } = { };
+  subscriptions: { [id: number]: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => R } = { };
 
-  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => R | Promise<R>) {
+  Subscribe(callback: (arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) => R) {
     this.subscriptions[this.currentId] = callback;
     let id = this.currentId;
     this.currentId++;
@@ -299,11 +277,10 @@ export class PollManager5<A1, A2, A3, A4, A5, R> implements PollManager<R> {
   }
 
   Poll(arg1: A1, arg2: A2, arg3: A3, arg4: A4, arg5: A5) {
-    let result: Promise<R>[] = [];
+    let result = [];
     for (let id in this.subscriptions) {
-      let sub = this.subscriptions[id];
-      result.push(Promise.resolve(sub(arg1, arg2, arg3, arg4, arg5)));
+      result.push(this.subscriptions[id](arg1, arg2, arg3, arg4, arg5));
     }
-    return Promise.all(result);
+    return result;
   }
 }

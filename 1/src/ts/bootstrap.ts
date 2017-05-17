@@ -22,12 +22,11 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
   await wallManager.Setup();
   await holeManager.Setup();
   await statueManager.Setup();
-  await animationManager.Setup();
   await interpolationManager.Setup();
   await particleManager.Setup();
   await inputManager.Setup();
 
-  await ces.AddEntity({
+  ces.AddEntity({
     "position": {
       "x": 0,
       "y": 0
@@ -42,7 +41,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     }
   });
 
-  await ces.AddEntity({
+  ces.AddEntity({
     "texture": "Player.png",
     "position": {
       "x": 40,
@@ -70,7 +69,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     }
   });
 
-  await ces.AddEntity({
+  ces.AddEntity({
     "id": "player",
     "texture": "Player.png",
     "position": {
@@ -123,11 +122,11 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
         "rotation": 0
       },
       "length": 1,
-      "frequency": 100
+      "frequency": 1000
     }
   });
 
-  await ces.AddEntity({
+  ces.AddEntity({
     "texture": "Wall.png",
     "position": {
       "x": 0,
@@ -149,7 +148,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     "foot": true
   });
 
-  await ces.AddEntity({
+  ces.AddEntity({
     "texture": "Wall.png",
     "position": {
       "x": 0,

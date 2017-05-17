@@ -57,11 +57,10 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                 await wallManager.Setup();
                 await holeManager.Setup();
                 await statueManager.Setup();
-                await animationManager.Setup();
                 await interpolationManager.Setup();
                 await particleManager.Setup();
                 await inputManager.Setup();
-                await ces.AddEntity({
+                ces.AddEntity({
                     "position": {
                         "x": 0,
                         "y": 0
@@ -75,7 +74,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "targetY": 0
                     }
                 });
-                await ces.AddEntity({
+                ces.AddEntity({
                     "texture": "Player.png",
                     "position": {
                         "x": 40,
@@ -102,7 +101,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "rotationSlowdown": 0.9
                     }
                 });
-                await ces.AddEntity({
+                ces.AddEntity({
                     "id": "player",
                     "texture": "Player.png",
                     "position": {
@@ -155,10 +154,10 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                             "rotation": 0
                         },
                         "length": 1,
-                        "frequency": 100
+                        "frequency": 1000
                     }
                 });
-                await ces.AddEntity({
+                ces.AddEntity({
                     "texture": "Wall.png",
                     "position": {
                         "x": 0,
@@ -179,7 +178,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     },
                     "foot": true
                 });
-                await ces.AddEntity({
+                ces.AddEntity({
                     "texture": "Wall.png",
                     "position": {
                         "x": 0,

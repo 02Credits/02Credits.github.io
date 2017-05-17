@@ -66,7 +66,7 @@ interface TextureInfo {
   texture?: WebGLTexture
 }
 
-async function packTextures(images: { [id: string]: HTMLImageElement }): Promise<TextureInfo> {
+function packTextures(images: { [id: string]: HTMLImageElement }): TextureInfo {
   let imageArray: {image: HTMLImageElement, id: string}[] = [];
   for (let id in images) {
     imageArray.push({image: images[id], id: id});
@@ -162,7 +162,7 @@ async function compileProgram(gl: WebGLRenderingContext, basePath: string, folde
   ]);
 }
 
-async function setCameraUniforms(program: twgl.ProgramInfo) {
+function setCameraUniforms(program: twgl.ProgramInfo) {
   let camera = ces.GetEntities(isCamera)[0];
   let cameraCX = camera.position.cx || 0.5;
   let cameraCY = camera.position.cy || 0.5;
@@ -176,7 +176,7 @@ async function setCameraUniforms(program: twgl.ProgramInfo) {
 
 }
 
-async function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement) {
+function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement) {
   positionCanvas(canvas, gl);
   gl.clearColor(1, 1, 1, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -202,7 +202,7 @@ let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
   indices: {numComponents: 3, data: new Array(400)}
 };
 
-async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: TextureInfo) {
+function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: TextureInfo) {
   gl.useProgram(spriteProgram.program);
   let renderables = ces.GetEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
 
@@ -243,7 +243,7 @@ async function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.Progra
   twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo, renderables.length * 6);
 }
 
-async function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
+function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
   gl.useProgram(debugProgram.program);
 
   let indexOffset = 0;
@@ -284,7 +284,6 @@ export async function Setup(texturePaths: string[]) {
   canvas.focus();
 
   let textures = await setupTextures(gl, basePath, texturePaths);
-
   let spriteProgram = await compileProgram(gl, basePath, "Sprite");
   let debugProgram = await compileProgram(gl, basePath, "Debug");
 
@@ -298,7 +297,7 @@ export async function Setup(texturePaths: string[]) {
     });
 
     if (debug) {
-      gl.useProgram(debugProgram.program)
+      gl.useProgram(debugProgram.program);
 
       setCameraUniforms(debugProgram);
       twgl.setUniforms(debugProgram, {
@@ -314,11 +313,11 @@ export async function Setup(texturePaths: string[]) {
     return true;
   });
 
-  Draw.Subscribe(async () => {
+  Draw.Subscribe(() => {
     clearCanvas(gl, canvas);
-    await drawSprites(gl, spriteProgram, textures);
+    drawSprites(gl, spriteProgram, textures);
     if (debug) {
-      await drawDebug(gl, debugProgram);
+      drawDebug(gl, debugProgram);
     }
   });
 

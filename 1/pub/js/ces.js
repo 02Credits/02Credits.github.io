@@ -2,8 +2,8 @@ System.register(["./eventManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isTracked(entity) { return "id" in entity; }
-    async function AddEntity(entity) {
-        let results = await CheckEntity.Poll(entity);
+    function AddEntity(entity) {
+        let results = CheckEntity.Poll(entity);
         if (results.every(result => result || result === undefined)) {
             let trackedEntity;
             if (isTracked(entity)) {
@@ -21,13 +21,13 @@ System.register(["./eventManager"], function (exports_1, context_1) {
                 entities[currentId] = trackedEntity;
                 currentId++;
             }
-            await EntityAdded.Publish(trackedEntity);
+            EntityAdded.Publish(trackedEntity);
             return trackedEntity;
         }
         return null;
     }
     exports_1("AddEntity", AddEntity);
-    async function RemoveEntity(entity) {
+    function RemoveEntity(entity) {
         EntityRemoved.Publish(entity);
         delete entities[entity.id];
     }
@@ -60,7 +60,7 @@ System.register(["./eventManager"], function (exports_1, context_1) {
         ],
         execute: function () {
             currentId = 0;
-            entities = {};
+            exports_1("entities", entities = {});
             exports_1("CheckEntity", CheckEntity = new eventManager_1.PollManager1());
             exports_1("EntityAdded", EntityAdded = new eventManager_1.EventManager1());
             exports_1("EntityRemoved", EntityRemoved = new eventManager_1.EventManager1());

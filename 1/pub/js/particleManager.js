@@ -47,7 +47,7 @@ System.register(["./animationManager", "./ces", "./interpolationManager", "./obj
                 }
             }
         });
-        animationManager_1.Update.Subscribe(async (time) => {
+        animationManager_1.Update.Subscribe((time) => {
             let generatorEntities = ces.GetEntities(isGenerator);
             for (let entity of generatorEntities) {
                 let generator = entity.particleGenerator;
@@ -59,7 +59,7 @@ System.register(["./animationManager", "./ces", "./interpolationManager", "./obj
                         interpolationManager_1.collapseTarget(generator.relativeEnd, particle.interpolated.end);
                         makeRelative(entity, particle.interpolated.end);
                         objectPool_1.default.copy(particle.interpolated.start, particle);
-                        let addedEntity = await ces.AddEntity(particle);
+                        let addedEntity = ces.AddEntity(particle);
                         generator.particleIds.add(addedEntity.id);
                     }
                 }

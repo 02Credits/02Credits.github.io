@@ -65,7 +65,7 @@ export function Setup() {
     }
   })
 
-  Update.Subscribe(async (time) => {
+  Update.Subscribe((time) => {
     let generatorEntities = ces.GetEntities(isGenerator);
     for (let entity of generatorEntities) {
       let generator = entity.particleGenerator;
@@ -77,7 +77,7 @@ export function Setup() {
           collapseTarget(generator.relativeEnd, particle.interpolated.end);
           makeRelative(entity, particle.interpolated.end);
           ObjectPool.copy(particle.interpolated.start, particle);
-          let addedEntity = await ces.AddEntity(particle);
+          let addedEntity = ces.AddEntity(particle);
           generator.particleIds.add(addedEntity.id);
         }
       }
