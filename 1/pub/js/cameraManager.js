@@ -8,14 +8,14 @@ System.register(["./ces", "./animationManager"], function (exports_1, context_1)
     }
     exports_1("Shake", Shake);
     function Retarget(target) {
-        var cameraEntity = ces.GetEntities(isCamera)[0];
+        var cameraEntity = ces.getEntities(isCamera)[0];
         cameraEntity.camera.targetX = target.targetX;
         cameraEntity.camera.targetY = target.targetY;
     }
     exports_1("Retarget", Retarget);
     function Setup() {
         animationManager_1.Update.Subscribe(() => {
-            for (let cameraEntity of ces.GetEntities(isCamera)) {
+            for (let cameraEntity of ces.getEntities(isCamera)) {
                 var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
                 var dx = cameraEntity.camera.targetX - cameraEntity.position.x;
                 cameraEntity.position.x += dx * 0.05 + (Math.random() - 0.5) * shake;

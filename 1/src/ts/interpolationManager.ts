@@ -76,12 +76,10 @@ function interpolate(start: any, end: any, target: any, amount: number) {
     if (id in end) {
       let startValue = start[id];
       let endValue = end[id];
-      if (!isNaN(startValue) || !isNaN(endValue)) {
-        if (!isNaN(startValue) && !isNaN(endValue)) {
-          target[id] = mix(startValue, endValue, amount);
-        }
-      } else {
+      if (typeof startValue == "object") {
         interpolate(startValue, endValue, target[id], amount);
+      } else {
+        target[id] = mix(startValue, endValue, amount);
       }
     }
   }
@@ -110,7 +108,7 @@ export function Setup() {
     return true;
   })
   Update.Subscribe((time) => {
-    let interpolatedEntities = ces.GetEntities(isInterpolated);
+    let interpolatedEntities = ces.getEntities(isInterpolated);
 
     for (let entity of interpolatedEntities) {
       let interpolated = entity.interpolated;
@@ -123,7 +121,7 @@ export function Setup() {
             repeat(entity, time);
           } else {
             if (interpolated.kill) {
-              ces.RemoveEntity(entity);
+              ces.removeEntity(entity);
             } else {
               AnimationFinished.Publish(entity);
             }

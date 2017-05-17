@@ -26,7 +26,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
   await particleManager.Setup();
   await inputManager.Setup();
 
-  ces.AddEntity({
+  ces.addEntity({
     "position": {
       "x": 0,
       "y": 0
@@ -41,35 +41,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     }
   });
 
-  ces.AddEntity({
-    "texture": "Player.png",
-    "position": {
-      "x": 40,
-      "y": 0,
-      "z": 5,
-      "cx": 0.5,
-      "cy": 0.5
-    },
-    "dimensions": {
-      "width": 5,
-      "height": 5
-    },
-    "scale": 2,
-    "fallable": true,
-    "collidable": true,
-    "statue": {
-      "activationRadius": 30,
-      "timeBetweenJumps": 5,
-      "maxJumpDistance": 5,
-      "jumpTimeLength": 1,
-      "jumpScaling": 1.25,
-      "knockBack": 5,
-      "rotationSpeed": Math.PI / 100,
-      "rotationSlowdown": 0.9
-    }
-  });
-
-  ces.AddEntity({
+  ces.addEntity({
     "id": "player",
     "texture": "Player.png",
     "position": {
@@ -91,42 +63,10 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     "player": {
       "stepSpeed": 0.3,
       "stepSize": 5
-    },
-    "particleGenerator": {
-      "relativeStart": {
-        "dimensions": {
-          "width": 0,
-          "height": 0
-        },
-        "position": {
-          "x": 0,
-          "y": 0
-        }
-      },
-      "relativeEnd": {
-        "dimensions": {
-          "width": -5,
-          "height": -5
-        },
-        "position": {
-          "x": [-50, 50],
-          "y": [-50, 50]
-        }
-      },
-      "constant": {
-        "texture": "Player.png",
-        "position": {
-          "cx": 0.5,
-          "cy": 0.5
-        },
-        "rotation": 0
-      },
-      "length": 1,
-      "frequency": 1000
     }
   });
 
-  ces.AddEntity({
+  ces.addEntity({
     "texture": "Wall.png",
     "position": {
       "x": 0,
@@ -148,7 +88,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     "foot": true
   });
 
-  ces.AddEntity({
+  ces.addEntity({
     "texture": "Wall.png",
     "position": {
       "x": 0,

@@ -32,7 +32,7 @@ System.register(["./ces", "./cameraManager", "./webglManager"], function (export
     exports_1("KeyDown", KeyDown);
     function MouseState() {
         // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
-        let camera = ces.GetEntities(cameraManager_1.isCamera)[0];
+        let camera = ces.getEntities(cameraManager_1.isCamera)[0];
         return {
             mouseButtons: mouseButtons,
             x: (mouseX - webglManager_1.canvasSize / 2) * camera.dimensions.width / webglManager_1.canvasSize,

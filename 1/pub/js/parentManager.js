@@ -5,8 +5,8 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
     exports_1("isChild", isChild);
     function Setup() {
         animationManager_1.Update.Subscribe(() => {
-            for (let childEntity of ces.GetEntities(isChild)) {
-                let parent = ces.GetEntity(childEntity.parent);
+            for (let childEntity of ces.getEntities(isChild)) {
+                let parent = ces.getEntity(childEntity.parent);
                 if (webglManager_1.isRenderable(parent)) {
                     let parentRotation = parent.rotation || 0;
                     let parentScale = parent.scale || 1;

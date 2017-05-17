@@ -10,7 +10,7 @@ System.register(["./eventManager"], function (exports_1, context_1) {
             if (Running) {
                 let iterations = 0;
                 while (time - Time > 0.01667) {
-                    if (iterations > 50) {
+                    if (iterations > 2) {
                         exports_1("Time", Time = time);
                     }
                     Update.Publish(Time);

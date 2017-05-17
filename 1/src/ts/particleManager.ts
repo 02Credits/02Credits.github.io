@@ -56,7 +56,7 @@ export function Setup() {
   });
 
   ces.EntityRemoved.Subscribe((entity) => {
-    let generatorEntities = ces.GetEntities(isGenerator);
+    let generatorEntities = ces.getEntities(isGenerator);
     for (let generatorEntity of generatorEntities) {
       let generator = generatorEntity.particleGenerator;
       if (generator.particleIds.has(entity.id)) {
@@ -66,7 +66,7 @@ export function Setup() {
   })
 
   Update.Subscribe((time) => {
-    let generatorEntities = ces.GetEntities(isGenerator);
+    let generatorEntities = ces.getEntities(isGenerator);
     for (let entity of generatorEntities) {
       let generator = entity.particleGenerator;
       for (let i = 0; i < 100; i++) {
@@ -77,7 +77,7 @@ export function Setup() {
           collapseTarget(generator.relativeEnd, particle.interpolated.end);
           makeRelative(entity, particle.interpolated.end);
           ObjectPool.copy(particle.interpolated.start, particle);
-          let addedEntity = ces.AddEntity(particle);
+          let addedEntity = ces.addEntity(particle);
           generator.particleIds.add(addedEntity.id);
         }
       }

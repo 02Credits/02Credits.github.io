@@ -45,7 +45,7 @@ export function KeyDown(key: string) {
 
 export function MouseState() {
   // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
-  let camera = ces.GetEntities(isCamera)[0];
+  let camera = ces.getEntities(isCamera)[0];
   return {
     mouseButtons: mouseButtons,
     x: (mouseX - canvasSize / 2) * camera.dimensions.width / canvasSize,

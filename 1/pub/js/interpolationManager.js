@@ -57,13 +57,11 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
             if (id in end) {
                 let startValue = start[id];
                 let endValue = end[id];
-                if (!isNaN(startValue) || !isNaN(endValue)) {
-                    if (!isNaN(startValue) && !isNaN(endValue)) {
-                        target[id] = mix(startValue, endValue, amount);
-                    }
+                if (typeof startValue == "object") {
+                    interpolate(startValue, endValue, target[id], amount);
                 }
                 else {
-                    interpolate(startValue, endValue, target[id], amount);
+                    target[id] = mix(startValue, endValue, amount);
                 }
             }
         }
@@ -90,7 +88,7 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
             return true;
         });
         animationManager_1.Update.Subscribe((time) => {
-            let interpolatedEntities = ces.GetEntities(isInterpolated);
+            let interpolatedEntities = ces.getEntities(isInterpolated);
             for (let entity of interpolatedEntities) {
                 let interpolated = entity.interpolated;
                 let state = entity.interpolated.state;
@@ -104,7 +102,7 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
                         }
                         else {
                             if (interpolated.kill) {
-                                ces.RemoveEntity(entity);
+                                ces.removeEntity(entity);
                             }
                             else {
                                 AnimationFinished.Publish(entity);

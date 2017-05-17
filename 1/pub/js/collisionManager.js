@@ -117,7 +117,7 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
         let physicsOverlay = new pixi.Graphics();
         // overlay.addChild(physicsOverlay);
         animationManager_1.Update.Subscribe(() => {
-            let collidables = ces.GetEntities(isCollidable);
+            let collidables = ces.getEntities(isCollidable);
             physicsOverlay.clear();
             for (let collider of collidables) {
                 if (!collider.collisionShape || collider.collisionShape.kind !== "circle") {

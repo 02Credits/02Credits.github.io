@@ -10,7 +10,7 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
         if ("scale" in playerEntity) {
             scale = playerEntity.scale;
         }
-        var feet = ces.GetEntities(isFoot);
+        var feet = ces.getEntities(isFoot);
         for (let entity of feet) {
             entity.child.relativePosition.y =
                 Math.sin(playerEntity.player.walkAnimation) *
@@ -49,7 +49,7 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
             }
         });
         animationManager_1.Update.Subscribe(() => {
-            for (let entity of ces.GetEntities(isPlayer)) {
+            for (let entity of ces.getEntities(isPlayer)) {
                 updatePlayer(entity);
                 updateFeet(entity);
             }

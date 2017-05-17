@@ -153,7 +153,7 @@ export function Setup() {
   let physicsOverlay = new pixi.Graphics();
   // overlay.addChild(physicsOverlay);
   Update.Subscribe(() => {
-    let collidables = ces.GetEntities(isCollidable);
+    let collidables = ces.getEntities(isCollidable);
 
     physicsOverlay.clear();
     for (let collider of collidables) {

@@ -104,7 +104,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         ]);
     }
     function setCameraUniforms(program) {
-        let camera = ces.GetEntities(cameraManager_1.isCamera)[0];
+        let camera = ces.getEntities(cameraManager_1.isCamera)[0];
         let cameraCX = camera.position.cx || 0.5;
         let cameraCY = camera.position.cy || 0.5;
         let cameraWidth = (camera.dimensions || obj).width || 100;
@@ -129,7 +129,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
     }
     function drawSprites(gl, spriteProgram, textureInfo) {
         gl.useProgram(spriteProgram.program);
-        let renderables = ces.GetEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
+        let renderables = ces.getEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
         for (let id in spriteArrays) {
             let expectedLength = renderables.length * spriteArrays[id].numComponents;
             if (spriteArrays[id].data.length < expectedLength) {
@@ -178,7 +178,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
             twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
         };
-        for (let entity of ces.GetEntities(collisionManager_1.isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
+        for (let entity of ces.getEntities(collisionManager_1.isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
             let corners = collisionManager_1.getCorners(entity);
             for (let poly of corners) {
                 coords.push([].concat.apply([], poly));
@@ -218,7 +218,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         });
         ces.CheckEntity.Subscribe((entity) => {
             if (isRenderable(entity)) {
-                entity.color = entity.color || { h: 1, s: 1, v: 1, a: 1 };
+                entity.color = entity.color || { h: 1, s: 1, v: 1, a: 1, r: 1, g: 1, b: 1 };
             }
             return true;
         });

@@ -17,7 +17,7 @@ function loop(time: number) {
     if (Running) {
       let iterations = 0;
       while (time - Time > 0.01667) {
-        if (iterations > 50) {
+        if (iterations > 2) {
           Time = time;
         }
         Update.Publish(Time);

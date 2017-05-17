@@ -1,7 +1,8 @@
 define [
   "./commands/giphy",
   "./commands/emoticonDirectory",
-  "./commands/refresh"
+  "./commands/refresh",
+  "./commands/megaKeith"
 ], ->
   commandProcessors = arguments
   (command, args) ->

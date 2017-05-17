@@ -27,9 +27,12 @@ export interface Dimensions {
 }
 
 export interface Color {
-  h: number;
-  s: number;
-  v: number;
+  h?: number;
+  s?: number;
+  v?: number;
+  r?: number;
+  g?: number;
+  b?: number;
   a?: number;
 }
 
@@ -163,7 +166,7 @@ async function compileProgram(gl: WebGLRenderingContext, basePath: string, folde
 }
 
 function setCameraUniforms(program: twgl.ProgramInfo) {
-  let camera = ces.GetEntities(isCamera)[0];
+  let camera = ces.getEntities(isCamera)[0];
   let cameraCX = camera.position.cx || 0.5;
   let cameraCY = camera.position.cy || 0.5;
   let cameraWidth = (camera.dimensions || obj).width || 100;
@@ -204,7 +207,7 @@ let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
 
 function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: TextureInfo) {
   gl.useProgram(spriteProgram.program);
-  let renderables = ces.GetEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
+  let renderables = ces.getEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
 
   for (let id in spriteArrays) {
     let expectedLength = renderables.length * spriteArrays[id].numComponents;
@@ -261,7 +264,7 @@ function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
     twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
   }
 
-  for (let entity of ces.GetEntities(isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
+  for (let entity of ces.getEntities(isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
     let corners = getCorners(entity);
     for (let poly of corners) {
       coords.push([].concat.apply([], poly));
@@ -308,7 +311,7 @@ export async function Setup(texturePaths: string[]) {
 
   ces.CheckEntity.Subscribe((entity) => {
     if (isRenderable(entity)) {
-      entity.color = entity.color || { h: 1, s: 1, v: 1, a: 1 };
+      entity.color = entity.color || { h: 1, s: 1, v: 1, a: 1, r: 1, g: 1, b: 1 };
     }
     return true;
   });

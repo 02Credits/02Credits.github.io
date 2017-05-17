@@ -31,7 +31,7 @@ function updateFeet(playerEntity: PlayerEntity) {
         scale = playerEntity.scale;
     }
 
-    var feet = ces.GetEntities(isFoot);
+    var feet = ces.getEntities(isFoot);
     for (let entity of feet) {
         entity.child.relativePosition.y =
             Math.sin(playerEntity.player.walkAnimation) * // Move steps by sin wave
@@ -79,7 +79,7 @@ export function Setup() {
     });
 
     Update.Subscribe(() => {
-        for (let entity of ces.GetEntities(isPlayer)) {
+        for (let entity of ces.getEntities(isPlayer)) {
             updatePlayer(entity);
             updateFeet(entity);
         }

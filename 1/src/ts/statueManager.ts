@@ -68,7 +68,7 @@ export function Setup() {
   });
 
   Update.Subscribe((time) => {
-    for (let entity of ces.GetEntities(isStatue)) {
+    for (let entity of ces.getEntities(isStatue)) {
       let statue = entity.statue;
       if (statue.jumpState.jumping) {
         let state = statue.jumpState;
@@ -89,7 +89,7 @@ export function Setup() {
           entity.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
         }
       } else {
-        let playerEntities = ces.GetEntities(isPlayer);
+        let playerEntities = ces.getEntities(isPlayer);
         let target = statue.home;
         let homeDelta = utils.sub(target, entity.position);
         let homeDistance = utils.distance(homeDelta);

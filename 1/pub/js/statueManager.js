@@ -25,7 +25,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
             }
         });
         animationManager_1.Update.Subscribe((time) => {
-            for (let entity of ces.GetEntities(isStatue)) {
+            for (let entity of ces.getEntities(isStatue)) {
                 let statue = entity.statue;
                 if (statue.jumpState.jumping) {
                     let state = statue.jumpState;
@@ -48,7 +48,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                     }
                 }
                 else {
-                    let playerEntities = ces.GetEntities(playerManager_1.isPlayer);
+                    let playerEntities = ces.getEntities(playerManager_1.isPlayer);
                     let target = statue.home;
                     let homeDelta = utils.sub(target, entity.position);
                     let homeDistance = utils.distance(homeDelta);

@@ -25,14 +25,14 @@ export function Shake(amount: number) {
 }
 
 export function Retarget(target: {targetX: number, targetY: number}) {
-  var cameraEntity = ces.GetEntities(isCamera)[0];
+  var cameraEntity = ces.getEntities(isCamera)[0];
   cameraEntity.camera.targetX = target.targetX;
   cameraEntity.camera.targetY = target.targetY;
 }
 
 export function Setup() {
   Update.Subscribe(() => {
-    for (let cameraEntity of ces.GetEntities(isCamera)) {
+    for (let cameraEntity of ces.getEntities(isCamera)) {
       var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
       var dx = cameraEntity.camera.targetX - cameraEntity.position.x;
 
