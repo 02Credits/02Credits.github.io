@@ -1,6 +1,6 @@
 import * as twgl from "twgl";
 
-import {Init, Update} from "./animationManager";
+import {Init, Draw} from "./animationManager";
 import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
@@ -314,7 +314,7 @@ export async function Setup(texturePaths: string[]) {
     return true;
   });
 
-  Update.Subscribe(async () => {
+  Draw.Subscribe(async () => {
     clearCanvas(gl, canvas);
     await drawSprites(gl, spriteProgram, textures);
     if (debug) {

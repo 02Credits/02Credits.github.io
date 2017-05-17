@@ -1,4 +1,4 @@
-import input from "./inputManager.js";
+import * as input from "./inputManager.js";
 import * as ces from "./ces.js";
 import {Update} from "./animationManager";
 import {Entity as RenderedEntity} from "./webglManager";

@@ -29,7 +29,7 @@ export async function AddEntity(entity: CombinedEntity | TrackedEntity) {
             currentId++;
         }
         await EntityAdded.Publish(trackedEntity);
-        return entity;
+        return trackedEntity;
     }
     return null;
 }

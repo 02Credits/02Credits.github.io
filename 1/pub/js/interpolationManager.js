@@ -78,13 +78,14 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
     function Setup() {
         ces.CheckEntity.Subscribe((entity) => {
             if (isInterpolated(entity)) {
-                entity.interpolated.state = {
-                    collapsedStart: {},
-                    collapsedEnd: {},
-                    timeStarted: NaN,
-                    reverse: false,
-                    initialized: false
-                };
+                if (!("state" in entity.interpolated))
+                    entity.interpolated.state = {
+                        collapsedStart: {},
+                        collapsedEnd: {},
+                        timeStarted: NaN,
+                        reverse: false,
+                        initialized: false
+                    };
             }
             return true;
         });

@@ -1,4 +1,4 @@
-System.register(["./animationManager", "./ces", "./interpolationManager"], function (exports_1, context_1) {
+System.register(["./animationManager", "./ces", "./interpolationManager", "./objectPool"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isGenerator(entity) { return "particleGenerator" in entity; }
@@ -16,33 +16,58 @@ System.register(["./animationManager", "./ces", "./interpolationManager"], funct
         }
     }
     function Setup() {
-        animationManager_1.Update.Subscribe((time) => {
+        ces.CheckEntity.Subscribe((entity) => {
+            if (isGenerator(entity)) {
+                let generator = entity.particleGenerator;
+                generator.particleIds = new Set();
+                let start = {};
+                interpolationManager_1.collapseTarget(generator.relativeStart, start);
+                generator.pool = new objectPool_1.default(Object.assign({}, generator.constant, start, { interpolated: {
+                        start: start,
+                        end: start,
+                        length: generator.length,
+                        kill: true,
+                        state: {
+                            collapsedStart: {},
+                            collapsedEnd: {},
+                            timeStarted: NaN,
+                            reverse: false,
+                            initialized: false
+                        }
+                    } }));
+            }
+            return true;
+        });
+        ces.EntityRemoved.Subscribe((entity) => {
+            let generatorEntities = ces.GetEntities(isGenerator);
+            for (let generatorEntity of generatorEntities) {
+                let generator = generatorEntity.particleGenerator;
+                if (generator.particleIds.has(entity.id)) {
+                    generator.pool.Free(entity);
+                }
+            }
+        });
+        animationManager_1.Update.Subscribe(async (time) => {
             let generatorEntities = ces.GetEntities(isGenerator);
             for (let entity of generatorEntities) {
                 let generator = entity.particleGenerator;
                 for (let i = 0; i < 100; i++) {
                     if (Math.random() < 0.01666 * generator.frequency / 100) {
-                        let constantValues = {};
-                        let relativeStart = {};
-                        let relativeEnd = {};
-                        interpolationManager_1.collapseTarget(generator.constant, constantValues);
-                        interpolationManager_1.collapseTarget(generator.relativeStart, relativeStart);
-                        makeRelative(entity, relativeStart);
-                        interpolationManager_1.collapseTarget(generator.relativeEnd, relativeEnd);
-                        makeRelative(entity, relativeEnd);
-                        ces.AddEntity(Object.assign({}, constantValues, relativeStart, { "interpolated": {
-                                start: relativeStart,
-                                end: relativeEnd,
-                                length: generator.length,
-                                kill: true
-                            } }));
+                        let particle = generator.pool.New();
+                        interpolationManager_1.collapseTarget(generator.relativeStart, particle.interpolated.start);
+                        makeRelative(entity, particle.interpolated.start);
+                        interpolationManager_1.collapseTarget(generator.relativeEnd, particle.interpolated.end);
+                        makeRelative(entity, particle.interpolated.end);
+                        objectPool_1.default.copy(particle.interpolated.start, particle);
+                        let addedEntity = await ces.AddEntity(particle);
+                        generator.particleIds.add(addedEntity.id);
                     }
                 }
             }
         });
     }
     exports_1("Setup", Setup);
-    var animationManager_1, ces, interpolationManager_1;
+    var animationManager_1, ces, interpolationManager_1, objectPool_1;
     return {
         setters: [
             function (animationManager_1_1) {
@@ -53,6 +78,9 @@ System.register(["./animationManager", "./ces", "./interpolationManager"], funct
             },
             function (interpolationManager_1_1) {
                 interpolationManager_1 = interpolationManager_1_1;
+            },
+            function (objectPool_1_1) {
+                objectPool_1 = objectPool_1_1;
             }
         ],
         execute: function () {

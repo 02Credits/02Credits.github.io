@@ -98,6 +98,7 @@ function interpolateState(entity: Entity, time: number) {
 export function Setup() {
   ces.CheckEntity.Subscribe((entity) => {
     if (isInterpolated(entity)) {
+      if (!("state" in entity.interpolated))
       entity.interpolated.state = {
         collapsedStart: {},
         collapsedEnd: {},

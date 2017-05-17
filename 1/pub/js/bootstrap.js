@@ -1,7 +1,7 @@
-System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager"], function (exports_1, context_1) {
+System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager", "./inputManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager;
+    var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager, inputManager;
     return {
         setters: [
             function (ces_1) {
@@ -42,6 +42,9 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             },
             function (particleManager_1) {
                 particleManager = particleManager_1;
+            },
+            function (inputManager_1) {
+                inputManager = inputManager_1;
             }
         ],
         execute: function () {
@@ -57,6 +60,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                 await animationManager.Setup();
                 await interpolationManager.Setup();
                 await particleManager.Setup();
+                await inputManager.Setup();
                 await ces.AddEntity({
                     "position": {
                         "x": 0,
@@ -98,57 +102,6 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "rotationSlowdown": 0.9
                     }
                 });
-                // await ces.AddEntity({
-                //   "texture": "Wall.png",
-                //   "position": {
-                //     "x": 20,
-                //     "y": 20,
-                //     "cx": 0.5,
-                //     "cy": 0.5
-                //   },
-                //   "dimensions": {
-                //     "width": 5,
-                //     "height": 5
-                //   },
-                //   "collidable": true,
-                //   "interpolated": {
-                //     "start": {
-                //       "dimensions": {
-                //         "width": [ 2, 5 ],
-                //         "height": [ 2, 5 ]
-                //       }
-                //     },
-                //     "end": {
-                //       "dimensions": {
-                //         "width": [ 5, 10 ],
-                //         "height": [ 5, 10 ]
-                //       }
-                //     },
-                //     "length": 5,
-                //     "kill": true
-                //   },
-                //   "trigger": {
-                //     "action": () => cameraManager.Shake(10)
-                //   }
-                // });
-                // await ces.AddEntity({
-                //   "texture": "Wall.png",
-                //   "position": {
-                //     "x": 40,
-                //     "y": 20,
-                //     "z": 0,
-                //     "cx": 0.5,
-                //     "cy": 0.5
-                //   },
-                //   "dimensions": {
-                //     "width": 20,
-                //     "height": 20
-                //   },
-                //   "collidable": true,
-                //   "hole": {
-                //     "steepness": 0.1
-                //   }
-                // });
                 await ces.AddEntity({
                     "id": "player",
                     "texture": "Player.png",
@@ -202,7 +155,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                             "rotation": 0
                         },
                         "length": 1,
-                        "frequency": 0
+                        "frequency": 100
                     }
                 });
                 await ces.AddEntity({

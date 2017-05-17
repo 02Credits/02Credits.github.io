@@ -22,7 +22,7 @@ System.register(["./eventManager"], function (exports_1, context_1) {
                 currentId++;
             }
             await EntityAdded.Publish(trackedEntity);
-            return entity;
+            return trackedEntity;
         }
         return null;
     }

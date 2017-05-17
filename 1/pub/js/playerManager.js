@@ -21,7 +21,7 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
         }
     }
     function updatePlayer(entity) {
-        var mouseState = inputManager_js_1.default.MouseState();
+        var mouseState = input.MouseState();
         var dx = mouseState.x - entity.position.x;
         var dy = mouseState.y - entity.position.y;
         entity.rotation = Math.atan2(dy, dx) + Math.PI / 2;
@@ -56,11 +56,11 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
         });
     }
     exports_1("Setup", Setup);
-    var inputManager_js_1, ces, animationManager_1;
+    var input, ces, animationManager_1;
     return {
         setters: [
-            function (inputManager_js_1_1) {
-                inputManager_js_1 = inputManager_js_1_1;
+            function (input_1) {
+                input = input_1;
             },
             function (ces_1) {
                 ces = ces_1;

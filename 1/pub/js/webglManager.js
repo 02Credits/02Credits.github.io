@@ -222,7 +222,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
             }
             return true;
         });
-        animationManager_1.Update.Subscribe(async () => {
+        animationManager_1.Draw.Subscribe(async () => {
             clearCanvas(gl, canvas);
             await drawSprites(gl, spriteProgram, textures);
             if (debug) {
