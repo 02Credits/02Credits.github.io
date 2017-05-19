@@ -2,7 +2,6 @@ import * as ces from "./ces";
 import * as webglManager from "./webglManager";
 import * as playerManager from "./playerManager";
 import * as collisionManager from "./collisionManager";
-import * as parentManager from "./parentManager";
 import * as cameraManager from "./cameraManager";
 import * as triggerManager from "./triggerManager";
 import * as wallManager from "./wallManager";
@@ -12,19 +11,20 @@ import * as animationManager from "./animationManager";
 import * as interpolationManager from "./interpolationManager";
 import * as particleManager from "./particleManager";
 import * as inputManager from "./inputManager";
+import * as parentManager from "./parentManager";
 
 webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
-  await collisionManager.Setup();
-  await playerManager.Setup();
-  await parentManager.Setup();
-  await cameraManager.Setup();
-  await triggerManager.Setup();
-  await wallManager.Setup();
-  await holeManager.Setup();
-  await statueManager.Setup();
-  await interpolationManager.Setup();
-  await particleManager.Setup();
-  await inputManager.Setup();
+  await collisionManager.setup();
+  await playerManager.setup();
+  await cameraManager.setup();
+  await triggerManager.setup();
+  await wallManager.setup();
+  await holeManager.setup();
+  await statueManager.setup();
+  await interpolationManager.setup();
+  await particleManager.setup();
+  await inputManager.setup();
+  await parentManager.setup();
 
   ces.addEntity({
     "position": {
@@ -47,9 +47,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     "position": {
       "x": 0,
       "y": 0,
-      "z": 5,
-      "cx": 0.5,
-      "cy": 0.5
+      "z": 5
     },
     "dimensions": {
       "width": 5,
@@ -71,9 +69,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     "position": {
       "x": 0,
       "y": 0,
-      "z": 4,
-      "cx": 0.5,
-      "cy": 0.5
+      "z": 4
     },
     "dimensions": {
       "width": 1,
@@ -93,9 +89,11 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     "position": {
       "x": 0,
       "y": 0,
-      "z": 4,
-      "cx": 0.5,
-      "cy": 0.5
+      "z": 4
+    },
+    "center": {
+      "x": 0.5,
+      "y": 0.5
     },
     "dimensions": {
       "width": 1,

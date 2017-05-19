@@ -13,7 +13,7 @@ export interface Entity {
 }
 export function isTrigger(entity: CombinedEntity): entity is Entity { return "trigger" in entity; }
 
-export function Setup() {
+export function setup() {
     Collision.Subscribe((player, collidable, details) => {
         if (isPlayer(player)) {
             if (isTrigger(collidable)) {

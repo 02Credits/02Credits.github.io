@@ -1,11 +1,11 @@
-System.register(["./collisionManager", "./webglManager", "./eventManager"], function (exports_1, context_1) {
+System.register(["./collisionManager", "./webglManager", "./eventManager", "./utils"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isFallable(entity) { return "fallable" in entity; }
     exports_1("isFallable", isFallable);
     function isHole(entity) { return "hole" in entity; }
     exports_1("isHole", isHole);
-    function Setup() {
+    function setup() {
         collisionManager_1.Collision.Subscribe((fallable, collidable, details) => {
             if (isFallable(fallable)) {
                 if (isHole(collidable)) {
@@ -15,8 +15,7 @@ System.register(["./collisionManager", "./webglManager", "./eventManager"], func
                         Fell.Publish(fallable);
                     }
                     else {
-                        fallable.position.x += details.normal[0] * details.depth * collidable.hole.steepness;
-                        fallable.position.y += details.normal[1] * details.depth * collidable.hole.steepness;
+                        fallable.position = utils.toPoint(utils.scale(details.normal, details.depth * collidable.hole.steepness));
                     }
                     var factor = 1.2 - details.depth * 0.2;
                     if (factor < 0) {
@@ -35,8 +34,8 @@ System.register(["./collisionManager", "./webglManager", "./eventManager"], func
             }
         });
     }
-    exports_1("Setup", Setup);
-    var collisionManager_1, webglManager_1, eventManager_1, Fell;
+    exports_1("setup", setup);
+    var collisionManager_1, webglManager_1, eventManager_1, utils, Fell;
     return {
         setters: [
             function (collisionManager_1_1) {
@@ -47,6 +46,9 @@ System.register(["./collisionManager", "./webglManager", "./eventManager"], func
             },
             function (eventManager_1_1) {
                 eventManager_1 = eventManager_1_1;
+            },
+            function (utils_1) {
+                utils = utils_1;
             }
         ],
         execute: function () {

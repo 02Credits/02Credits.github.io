@@ -3,7 +3,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
     var __moduleName = context_1 && context_1.id;
     function isStatue(entity) { return "statue" in entity; }
     exports_1("isStatue", isStatue);
-    function Setup() {
+    function setup() {
         ces.EntityAdded.Subscribe((entity) => {
             if (isStatue(entity)) {
                 let statue = entity.statue;
@@ -20,8 +20,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
         });
         collisionManager_1.Collision.Subscribe((collider, collidee, details) => {
             if (playerManager_1.isPlayer(collider) && isStatue(collidee)) {
-                collider.player.vx -= details.normal[0] * 2;
-                collider.player.vy -= details.normal[1] * 2;
+                collider.player.velocity = utils.toPoint(utils.sub(collider.player.velocity, utils.scale(details.normal, 2)));
             }
         });
         animationManager_1.Update.Subscribe((time) => {
@@ -42,8 +41,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                         // we multiply with the direction by 2 so that we go the proper distance
                         let jumpAmount = Math.sin(jumpPosition * Math.PI) / 2;
                         let distanceScaling = state.jumpDistance / statue.maxJumpDistance;
-                        entity.position.x += jumpAmount * state.direction.x * distanceScaling;
-                        entity.position.y += jumpAmount * state.direction.y * distanceScaling;
+                        entity.position = utils.toPoint(utils.sum(entity.position, utils.scale(state.direction, jumpAmount * distanceScaling)));
                         entity.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
                     }
                 }
@@ -72,15 +70,15 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
                     }
                     if (distance > 0.01) {
                         let targetDelta = utils.sub(target, entity.position);
-                        targetDelta = utils.div(targetDelta, distance);
-                        let targetRotation = Math.atan2(targetDelta.y, targetDelta.x);
+                        targetDelta = utils.shrink(targetDelta, distance);
+                        let targetRotation = utils.angle(targetDelta);
                         let r = entity.rotation;
                         let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
                         if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
                             statue.jumpState = {
                                 jumpTime: 0,
                                 jumping: true,
-                                direction: targetDelta,
+                                direction: utils.toPoint(targetDelta),
                                 jumpDistance: Math.min(distance, statue.maxJumpDistance)
                             };
                         }
@@ -101,7 +99,7 @@ System.register(["./ces", "./utils", "./animationManager", "./playerManager", ".
             }
         });
     }
-    exports_1("Setup", Setup);
+    exports_1("setup", setup);
     var ces, utils, animationManager_1, playerManager_1, collisionManager_1, obj;
     return {
         setters: [

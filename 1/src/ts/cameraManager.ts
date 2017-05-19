@@ -30,7 +30,7 @@ export function Retarget(target: {targetX: number, targetY: number}) {
   cameraEntity.camera.targetY = target.targetY;
 }
 
-export function Setup() {
+export function setup() {
   Update.Subscribe(() => {
     for (let cameraEntity of ces.getEntities(isCamera)) {
       var dy = cameraEntity.camera.targetY - cameraEntity.position.y;

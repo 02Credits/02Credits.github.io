@@ -1,4 +1,5 @@
 import * as ces from "./ces";
+import {sub, mult, scale, shrink} from "./utils";
 import {isCamera} from "./cameraManager";
 import {canvasSize} from "./webglManager";
 
@@ -6,16 +7,15 @@ let keys: { [key: string]: boolean } = {};
 let mouseButtons: { [key: string]: boolean } = {};
 let enabled = false;
 let mouseDown = false;
-let mouseX = 0;
-let mouseY = 0;
+let mouseScreenPos = [0, 0];
 let gameDiv: HTMLElement;
 
 function mouseEventHandler(e: MouseEvent) {
   mouseButtons.left = (e.buttons & 1) === 1;
   mouseButtons.right = ((e.buttons >> 1) & 1) === 1;
   mouseButtons.middle = ((e.buttons >> 2) & 1) === 1;
-  mouseX = e.offsetX;
-  mouseY = e.offsetY;
+  mouseScreenPos[0] = e.offsetX;
+  mouseScreenPos[1] = e.offsetY;
 }
 
 function mouseEnterHandler() {
@@ -46,15 +46,15 @@ export function KeyDown(key: string) {
 export function MouseState() {
   // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
   let camera = ces.getEntities(isCamera)[0];
+  let canvasDimensions = [canvasSize, canvasSize];
   return {
     mouseButtons: mouseButtons,
-    x: (mouseX - canvasSize / 2) * camera.dimensions.width / canvasSize,
-    y: -(mouseY - canvasSize / 2) * camera.dimensions.height / canvasSize,
+    position: mult(mult(sub(mouseScreenPos, scale(canvasDimensions, 0.5)), shrink(camera.dimensions, canvasSize)), [1, -1]),
     enabled: enabled
   };
 }
 
-export function Setup() {
+export function setup() {
   gameDiv = document.getElementById("game");
 
   gameDiv.addEventListener("mouseup", mouseEventHandler);

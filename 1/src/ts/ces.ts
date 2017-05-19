@@ -29,15 +29,14 @@ export function addEntity(entity: CombinedEntity | TrackedEntity) {
       if (entity.id in entities) {
         console.warn("WARNING: repeat id for " + JSON.stringify(entity));
         return null;
-      } else {
-        addToLists(entity);
       }
       trackedEntity = entity;
     } else {
       trackedEntity = {...entity, id: currentId.toString()};
-      addToLists(trackedEntity);
       currentId++;
     }
+
+    addToLists(trackedEntity);
     EntityAdded.Publish(trackedEntity);
     return trackedEntity;
   }
@@ -73,4 +72,8 @@ export function getEntities<T extends CombinedEntity>(guard: (entity: CombinedEn
 
 export function getEntity(id: string) {
   return entities.get(id);
+}
+
+export function hasEntity(entity: TrackedEntity) {
+  return entities.has(entity.id);
 }

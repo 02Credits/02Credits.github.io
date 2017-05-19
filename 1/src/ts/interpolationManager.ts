@@ -93,7 +93,7 @@ function interpolateState(entity: Entity, time: number) {
   interpolate(start, end, entity, amount);
 }
 
-export function Setup() {
+export function setup() {
   ces.CheckEntity.Subscribe((entity) => {
     if (isInterpolated(entity)) {
       if (!("state" in entity.interpolated))

@@ -1,4 +1,4 @@
-System.register(["./inputManager.js", "./ces.js", "./animationManager"], function (exports_1, context_1) {
+System.register(["./inputManager", "./ces", "./utils", "./animationManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isPlayer(entity) { return "player" in entity; }
@@ -21,30 +21,24 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
         }
     }
     function updatePlayer(entity) {
-        var mouseState = input.MouseState();
-        var dx = mouseState.x - entity.position.x;
-        var dy = mouseState.y - entity.position.y;
-        entity.rotation = Math.atan2(dy, dx) + Math.PI / 2;
-        var length = Math.sqrt(dx * dx + dy * dy);
+        let mouseState = input.MouseState();
+        let delta = utils.sub(mouseState.position, entity.position);
+        entity.rotation = utils.angle(delta) + Math.PI / 2;
+        let length = utils.length(delta);
         if (entity.dimensions && length > 3) {
-            dx = dx / length;
-            dy = dy / length;
-            entity.player.vx += dx * 0.1;
-            entity.player.vy += dy * 0.1;
+            delta = utils.shrink(delta, length);
+            entity.player.velocity = utils.toPoint(utils.sum(entity.player.velocity, utils.scale(delta, 0.1)));
         }
-        entity.player.vx *= 0.85;
-        entity.player.vy *= 0.85;
-        var playerSpeed = Math.sqrt(entity.player.vx * entity.player.vx + entity.player.vy * entity.player.vy);
+        entity.player.velocity = utils.toPoint(utils.scale(entity.player.velocity, 0.85));
+        var playerSpeed = utils.length(entity.player.velocity);
         entity.player.speed = playerSpeed;
         entity.player.walkAnimation += playerSpeed * entity.player.stepSpeed;
-        entity.position.x += entity.player.vx;
-        entity.position.y += entity.player.vy;
+        entity.position = utils.toPoint(utils.sum(entity.position, entity.player.velocity));
     }
-    function Setup() {
+    function setup() {
         ces.EntityAdded.Subscribe((entity) => {
             if (isPlayer(entity)) {
-                entity.player.vx = 0;
-                entity.player.vy = 0;
+                entity.player.velocity = { x: 0, y: 0 };
                 entity.player.walkAnimation = 0;
             }
         });
@@ -55,8 +49,8 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
             }
         });
     }
-    exports_1("Setup", Setup);
-    var input, ces, animationManager_1;
+    exports_1("setup", setup);
+    var input, ces, utils, animationManager_1;
     return {
         setters: [
             function (input_1) {
@@ -64,6 +58,9 @@ System.register(["./inputManager.js", "./ces.js", "./animationManager"], functio
             },
             function (ces_1) {
                 ces = ces_1;
+            },
+            function (utils_1) {
+                utils = utils_1;
             },
             function (animationManager_1_1) {
                 animationManager_1 = animationManager_1_1;

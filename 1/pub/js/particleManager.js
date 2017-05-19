@@ -15,7 +15,7 @@ System.register(["./animationManager", "./ces", "./interpolationManager", "./obj
             }
         }
     }
-    function Setup() {
+    function setup() {
         ces.CheckEntity.Subscribe((entity) => {
             if (isGenerator(entity)) {
                 let generator = entity.particleGenerator;
@@ -66,7 +66,7 @@ System.register(["./animationManager", "./ces", "./interpolationManager", "./obj
             }
         });
     }
-    exports_1("Setup", Setup);
+    exports_1("setup", setup);
     var animationManager_1, ces, interpolationManager_1, objectPool_1;
     return {
         setters: [

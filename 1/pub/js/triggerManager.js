@@ -3,7 +3,7 @@ System.register(["./collisionManager", "./playerManager"], function (exports_1, 
     var __moduleName = context_1 && context_1.id;
     function isTrigger(entity) { return "trigger" in entity; }
     exports_1("isTrigger", isTrigger);
-    function Setup() {
+    function setup() {
         collisionManager_1.Collision.Subscribe((player, collidable, details) => {
             if (playerManager_1.isPlayer(player)) {
                 if (isTrigger(collidable)) {
@@ -20,7 +20,7 @@ System.register(["./collisionManager", "./playerManager"], function (exports_1, 
             }
         });
     }
-    exports_1("Setup", Setup);
+    exports_1("setup", setup);
     var collisionManager_1, playerManager_1;
     return {
         setters: [

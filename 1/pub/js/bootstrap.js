@@ -1,7 +1,7 @@
-System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./parentManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager", "./inputManager"], function (exports_1, context_1) {
+System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager", "./inputManager", "./parentManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ces, webglManager, playerManager, collisionManager, parentManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager, inputManager;
+    var ces, webglManager, playerManager, collisionManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager, inputManager, parentManager;
     return {
         setters: [
             function (ces_1) {
@@ -15,9 +15,6 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             },
             function (collisionManager_1) {
                 collisionManager = collisionManager_1;
-            },
-            function (parentManager_1) {
-                parentManager = parentManager_1;
             },
             function (cameraManager_1) {
                 cameraManager = cameraManager_1;
@@ -45,21 +42,24 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             },
             function (inputManager_1) {
                 inputManager = inputManager_1;
+            },
+            function (parentManager_1) {
+                parentManager = parentManager_1;
             }
         ],
         execute: function () {
             webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
-                await collisionManager.Setup();
-                await playerManager.Setup();
-                await parentManager.Setup();
-                await cameraManager.Setup();
-                await triggerManager.Setup();
-                await wallManager.Setup();
-                await holeManager.Setup();
-                await statueManager.Setup();
-                await interpolationManager.Setup();
-                await particleManager.Setup();
-                await inputManager.Setup();
+                await collisionManager.setup();
+                await playerManager.setup();
+                await cameraManager.setup();
+                await triggerManager.setup();
+                await wallManager.setup();
+                await holeManager.setup();
+                await statueManager.setup();
+                await interpolationManager.setup();
+                await particleManager.setup();
+                await inputManager.setup();
+                await parentManager.setup();
                 ces.addEntity({
                     "position": {
                         "x": 0,
@@ -80,9 +80,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "position": {
                         "x": 0,
                         "y": 0,
-                        "z": 5,
-                        "cx": 0.5,
-                        "cy": 0.5
+                        "z": 5
                     },
                     "dimensions": {
                         "width": 5,
@@ -103,9 +101,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "position": {
                         "x": 0,
                         "y": 0,
-                        "z": 4,
-                        "cx": 0.5,
-                        "cy": 0.5
+                        "z": 4
                     },
                     "dimensions": {
                         "width": 1,
@@ -124,9 +120,11 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "position": {
                         "x": 0,
                         "y": 0,
-                        "z": 4,
-                        "cx": 0.5,
-                        "cy": 0.5
+                        "z": 4
+                    },
+                    "center": {
+                        "x": 0.5,
+                        "y": 0.5
                     },
                     "dimensions": {
                         "width": 1,

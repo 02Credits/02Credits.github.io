@@ -3,6 +3,7 @@ import {isRenderable} from "./webglManager";
 import {EventManager1} from "./eventManager";
 
 import {CombinedEntity} from "./entity";
+import * as utils from "./utils";
 
 export let Fell = new EventManager1<any>();
 
@@ -20,7 +21,7 @@ export function isHole(entity: CombinedEntity): entity is HoleEntity { return "h
 
 export type Entity = FallableEntity | HoleEntity;
 
-export function Setup() {
+export function setup() {
   Collision.Subscribe((fallable, collidable, details) => {
     if (isFallable(fallable)) {
       if (isHole(collidable)) {
@@ -29,8 +30,7 @@ export function Setup() {
           fallable.position.y = collidable.position.y;
           Fell.Publish(fallable);
         } else {
-          fallable.position.x += details.normal[0] * details.depth * collidable.hole.steepness;
-          fallable.position.y += details.normal[1] * details.depth * collidable.hole.steepness;
+          fallable.position = utils.toPoint(utils.scale(details.normal, details.depth * collidable.hole.steepness));
         }
 
         var factor = 1.2 - details.depth * 0.2;

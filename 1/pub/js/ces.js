@@ -19,16 +19,13 @@ System.register(["./eventManager"], function (exports_1, context_1) {
                     console.warn("WARNING: repeat id for " + JSON.stringify(entity));
                     return null;
                 }
-                else {
-                    addToLists(entity);
-                }
                 trackedEntity = entity;
             }
             else {
                 trackedEntity = Object.assign({}, entity, { id: currentId.toString() });
-                addToLists(trackedEntity);
                 currentId++;
             }
+            addToLists(trackedEntity);
             EntityAdded.Publish(trackedEntity);
             return trackedEntity;
         }
@@ -67,6 +64,10 @@ System.register(["./eventManager"], function (exports_1, context_1) {
         return entities.get(id);
     }
     exports_1("getEntity", getEntity);
+    function hasEntity(entity) {
+        return entities.has(entity.id);
+    }
+    exports_1("hasEntity", hasEntity);
     var eventManager_1, currentId, entities, sortedEntities, CheckEntity, EntityAdded, EntityRemoved;
     return {
         setters: [

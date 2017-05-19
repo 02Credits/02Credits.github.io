@@ -4,7 +4,7 @@ import {Init, Draw} from "./animationManager";
 import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
-import {spliceArray} from "./utils";
+import {spliceArray, Point, Dimensions} from "./utils";
 
 import {CombinedEntity} from "./entity";
 
@@ -12,19 +12,6 @@ const debug = false;
 const obj: any = {};
 
 export let canvasSize: number;
-
-export interface Position {
-  x: number;
-  y: number;
-  z?: number;
-  cx?: number;
-  cy?: number;
-}
-
-export interface Dimensions {
-  width: number;
-  height: number;
-}
 
 export interface Color {
   h?: number;
@@ -38,8 +25,9 @@ export interface Color {
 
 export interface Entity {
   texture: string;
-  position: Position;
+  position: Point;
   dimensions: Dimensions;
+  center?: Point;
   scale?: number;
   rotation?: number;
   color?: Color;
@@ -231,8 +219,8 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
       entity.dimensions.height
     ]);
     spliceData(spriteArrays.a_center, index, [
-      entity.position.cx || 0.5,
-      entity.position.cy || 0.5
+      (entity.center || obj).x || 0.5,
+      (entity.center || obj).y || 0.5
     ]);
     spliceData(spriteArrays.a_scale, index, [entity.scale || 1]);
     let offset = index * 4;
@@ -323,5 +311,4 @@ export async function Setup(texturePaths: string[]) {
       drawDebug(gl, debugProgram);
     }
   });
-
 }

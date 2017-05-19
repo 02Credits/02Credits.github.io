@@ -13,7 +13,7 @@ System.register(["./ces", "./animationManager"], function (exports_1, context_1)
         cameraEntity.camera.targetY = target.targetY;
     }
     exports_1("Retarget", Retarget);
-    function Setup() {
+    function setup() {
         animationManager_1.Update.Subscribe(() => {
             for (let cameraEntity of ces.getEntities(isCamera)) {
                 var dy = cameraEntity.camera.targetY - cameraEntity.position.y;
@@ -24,7 +24,7 @@ System.register(["./ces", "./animationManager"], function (exports_1, context_1)
             }
         });
     }
-    exports_1("Setup", Setup);
+    exports_1("setup", setup);
     var ces, animationManager_1, shake, shakeFade;
     return {
         setters: [

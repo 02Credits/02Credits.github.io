@@ -73,7 +73,7 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
         amount = entity.interpolated.state.reverse ? 1 - amount : amount;
         interpolate(start, end, entity, amount);
     }
-    function Setup() {
+    function setup() {
         ces.CheckEntity.Subscribe((entity) => {
             if (isInterpolated(entity)) {
                 if (!("state" in entity.interpolated))
@@ -116,7 +116,7 @@ System.register(["./animationManager", "./eventManager", "./ces"], function (exp
             }
         });
     }
-    exports_1("Setup", Setup);
+    exports_1("setup", setup);
     var animationManager_1, eventManager_1, ces, AnimationFinished;
     return {
         setters: [

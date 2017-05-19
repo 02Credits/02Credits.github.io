@@ -31,7 +31,7 @@ function makeRelative(entity: any, target: any) {
   }
 }
 
-export function Setup() {
+export function setup() {
   ces.CheckEntity.Subscribe((entity) => {
     if (isGenerator(entity)) {
       let generator = entity.particleGenerator;

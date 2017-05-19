@@ -1,12 +1,12 @@
 import * as ces from "./ces"
 import {Update} from "./animationManager";
-import {Position, Entity as RenderableEntity, isRenderable} from "./webglManager";
+import {Entity as RenderableEntity, isRenderable} from "./webglManager";
 import utils from "./utils";
 import {CombinedEntity} from "./entity";
 
 export interface Entity extends RenderableEntity {
   child: {
-    relativePosition?: Position,
+    relativePosition?: utils.Point,
     relativeRotation?: number,
     relativeScale?: number,
     relativeAlpha?: number
@@ -15,7 +15,7 @@ export interface Entity extends RenderableEntity {
 }
 export function isChild(entity: CombinedEntity): entity is Entity { return "child" in entity; }
 
-export function Setup() {
+export function setup() {
   Update.Subscribe(() => {
     for (let childEntity of ces.getEntities(isChild)) {
       let parent = ces.getEntity(childEntity.parent);
@@ -25,7 +25,7 @@ export function Setup() {
         let parentX = parent.position.x || 0;
         let parentY = parent.position.y || 0;
         // let parentAlpha = parent.rendered.alpha || 1;
-        childEntity.child.relativePosition = childEntity.child.relativePosition || {y: 0, x: 0};
+        childEntity.child.relativePosition = childEntity.child.relativePosition || {x: 0, y: 0};
         childEntity.position.x =
           (Math.cos(parentRotation) * childEntity.child.relativePosition.x -
            Math.sin(parentRotation) * childEntity.child.relativePosition.y) * parentScale +

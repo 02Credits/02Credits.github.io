@@ -1,14 +1,12 @@
-import * as pixi from "pixi.js";
-
 import * as ces from "./ces";
 import {Update} from "./animationManager";
 
-import {Dimensions, Position, Entity as RenderableEntity} from "./webglManager";
+import {Entity as RenderableEntity} from "./webglManager";
 import {EventManager3} from "./eventManager";
 
 import {CombinedEntity} from "./entity";
 
-import * as geometryUtils from "./geometryUtils";
+import * as utils from "./utils";
 
 interface Circle {
   kind: "circle"
@@ -20,12 +18,12 @@ interface Rectangle {
 
 interface Poly {
   kind: "polygon"
-  points: geometryUtils.Polygon
+  points: utils.Polygon
 }
 
 interface CompoundPoly {
   kind: "compound polygon"
-  children: geometryUtils.Polygon[]
+  children: utils.Polygon[]
 }
 
 const obj: any = {};
@@ -40,16 +38,16 @@ export interface Entity extends GeometryEntity {
 export function isCollidable(entity: CombinedEntity): entity is Entity { return "collidable" in entity; }
 
 // Algorithm modified from http://wiki.roblox.com/index.php?title=2D_Collision_Detection
-export function getCorners(entity: GeometryEntity) : geometryUtils.Polygon[]{
+export function getCorners(entity: GeometryEntity) : utils.Polygon[]{
   let scale = entity.scale || 1;
   let rotation = entity.rotation || 0;
-  let position = [entity.position.x, entity.position.y];
-  let corners: geometryUtils.Polygon[] = [];
+  let center = entity.center || {x: 0.5, y: 0.5};
+  let corners: utils.Polygon[] = [];
   if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-    let left = entity.position.x + entity.dimensions.width * entity.position.cx;
-    let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx);
-    let bottom = entity.position.y + entity.dimensions.height * entity.position.cy;
-    let top = entity.position.y - entity.dimensions.height * (1 - entity.position.cy);
+    let left = entity.position.x + entity.dimensions.width * center.x;
+    let right = entity.position.x - entity.dimensions.width * (1 - center.x);
+    let bottom = entity.position.y + entity.dimensions.height * center.y;
+    let top = entity.position.y - entity.dimensions.height * (1 - center.x);
 
     corners.push([
       [left, top],
@@ -64,21 +62,21 @@ export function getCorners(entity: GeometryEntity) : geometryUtils.Polygon[]{
       corners.push(child);
     }
   }
-  let retList: geometryUtils.Polygon[] = [];
+  let retList: utils.Polygon[] = [];
   for (let cornersList of corners) {
-    retList.push(geometryUtils.transformPoly(cornersList, position, rotation, scale));
+    retList.push(utils.transformPoly(cornersList, entity.position, rotation, scale));
   }
   return retList;
 }
 
 function getAxis(entity: Entity) {
   if (entity.collisionShape == null || entity.collisionShape.kind != "circle") {
-    let axis: geometryUtils.Vec[] = [];
+    let axis: utils.Vec[] = [];
     let childCorners = getCorners(entity);
     for (let child of childCorners) {
       let previous = child[child.length - 1];
       for (let corner of child) {
-        axis.push(geometryUtils.normal(geometryUtils.unit(geometryUtils.sub(corner, previous))));
+        axis.push(utils.normal(utils.unit(utils.sub(corner, previous))));
         previous = corner;
       }
     }
@@ -88,19 +86,19 @@ function getAxis(entity: Entity) {
   }
 }
 
-function projectedBounds(entity: Entity, axis: geometryUtils.Vec) {
+function projectedBounds(entity: Entity, axis: utils.Vec) {
   if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
     let scale = ((entity || obj).renderer || obj).scale || 1;
-    let center = geometryUtils.dot([entity.position.x, entity.position.y], axis);
+    let center = utils.dot([entity.position.x, entity.position.y], axis);
     let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
     return {max: center + radius, min: center - radius};
   } else {
     let corners = getCorners(entity);
-    let min = geometryUtils.dot(corners[0][0], axis);
+    let min = utils.dot(corners[0][0], axis);
     let max = min;
     for (let child of corners) {
       for (let corner of child) {
-        let projectedCorner = geometryUtils.dot(corner, axis);
+        let projectedCorner = utils.dot(corner, axis);
         if (projectedCorner > max) max = projectedCorner;
         if (projectedCorner < min) min = projectedCorner;
       }
@@ -109,7 +107,7 @@ function projectedBounds(entity: Entity, axis: geometryUtils.Vec) {
   }
 }
 
-function calculateOverlap(e1: Entity, e2: Entity, axis: geometryUtils.Vec) {
+function calculateOverlap(e1: Entity, e2: Entity, axis: utils.Vec) {
   let b1 = projectedBounds(e1, axis);
   let b2 = projectedBounds(e2, axis);
   if (b2.min > b1.max || b2.max < b1.min) {
@@ -120,9 +118,9 @@ function calculateOverlap(e1: Entity, e2: Entity, axis: geometryUtils.Vec) {
 
 function getOverlap(e1: Entity, e2: Entity) {
   let c1 = getCorners(e1);
-  let c2 = getCorners(e2);
-  let result: {depth: number, normal: geometryUtils.Vec} = null;
-  let normal: geometryUtils.Vec = [];
+  let c2 = getCorners(e2)
+  let result: {depth: number, normal: utils.Vec} = null;
+  let normal: utils.Vec = [];
   for (let axis of getAxis(e1).concat(getAxis(e2))) {
     let overlap = calculateOverlap(e1, e2, axis);
     if (overlap == null) return null;
@@ -131,10 +129,7 @@ function getOverlap(e1: Entity, e2: Entity) {
       if (overlap < 0) {
         result = {
           depth: -overlap,
-          normal: [
-              -axis[0],
-              -axis[1]
-          ]
+          normal: utils.scale(axis, -1)
         }
       } else {
         result = {
@@ -147,30 +142,11 @@ function getOverlap(e1: Entity, e2: Entity) {
   return result;
 }
 
-export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: geometryUtils.Vec}>();
+export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: utils.Vec}>();
 
-export function Setup() {
-  let physicsOverlay = new pixi.Graphics();
-  // overlay.addChild(physicsOverlay);
+export function setup() {
   Update.Subscribe(() => {
     let collidables = ces.getEntities(isCollidable);
-
-    physicsOverlay.clear();
-    for (let collider of collidables) {
-      if (!collider.collisionShape || collider.collisionShape.kind !== "circle") {
-        let corners = getCorners(collider);
-        physicsOverlay.lineStyle(0.1, 0xFF0000, 1);
-        for (let poly of corners) {
-          let startCorner = poly[poly.length - 1];
-          physicsOverlay.beginFill(0xFF0000, 0.5);
-          physicsOverlay.moveTo(startCorner[0], startCorner[1]);
-          for (let corner of poly) {
-            physicsOverlay.lineTo(corner[0], corner[1]);
-          }
-          physicsOverlay.endFill();
-        }
-      }
-    }
 
     for (let collider of collidables) {
       for (let collidable of collidables) {

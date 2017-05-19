@@ -1,4 +1,4 @@
-System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./geometryUtils"], function (exports_1, context_1) {
+System.register(["./ces", "./animationManager", "./eventManager", "./utils"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function isCollidable(entity) { return "collidable" in entity; }
@@ -7,13 +7,13 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
     function getCorners(entity) {
         let scale = entity.scale || 1;
         let rotation = entity.rotation || 0;
-        let position = [entity.position.x, entity.position.y];
+        let center = entity.center || { x: 0.5, y: 0.5 };
         let corners = [];
         if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-            let left = entity.position.x + entity.dimensions.width * entity.position.cx;
-            let right = entity.position.x - entity.dimensions.width * (1 - entity.position.cx);
-            let bottom = entity.position.y + entity.dimensions.height * entity.position.cy;
-            let top = entity.position.y - entity.dimensions.height * (1 - entity.position.cy);
+            let left = entity.position.x + entity.dimensions.width * center.x;
+            let right = entity.position.x - entity.dimensions.width * (1 - center.x);
+            let bottom = entity.position.y + entity.dimensions.height * center.y;
+            let top = entity.position.y - entity.dimensions.height * (1 - center.x);
             corners.push([
                 [left, top],
                 [right, top],
@@ -31,7 +31,7 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
         }
         let retList = [];
         for (let cornersList of corners) {
-            retList.push(geometryUtils.transformPoly(cornersList, position, rotation, scale));
+            retList.push(utils.transformPoly(cornersList, entity.position, rotation, scale));
         }
         return retList;
     }
@@ -43,7 +43,7 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
             for (let child of childCorners) {
                 let previous = child[child.length - 1];
                 for (let corner of child) {
-                    axis.push(geometryUtils.normal(geometryUtils.unit(geometryUtils.sub(corner, previous))));
+                    axis.push(utils.normal(utils.unit(utils.sub(corner, previous))));
                     previous = corner;
                 }
             }
@@ -56,17 +56,17 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
     function projectedBounds(entity, axis) {
         if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
             let scale = ((entity || obj).renderer || obj).scale || 1;
-            let center = geometryUtils.dot([entity.position.x, entity.position.y], axis);
+            let center = utils.dot([entity.position.x, entity.position.y], axis);
             let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
             return { max: center + radius, min: center - radius };
         }
         else {
             let corners = getCorners(entity);
-            let min = geometryUtils.dot(corners[0][0], axis);
+            let min = utils.dot(corners[0][0], axis);
             let max = min;
             for (let child of corners) {
                 for (let corner of child) {
-                    let projectedCorner = geometryUtils.dot(corner, axis);
+                    let projectedCorner = utils.dot(corner, axis);
                     if (projectedCorner > max)
                         max = projectedCorner;
                     if (projectedCorner < min)
@@ -97,10 +97,7 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
                 if (overlap < 0) {
                     result = {
                         depth: -overlap,
-                        normal: [
-                            -axis[0],
-                            -axis[1]
-                        ]
+                        normal: utils.scale(axis, -1)
                     };
                 }
                 else {
@@ -113,27 +110,9 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
         }
         return result;
     }
-    function Setup() {
-        let physicsOverlay = new pixi.Graphics();
-        // overlay.addChild(physicsOverlay);
+    function setup() {
         animationManager_1.Update.Subscribe(() => {
             let collidables = ces.getEntities(isCollidable);
-            physicsOverlay.clear();
-            for (let collider of collidables) {
-                if (!collider.collisionShape || collider.collisionShape.kind !== "circle") {
-                    let corners = getCorners(collider);
-                    physicsOverlay.lineStyle(0.1, 0xFF0000, 1);
-                    for (let poly of corners) {
-                        let startCorner = poly[poly.length - 1];
-                        physicsOverlay.beginFill(0xFF0000, 0.5);
-                        physicsOverlay.moveTo(startCorner[0], startCorner[1]);
-                        for (let corner of poly) {
-                            physicsOverlay.lineTo(corner[0], corner[1]);
-                        }
-                        physicsOverlay.endFill();
-                    }
-                }
-            }
             for (let collider of collidables) {
                 for (let collidable of collidables) {
                     if (collidable !== collider) {
@@ -146,13 +125,10 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
             }
         });
     }
-    exports_1("Setup", Setup);
-    var pixi, ces, animationManager_1, eventManager_1, geometryUtils, obj, Collision;
+    exports_1("setup", setup);
+    var ces, animationManager_1, eventManager_1, utils, obj, Collision;
     return {
         setters: [
-            function (pixi_1) {
-                pixi = pixi_1;
-            },
             function (ces_1) {
                 ces = ces_1;
             },
@@ -162,8 +138,8 @@ System.register(["pixi.js", "./ces", "./animationManager", "./eventManager", "./
             function (eventManager_1_1) {
                 eventManager_1 = eventManager_1_1;
             },
-            function (geometryUtils_1) {
-                geometryUtils = geometryUtils_1;
+            function (utils_1) {
+                utils = utils_1;
             }
         ],
         execute: function () {

@@ -151,8 +151,8 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
                 entity.dimensions.height
             ]);
             spliceData(spriteArrays.a_center, index, [
-                entity.position.cx || 0.5,
-                entity.position.cy || 0.5
+                (entity.center || obj).x || 0.5,
+                (entity.center || obj).y || 0.5
             ]);
             spliceData(spriteArrays.a_scale, index, [entity.scale || 1]);
             let offset = index * 4;

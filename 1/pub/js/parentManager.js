@@ -3,7 +3,7 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
     var __moduleName = context_1 && context_1.id;
     function isChild(entity) { return "child" in entity; }
     exports_1("isChild", isChild);
-    function Setup() {
+    function setup() {
         animationManager_1.Update.Subscribe(() => {
             for (let childEntity of ces.getEntities(isChild)) {
                 let parent = ces.getEntity(childEntity.parent);
@@ -13,7 +13,7 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
                     let parentX = parent.position.x || 0;
                     let parentY = parent.position.y || 0;
                     // let parentAlpha = parent.rendered.alpha || 1;
-                    childEntity.child.relativePosition = childEntity.child.relativePosition || { y: 0, x: 0 };
+                    childEntity.child.relativePosition = childEntity.child.relativePosition || { x: 0, y: 0 };
                     childEntity.position.x =
                         (Math.cos(parentRotation) * childEntity.child.relativePosition.x -
                             Math.sin(parentRotation) * childEntity.child.relativePosition.y) * parentScale +
@@ -32,7 +32,7 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
             }
         });
     }
-    exports_1("Setup", Setup);
+    exports_1("setup", setup);
     var ces, animationManager_1, webglManager_1;
     return {
         setters: [

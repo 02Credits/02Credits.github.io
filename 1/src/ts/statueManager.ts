@@ -1,7 +1,7 @@
 import * as ces from "./ces";
 import * as utils from "./utils";
 import {Update} from "./animationManager";
-import {Position, Dimensions, Entity as RenderedEntity} from "./webglManager";
+import {Entity as RenderedEntity} from "./webglManager";
 import {isPlayer} from "./playerManager";
 import {Collision} from "./collisionManager";
 
@@ -44,7 +44,7 @@ export interface Entity extends RenderedEntity {
 export function isStatue(entity: CombinedEntity): entity is Entity { return "statue" in entity; }
 
 const obj: any = {};
-export function Setup() {
+export function setup() {
   ces.EntityAdded.Subscribe((entity) => {
     if (isStatue(entity)) {
       let statue = entity.statue;
@@ -62,8 +62,7 @@ export function Setup() {
 
   Collision.Subscribe((collider, collidee, details) => {
     if (isPlayer(collider) && isStatue(collidee)) {
-      collider.player.vx -= details.normal[0] * 2;
-      collider.player.vy -= details.normal[1] * 2;
+      collider.player.velocity = utils.toPoint(utils.sub(collider.player.velocity, utils.scale(details.normal, 2)));
     }
   });
 
@@ -84,8 +83,7 @@ export function Setup() {
           // we multiply with the direction by 2 so that we go the proper distance
           let jumpAmount = Math.sin(jumpPosition * Math.PI) / 2;
           let distanceScaling = state.jumpDistance / statue.maxJumpDistance;
-          entity.position.x += jumpAmount * state.direction.x * distanceScaling;
-          entity.position.y += jumpAmount * state.direction.y * distanceScaling;
+          entity.position = utils.toPoint(utils.sum(entity.position, utils.scale(state.direction, jumpAmount * distanceScaling)));
           entity.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
         }
       } else {
@@ -114,15 +112,15 @@ export function Setup() {
         }
         if (distance > 0.01) {
           let targetDelta = utils.sub(target, entity.position);
-          targetDelta = utils.div(targetDelta, distance);
-          let targetRotation = Math.atan2(targetDelta.y, targetDelta.x);
+          targetDelta = utils.shrink(targetDelta, distance);
+          let targetRotation = utils.angle(targetDelta);
           let r = entity.rotation;
           let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
           if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
             statue.jumpState = {
               jumpTime: 0,
               jumping: true,
-              direction: targetDelta,
+              direction: utils.toPoint(targetDelta),
               jumpDistance: Math.min(distance, statue.maxJumpDistance)
             };
           } else {
