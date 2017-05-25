@@ -93,7 +93,7 @@ export function sum(vec1: Vec, vec2: Vec): VecArray {
   for (let i = 0; i < min.length; i++) {
     max[i] += min[i];
   }
-  return [vec1[0] + vec2[0], vec1[1] + vec2[1]];
+  return max;
 }
 
 export function sub(vec1: Vec, vec2: Vec): VecArray {
@@ -157,15 +157,13 @@ export function unit(vec: Vec): VecArray {
   return shrink(vec, len);
 }
 
-export function transform(vec: Vec, position: Vec, rotation: number = 0, scale: number = 1) {
+export function transform(vec: Vec, position: Vec, rotation: number = 0, s: number = 1) {
   vec = toVecArray(vec);
-  position = toVecArray(position);
-  let relX = (vec[0] - position[0]) * scale;
-  let relY = (vec[1] - position[1]) * scale;
-  return [
-    position[0] + relX * Math.cos(rotation) - relY * Math.sin(rotation),
-    position[1] + relX * Math.sin(rotation) + relY * Math.cos(rotation)
-  ];
+  position = clone(toVecArray(position));
+  let rel = scale(sub(vec, position), s);
+  position[0] += rel[0] * Math.cos(rotation) - rel[1] * Math.sin(rotation);
+  position[1] += rel[0] * Math.sin(rotation) + rel[1] * Math.cos(rotation);
+  return position;
 }
 
 export type Polygon = Vec[];

@@ -38,7 +38,7 @@ function updateFeet(playerEntity: PlayerEntity) {
       playerEntity.player.stepSize *                // Account for settings
       playerEntity.player.speed *                   // Step faster as you walk faster
       entity.child.relativePosition.x *             // Account for which foot and scale a bit
-      scale;
+      scale
   }
 }
 
