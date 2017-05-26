@@ -1,9 +1,8 @@
+export default class ObjectPool<T> {
+  private pool: T[] = [];
+  private proto: T;
 
-export default class ObjectPool {
-  private pool: any[] = [];
-  private proto: any;
-
-  static copy(source: any, dest: any) {
+  static copy<T>(source: T, dest: T) {
     for (let id in source) {
       if (typeof source[id] == "object") {
         if (!dest[id]) {
@@ -16,7 +15,7 @@ export default class ObjectPool {
     }
   }
 
-  static clone(el: any): any {
+  static clone<T>(el: T): T {
     if (typeof el == "object") {
       let newEl: any = {} as any;
       this.copy(el, newEl);
@@ -26,17 +25,17 @@ export default class ObjectPool {
       for (let child of el as any[]) {
         returnArray.push(this.clone(child));
       }
-      return returnArray;
+      return returnArray as any as T;
     } else {
       return el;
     }
   }
 
-  constructor(proto: any) {
+  constructor(proto: T) {
     this.proto = proto;
   }
 
-  public New(): any {
+  public New(): T {
     if (this.pool.length != 0) {
       return this.pool.pop();
     } else {
@@ -44,7 +43,7 @@ export default class ObjectPool {
     }
   }
 
-  public Free(obj: any) {
+  public Free(obj: T) {
     ObjectPool.copy(this.proto, obj);
     this.pool.push(obj);
   }

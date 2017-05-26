@@ -12,7 +12,7 @@ export interface Entity {
     length: number;
     frequency: number;
     particleIds?: Set<string>;
-    pool?: ObjectPool;
+    pool?: ObjectPool<any>;
   }
 }
 export function isGenerator(entity: CombinedEntity): entity is Entity { return "particleGenerator" in entity; }

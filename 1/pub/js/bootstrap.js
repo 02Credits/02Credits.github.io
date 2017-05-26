@@ -96,6 +96,38 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     }
                 });
                 ces.addEntity({
+                    "id": "playerParticleBase",
+                    "position": { x: 0, y: 0, z: 0 },
+                    "dimensions": {
+                        x: 1, y: 1, z: 0
+                    },
+                    "texture": "Player.png",
+                    "collidable": true,
+                    "collisionShape": {
+                        kind: "circle"
+                    },
+                    "friction": 0.90,
+                    "restitution": 1.5,
+                    "enabled": false
+                });
+                ces.addEntity({
+                    "id": "playerFootBase",
+                    "texture": "Wall.png",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 4
+                    },
+                    "dimensions": {
+                        "x": 1,
+                        "y": 1,
+                        "z": 0
+                    },
+                    "parent": "player",
+                    "foot": true,
+                    "enabled": false
+                });
+                ces.addEntity({
                     "id": "player",
                     "texture": "Player.png",
                     "position": {
@@ -111,88 +143,15 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     "friction": 0.85,
                     "collidable": true,
                     "collisionShape": {
-                        "kind": "circle",
+                        "kind": "circle"
                     },
                     "player": {
                         "stepSpeed": 0.3,
-                        "stepSize": 5
-                    },
-                    "particleGenerator": {
-                        relativeStart: {},
-                        relativeEnd: {},
-                        constant: {
-                            texture: "Player.png",
-                            dimensions: {
-                                x: 1,
-                                y: 1,
-                                z: 0
-                            },
-                            position: { x: 0, y: 0, z: 0 },
-                            restitution: 1,
-                            collidable: true,
-                            // friction: 0.95,
-                            playerParticle: true
-                        },
-                        length: 10,
-                        frequency: 2
+                        "stepSize": 5,
+                        "dashLength": 0.5,
+                        "particleBase": "playerParticleBase",
+                        "footBase": "playerFootBase"
                     }
-                });
-                ces.addEntity({
-                    "texture": "Player.png",
-                    "position": {
-                        "x": 20,
-                        "y": 20,
-                        "z": 20
-                    },
-                    "dimensions": {
-                        "x": 1,
-                        "y": 1,
-                        "z": 0
-                    },
-                    "restitution": 1,
-                    "collidable": true,
-                    "friction": 0.95,
-                    "playerParticle": true
-                });
-                ces.addEntity({
-                    "texture": "Wall.png",
-                    "position": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 4
-                    },
-                    "dimensions": {
-                        "x": 1,
-                        "y": 1,
-                        "z": 0
-                    },
-                    "parent": "player",
-                    "child": {
-                        "relativePosition": {
-                            "x": -1
-                        }
-                    },
-                    "foot": true
-                });
-                ces.addEntity({
-                    "texture": "Wall.png",
-                    "position": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 4
-                    },
-                    "dimensions": {
-                        "x": 1,
-                        "y": 1,
-                        "z": 0
-                    },
-                    "parent": "player",
-                    "child": {
-                        "relativePosition": {
-                            "x": 1
-                        }
-                    },
-                    "foot": true
                 });
                 animationManager.Setup();
             });
