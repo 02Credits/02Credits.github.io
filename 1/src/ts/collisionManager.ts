@@ -44,16 +44,16 @@ export function getCorners(entity: GeometryEntity) : utils.Polygon[]{
   let center = entity.center || {x: 0.5, y: 0.5};
   let corners: utils.Polygon[] = [];
   if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-    let left = entity.position.x + entity.dimensions.width * center.x;
-    let right = entity.position.x - entity.dimensions.width * (1 - center.x);
-    let bottom = entity.position.y + entity.dimensions.height * center.y;
-    let top = entity.position.y - entity.dimensions.height * (1 - center.x);
+    let left = entity.position.x + entity.dimensions.x * center.x;
+    let right = entity.position.x - entity.dimensions.x * (1 - center.x);
+    let bottom = entity.position.y + entity.dimensions.y * center.y;
+    let top = entity.position.y - entity.dimensions.y * (1 - center.x);
 
     corners.push([
-      [left, top],
-      [right, top],
-      [right, bottom],
-      [left, bottom]
+      {x: left, y: top, z: entity.position.z},
+      {x: right, y: top, z: entity.position.z},
+      {x: right, y: bottom, z: entity.position.z},
+      {x: left, y: bottom, z: entity.position.z}
     ]);
   } else if (entity.collisionShape.kind === "polygon") {
     corners = [entity.collisionShape.points];
@@ -71,12 +71,12 @@ export function getCorners(entity: GeometryEntity) : utils.Polygon[]{
 
 function getAxis(entity: Entity) {
   if (entity.collisionShape == null || entity.collisionShape.kind != "circle") {
-    let axis: utils.Vec[] = [];
+    let axis: utils.Point[] = [];
     let childCorners = getCorners(entity);
     for (let child of childCorners) {
       let previous = child[child.length - 1];
       for (let corner of child) {
-        axis.push(utils.normal(utils.unit(utils.sub(corner, previous))));
+        axis.push(utils.xyNormal(utils.unit(utils.sub(corner, previous))));
         previous = corner;
       }
     }
@@ -86,11 +86,11 @@ function getAxis(entity: Entity) {
   }
 }
 
-function projectedBounds(entity: Entity, axis: utils.Vec) {
+function projectedBounds(entity: Entity, axis: utils.Point) {
   if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
     let scale = ((entity || obj).renderer || obj).scale || 1;
-    let center = utils.dot([entity.position.x, entity.position.y], axis);
-    let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
+    let center = utils.dot(entity.position, axis);
+    let radius = Math.max(entity.dimensions.x * scale, entity.dimensions.y * scale) / 2;
     return {max: center + radius, min: center - radius};
   } else {
     let corners = getCorners(entity);
@@ -107,7 +107,7 @@ function projectedBounds(entity: Entity, axis: utils.Vec) {
   }
 }
 
-function calculateOverlap(e1: Entity, e2: Entity, axis: utils.Vec) {
+function calculateOverlap(e1: Entity, e2: Entity, axis: utils.Point) {
   let b1 = projectedBounds(e1, axis);
   let b2 = projectedBounds(e2, axis);
   if (b2.min > b1.max || b2.max < b1.min) {
@@ -119,8 +119,8 @@ function calculateOverlap(e1: Entity, e2: Entity, axis: utils.Vec) {
 function getOverlap(e1: Entity, e2: Entity) {
   let c1 = getCorners(e1);
   let c2 = getCorners(e2)
-  let result: {depth: number, normal: utils.Vec} = null;
-  let normal: utils.Vec = [];
+  let result: {depth: number, normal: utils.Point} = null;
+  let normal: utils.Point = {x: 0, y: 0, z: 0};
   for (let axis of getAxis(e1).concat(getAxis(e2))) {
     let overlap = calculateOverlap(e1, e2, axis);
     if (overlap == null) return null;
@@ -142,7 +142,7 @@ function getOverlap(e1: Entity, e2: Entity) {
   return result;
 }
 
-export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: utils.Vec}>();
+export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: utils.Point}>();
 
 export function setup() {
   Update.Subscribe(() => {

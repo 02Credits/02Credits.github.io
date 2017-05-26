@@ -12,14 +12,14 @@ export interface StatueComponent {
   jumpState?: {
     jumpTime: number;
     jumping: boolean;
-    direction: {x: number, y: number};
+    direction: utils.Point;
     jumpDistance: number;
   }
   lastJumped?: number;
   // Light activated
   active?: boolean;
   // Home Position
-  home?: {x: number, y: number};
+  home?: utils.Point;
   // Appearance
   activeTexture?: string;
   inactiveTexture?: string;
@@ -48,21 +48,21 @@ export function setup() {
   ces.EntityAdded.Subscribe((entity) => {
     if (isStatue(entity)) {
       let statue = entity.statue;
-      statue.jumpState = {jumpTime: 0, jumping: false, direction: {x:0, y:0}, jumpDistance: 0};
+      statue.jumpState = {jumpTime: 0, jumping: false, direction: {x:0, y:0, z:0}, jumpDistance: 0};
       statue.active = false;
-      statue.home = (statue || obj).home || {x: entity.position.x, y: entity.position.y};
+      statue.home = (statue || obj).home || utils.clone(entity.position);
       statue.activeTexture = (statue || obj).activeTexture || entity.texture;
       statue.inactiveTexture = (statue || obj).inactiveTexture || entity.texture;
       statue.originalScale = entity.scale || 1;
       statue.lastJumped = 0;
-      entity.position = (entity.position || obj) || {x: 0, y: 0, rotation: 0};
+      entity.position = (entity.position || obj) || {x: 0, y: 0, z: 0};
       entity.rotation = ((entity || obj).position || obj).rotation || 0;
     }
   });
 
   Collision.Subscribe((collider, collidee, details) => {
     if (isPlayer(collider) && isStatue(collidee)) {
-      collider.player.velocity = utils.toPoint(utils.sub(collider.player.velocity, utils.scale(details.normal, 2)));
+      collider.velocity = utils.sub(collider.velocity, utils.scale(details.normal, 2));
     }
   });
 
@@ -83,7 +83,7 @@ export function setup() {
           // we multiply with the direction by 2 so that we go the proper distance
           let jumpAmount = Math.sin(jumpPosition * Math.PI) / 2;
           let distanceScaling = state.jumpDistance / statue.maxJumpDistance;
-          entity.position = utils.toPoint(utils.sum(entity.position, utils.scale(state.direction, jumpAmount * distanceScaling)));
+          entity.position = utils.sum(entity.position, utils.scale(state.direction, jumpAmount * distanceScaling));
           entity.scale = statue.originalScale + statue.jumpScaling * jumpAmount;
         }
       } else {
@@ -113,14 +113,14 @@ export function setup() {
         if (distance > 0.01) {
           let targetDelta = utils.sub(target, entity.position);
           targetDelta = utils.shrink(targetDelta, distance);
-          let targetRotation = utils.angle(targetDelta);
+          let targetRotation = utils.xyAngle(targetDelta);
           let r = entity.rotation;
           let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
           if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
             statue.jumpState = {
               jumpTime: 0,
               jumping: true,
-              direction: utils.toPoint(targetDelta),
+              direction: targetDelta,
               jumpDistance: Math.min(distance, statue.maxJumpDistance)
             };
           } else {

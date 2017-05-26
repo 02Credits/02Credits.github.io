@@ -5,8 +5,8 @@ System.register(["./ces", "./utils", "./cameraManager", "./webglManager"], funct
         mouseButtons.left = (e.buttons & 1) === 1;
         mouseButtons.right = ((e.buttons >> 1) & 1) === 1;
         mouseButtons.middle = ((e.buttons >> 2) & 1) === 1;
-        mouseScreenPos[0] = e.offsetX;
-        mouseScreenPos[1] = e.offsetY;
+        mouseScreenPos.x = e.offsetX;
+        mouseScreenPos.y = e.offsetY;
     }
     function mouseEnterHandler() {
         gameDiv.focus();
@@ -33,23 +33,30 @@ System.register(["./ces", "./utils", "./cameraManager", "./webglManager"], funct
     function MouseState() {
         // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
         let camera = ces.getEntities(cameraManager_1.isCamera)[0];
-        let canvasDimensions = [webglManager_1.canvasSize, webglManager_1.canvasSize];
+        let canvasDimensions = { x: webglManager_1.canvasSize, y: webglManager_1.canvasSize, z: 0 };
+        let mousePos;
+        if (webglManager_1.canvasSize != 0) {
+            mousePos = utils_1.mult(utils_1.mult(utils_1.sub(mouseScreenPos, utils_1.scale(canvasDimensions, 0.5)), utils_1.shrink(camera.dimensions, webglManager_1.canvasSize)), { x: 1, y: -1, z: 0 });
+        }
+        else {
+            mousePos = { x: 0, y: 0, z: 0 };
+        }
         return {
             mouseButtons: mouseButtons,
-            position: utils_1.mult(utils_1.mult(utils_1.sub(mouseScreenPos, utils_1.scale(canvasDimensions, 0.5)), utils_1.shrink(camera.dimensions, webglManager_1.canvasSize)), [1, -1]),
+            position: mousePos,
             enabled: enabled
         };
     }
     exports_1("MouseState", MouseState);
     function setup() {
         gameDiv = document.getElementById("game");
-        gameDiv.addEventListener("mouseup", mouseEventHandler);
-        gameDiv.addEventListener("mousedown", mouseEventHandler);
-        gameDiv.addEventListener("mousemove", mouseEventHandler);
-        gameDiv.addEventListener("keydown", keyDownHandler);
-        gameDiv.addEventListener("keyup", keyUpHandler);
-        gameDiv.addEventListener("mouseenter", mouseEnterHandler);
-        gameDiv.addEventListener("mouseleave", mouseLeaveHandler);
+        document.addEventListener("mouseup", mouseEventHandler);
+        document.addEventListener("mousedown", mouseEventHandler);
+        document.addEventListener("mousemove", mouseEventHandler);
+        document.addEventListener("keydown", keyDownHandler);
+        document.addEventListener("keyup", keyUpHandler);
+        document.addEventListener("mouseenter", mouseEnterHandler);
+        document.addEventListener("mouseleave", mouseLeaveHandler);
     }
     exports_1("setup", setup);
     var ces, utils_1, cameraManager_1, webglManager_1, keys, mouseButtons, enabled, mouseDown, mouseScreenPos, gameDiv;
@@ -73,7 +80,7 @@ System.register(["./ces", "./utils", "./cameraManager", "./webglManager"], funct
             mouseButtons = {};
             enabled = false;
             mouseDown = false;
-            mouseScreenPos = [0, 0];
+            mouseScreenPos = { x: 0, y: 0, z: 0 };
         }
     };
 });

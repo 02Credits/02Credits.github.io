@@ -25,12 +25,12 @@ export function setup() {
   Collision.Subscribe((fallable, collidable, details) => {
     if (isFallable(fallable)) {
       if (isHole(collidable)) {
-        if (details.depth > Math.max(fallable.dimensions.width, fallable.dimensions.height)) {
+        if (details.depth > Math.max(fallable.dimensions.x, fallable.dimensions.y)) {
           fallable.position.x = collidable.position.x;
           fallable.position.y = collidable.position.y;
           Fell.Publish(fallable);
         } else {
-          fallable.position = utils.toPoint(utils.scale(details.normal, details.depth * collidable.hole.steepness));
+          fallable.position = utils.scale(details.normal, details.depth * collidable.hole.steepness);
         }
 
         var factor = 1.2 - details.depth * 0.2;

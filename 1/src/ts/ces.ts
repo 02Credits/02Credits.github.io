@@ -5,7 +5,7 @@ let currentId = 0;
 export let entities: Map<string, TrackedEntity> = new Map<string, TrackedEntity>();
 export let sortedEntities: Map<(entity: TrackedEntity) => boolean, Set<TrackedEntity>> = new Map();
 
-export type TrackedEntity = { id: string } & CombinedEntity;
+export type TrackedEntity = { id: string, enabled?: boolean } & CombinedEntity;
 function isTracked(entity: CombinedEntity | TrackedEntity): entity is TrackedEntity { return "id" in entity; }
 
 export let CheckEntity = new PollManager1<CombinedEntity, boolean>();
@@ -54,9 +54,9 @@ export function removeEntity(entity: any) {
   entities.delete(entity.id);
 }
 
-export function getEntities<T extends CombinedEntity>(guard: (entity: CombinedEntity) => entity is T): (T & { id: string })[] {
+export function getEntities<T extends CombinedEntity>(guard: (entity: CombinedEntity) => entity is T, includeDisabled: boolean = false): (T & { id: string })[] {
   if (sortedEntities.has(guard)) {
-    return Array.from(sortedEntities.get(guard).values()) as any;
+    return Array.from(sortedEntities.get(guard).values()).filter((entity) => !("enabled" in entity) || entity.enabled || includeDisabled) as any;
   } else {
     let newSet = new Set();
     for (let id of entities.keys()) {
@@ -66,7 +66,7 @@ export function getEntities<T extends CombinedEntity>(guard: (entity: CombinedEn
       }
     }
     sortedEntities.set(guard, newSet);
-    return Array.from(newSet.values()) as any;
+    return Array.from(newSet.values()).filter((entity) => !("enabled" in entity) || entity.enabled || includeDisabled) as any;
   }
 }
 

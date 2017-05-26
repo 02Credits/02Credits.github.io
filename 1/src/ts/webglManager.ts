@@ -4,14 +4,14 @@ import {Init, Draw} from "./animationManager";
 import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
-import {spliceArray, Point, Dimensions} from "./utils";
+import {spliceArray, Point} from "./utils";
 
 import {CombinedEntity} from "./entity";
 
 const debug = false;
 const obj: any = {};
 
-export let canvasSize: number;
+export let canvasSize: number = 0;
 
 export interface Color {
   h?: number;
@@ -26,7 +26,7 @@ export interface Color {
 export interface Entity {
   texture: string;
   position: Point;
-  dimensions: Dimensions;
+  dimensions: Point;
   center?: Point;
   scale?: number;
   rotation?: number;
@@ -155,10 +155,8 @@ async function compileProgram(gl: WebGLRenderingContext, basePath: string, folde
 
 function setCameraUniforms(program: twgl.ProgramInfo) {
   let camera = ces.getEntities(isCamera)[0];
-  let cameraCX = camera.position.cx || 0.5;
-  let cameraCY = camera.position.cy || 0.5;
-  let cameraWidth = (camera.dimensions || obj).width || 100;
-  let cameraHeight = (camera.dimensions || obj).height || 100;
+  let cameraWidth = (camera.dimensions || obj).x || 100;
+  let cameraHeight = (camera.dimensions || obj).y || 100;
 
   let cameraUniforms = {
     u_camera_dimensions: [camera.position.x, camera.position.y, cameraWidth, cameraHeight]
@@ -215,8 +213,8 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
     spliceData(spriteArrays.a_texcoord, index, textureInfo.texCoords[entity.texture]);
     spliceData(spriteArrays.a_rotation, index, [entity.rotation || 0]);
     spliceData(spriteArrays.a_dimensions, index, [
-      entity.dimensions.width,
-      entity.dimensions.height
+      entity.dimensions.x,
+      entity.dimensions.y
     ]);
     spliceData(spriteArrays.a_center, index, [
       (entity.center || obj).x || 0.5,

@@ -10,15 +10,15 @@ System.register(["./ces", "./animationManager", "./eventManager", "./utils"], fu
         let center = entity.center || { x: 0.5, y: 0.5 };
         let corners = [];
         if (entity.collisionShape == null || entity.collisionShape.kind === "rectangle") {
-            let left = entity.position.x + entity.dimensions.width * center.x;
-            let right = entity.position.x - entity.dimensions.width * (1 - center.x);
-            let bottom = entity.position.y + entity.dimensions.height * center.y;
-            let top = entity.position.y - entity.dimensions.height * (1 - center.x);
+            let left = entity.position.x + entity.dimensions.x * center.x;
+            let right = entity.position.x - entity.dimensions.x * (1 - center.x);
+            let bottom = entity.position.y + entity.dimensions.y * center.y;
+            let top = entity.position.y - entity.dimensions.y * (1 - center.x);
             corners.push([
-                [left, top],
-                [right, top],
-                [right, bottom],
-                [left, bottom]
+                { x: left, y: top, z: entity.position.z },
+                { x: right, y: top, z: entity.position.z },
+                { x: right, y: bottom, z: entity.position.z },
+                { x: left, y: bottom, z: entity.position.z }
             ]);
         }
         else if (entity.collisionShape.kind === "polygon") {
@@ -43,7 +43,7 @@ System.register(["./ces", "./animationManager", "./eventManager", "./utils"], fu
             for (let child of childCorners) {
                 let previous = child[child.length - 1];
                 for (let corner of child) {
-                    axis.push(utils.normal(utils.unit(utils.sub(corner, previous))));
+                    axis.push(utils.xyNormal(utils.unit(utils.sub(corner, previous))));
                     previous = corner;
                 }
             }
@@ -56,8 +56,8 @@ System.register(["./ces", "./animationManager", "./eventManager", "./utils"], fu
     function projectedBounds(entity, axis) {
         if (entity.collisionShape != null && entity.collisionShape.kind === "circle") {
             let scale = ((entity || obj).renderer || obj).scale || 1;
-            let center = utils.dot([entity.position.x, entity.position.y], axis);
-            let radius = Math.max(entity.dimensions.width * scale, entity.dimensions.height * scale) / 2;
+            let center = utils.dot(entity.position, axis);
+            let radius = Math.max(entity.dimensions.x * scale, entity.dimensions.y * scale) / 2;
             return { max: center + radius, min: center - radius };
         }
         else {
@@ -88,7 +88,7 @@ System.register(["./ces", "./animationManager", "./eventManager", "./utils"], fu
         let c1 = getCorners(e1);
         let c2 = getCorners(e2);
         let result = null;
-        let normal = [];
+        let normal = { x: 0, y: 0, z: 0 };
         for (let axis of getAxis(e1).concat(getAxis(e2))) {
             let overlap = calculateOverlap(e1, e2, axis);
             if (overlap == null)

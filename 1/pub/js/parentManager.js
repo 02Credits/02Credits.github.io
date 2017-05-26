@@ -5,7 +5,7 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
     exports_1("isChild", isChild);
     function setup() {
         animationManager_1.Update.Subscribe(() => {
-            for (let childEntity of ces.getEntities(isChild)) {
+            for (let childEntity of ces.getEntities(isChild, true)) {
                 let parent = ces.getEntity(childEntity.parent);
                 if (webglManager_1.isRenderable(parent)) {
                     let parentRotation = parent.rotation || 0;
@@ -13,7 +13,7 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
                     let parentX = parent.position.x || 0;
                     let parentY = parent.position.y || 0;
                     // let parentAlpha = parent.rendered.alpha || 1;
-                    childEntity.child.relativePosition = childEntity.child.relativePosition || { x: 0, y: 0 };
+                    childEntity.child.relativePosition = childEntity.child.relativePosition || { x: 0, y: 0, z: 0 };
                     childEntity.position.x =
                         (Math.cos(parentRotation) * childEntity.child.relativePosition.x -
                             Math.sin(parentRotation) * childEntity.child.relativePosition.y) * parentScale +
@@ -28,6 +28,12 @@ System.register(["./ces", "./animationManager", "./webglManager"], function (exp
                     childEntity.scale = childEntity.child.relativeScale * parentScale;
                     // childEntity.child.relativeAlpha = childEntity.child.relativeAlpha || 1;
                     // childEntity.rendered.alpha = childEntity.child.relativeAlpha * parentAlpha;
+                    if ("enabled" in parent) {
+                        childEntity.enabled = parent.enabled;
+                    }
+                    else {
+                        childEntity.enabled = true;
+                    }
                 }
             }
         });

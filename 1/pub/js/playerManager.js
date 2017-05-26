@@ -5,6 +5,8 @@ System.register(["./inputManager", "./ces", "./utils", "./animationManager"], fu
     exports_1("isPlayer", isPlayer);
     function isFoot(entity) { return "foot" in entity; }
     exports_1("isFoot", isFoot);
+    function isPlayerParticle(entity) { return "playerParticle" in entity; }
+    exports_1("isPlayerParticle", isPlayerParticle);
     function updateFeet(playerEntity) {
         var scale = 1;
         if ("scale" in playerEntity) {
@@ -21,31 +23,58 @@ System.register(["./inputManager", "./ces", "./utils", "./animationManager"], fu
         }
     }
     function updatePlayer(entity) {
-        let mouseState = input.MouseState();
-        let delta = utils.sub(mouseState.position, entity.position);
-        entity.rotation = utils.angle(delta) + Math.PI / 2;
-        let length = utils.length(delta);
-        if (entity.dimensions && length > 3) {
-            delta = utils.shrink(delta, length);
-            entity.player.velocity = utils.toPoint(utils.sum(entity.player.velocity, utils.scale(delta, 0.1)));
+        let delta = { x: 0, y: 0, z: 0 };
+        if (input.KeyDown("a")) {
+            delta.x -= 10;
         }
-        entity.player.velocity = utils.toPoint(utils.scale(entity.player.velocity, 0.85));
-        var playerSpeed = utils.length(entity.player.velocity);
+        if (input.KeyDown("d")) {
+            delta.x += 10;
+        }
+        if (input.KeyDown("w")) {
+            delta.y += 10;
+        }
+        if (input.KeyDown("s")) {
+            delta.y -= 10;
+        }
+        entity.rotation = utils.xyAngle(entity.velocity) + Math.PI / 2;
+        let length = utils.length(delta);
+        if (length != 0) {
+            delta = utils.shrink(delta, length);
+        }
+        entity.velocity = utils.sum(entity.velocity, utils.scale(delta, 0.1));
+        var playerSpeed = utils.length(entity.velocity);
         entity.player.speed = playerSpeed;
         entity.player.walkAnimation += playerSpeed * entity.player.stepSpeed;
-        entity.position = utils.toPoint(utils.sum(entity.position, entity.player.velocity));
+    }
+    function updatePlayerParticle(entity) {
+        let playerEntities = ces.getEntities(isPlayer);
+        let target;
+        if (playerEntities.length != 0 && playerEntities.length == 0) {
+            let playerEntity = playerEntities[0];
+            target = playerEntity.position;
+        }
+        else {
+            target = input.MouseState().position;
+        }
+        entity.velocity = utils.sum(utils.scale(utils.normalize(utils.sub(target, entity.position)), 0.1), entity.velocity);
     }
     function setup() {
         ces.EntityAdded.Subscribe((entity) => {
             if (isPlayer(entity)) {
-                entity.player.velocity = { x: 0, y: 0 };
+                entity.velocity = { x: 0, y: 0, z: 0 };
                 entity.player.walkAnimation = 0;
+            }
+            if (isPlayerParticle(entity)) {
+                entity.velocity = { x: 0, y: 0, z: 0 };
             }
         });
         animationManager_1.Update.Subscribe(() => {
             for (let entity of ces.getEntities(isPlayer)) {
                 updatePlayer(entity);
                 updateFeet(entity);
+            }
+            for (let entity of ces.getEntities(isPlayerParticle)) {
+                updatePlayerParticle(entity);
             }
         });
     }

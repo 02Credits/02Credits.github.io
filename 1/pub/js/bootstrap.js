@@ -1,7 +1,7 @@
-System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager", "./inputManager", "./parentManager"], function (exports_1, context_1) {
+System.register(["./ces", "./webglManager", "./playerManager", "./collisionManager", "./cameraManager", "./triggerManager", "./wallManager", "./holeManager", "./statueManager", "./animationManager", "./interpolationManager", "./particleManager", "./inputManager", "./parentManager", "./motionManager"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ces, webglManager, playerManager, collisionManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager, inputManager, parentManager;
+    var ces, webglManager, playerManager, collisionManager, cameraManager, triggerManager, wallManager, holeManager, statueManager, animationManager, interpolationManager, particleManager, inputManager, parentManager, motionManager;
     return {
         setters: [
             function (ces_1) {
@@ -45,6 +45,9 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             },
             function (parentManager_1) {
                 parentManager = parentManager_1;
+            },
+            function (motionManager_1) {
+                motionManager = motionManager_1;
             }
         ],
         execute: function () {
@@ -59,15 +62,33 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                 await interpolationManager.setup();
                 await particleManager.setup();
                 await inputManager.setup();
+                await motionManager.setup();
                 await parentManager.setup();
                 ces.addEntity({
                     "position": {
-                        "x": 0,
-                        "y": 0
+                        "x": 50,
+                        "y": 0,
+                        "z": 0
                     },
                     "dimensions": {
-                        "width": 100,
-                        "height": 100
+                        "x": 10,
+                        "y": 100,
+                        "z": 0
+                    },
+                    "wall": true,
+                    "collidable": true,
+                    "texture": "Wall.png"
+                });
+                ces.addEntity({
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "dimensions": {
+                        "x": 100,
+                        "y": 100,
+                        "z": 0
                     },
                     "camera": {
                         "targetX": 0,
@@ -83,18 +104,55 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "z": 5
                     },
                     "dimensions": {
-                        "width": 5,
-                        "height": 5
+                        "x": 5,
+                        "y": 5,
+                        "z": 0
                     },
+                    "friction": 0.85,
                     "collidable": true,
                     "collisionShape": {
                         "kind": "circle",
                     },
-                    "fallable": true,
                     "player": {
                         "stepSpeed": 0.3,
                         "stepSize": 5
+                    },
+                    "particleGenerator": {
+                        relativeStart: {},
+                        relativeEnd: {},
+                        constant: {
+                            texture: "Player.png",
+                            dimensions: {
+                                x: 1,
+                                y: 1,
+                                z: 0
+                            },
+                            position: { x: 0, y: 0, z: 0 },
+                            restitution: 1,
+                            collidable: true,
+                            // friction: 0.95,
+                            playerParticle: true
+                        },
+                        length: 10,
+                        frequency: 2
                     }
+                });
+                ces.addEntity({
+                    "texture": "Player.png",
+                    "position": {
+                        "x": 20,
+                        "y": 20,
+                        "z": 20
+                    },
+                    "dimensions": {
+                        "x": 1,
+                        "y": 1,
+                        "z": 0
+                    },
+                    "restitution": 1,
+                    "collidable": true,
+                    "friction": 0.95,
+                    "playerParticle": true
                 });
                 ces.addEntity({
                     "texture": "Wall.png",
@@ -104,8 +162,9 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "z": 4
                     },
                     "dimensions": {
-                        "width": 1,
-                        "height": 1
+                        "x": 1,
+                        "y": 1,
+                        "z": 0
                     },
                     "parent": "player",
                     "child": {
@@ -122,13 +181,10 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "y": 0,
                         "z": 4
                     },
-                    "center": {
-                        "x": 0.5,
-                        "y": 0.5
-                    },
                     "dimensions": {
-                        "width": 1,
-                        "height": 1
+                        "x": 1,
+                        "y": 1,
+                        "z": 0
                     },
                     "parent": "player",
                     "child": {

@@ -1,7 +1,7 @@
 import * as ces from "./ces";
+import * as utils from "./utils";
 import {Update} from "./animationManager";
 
-import {Position} from "./pixiManager";
 import {CombinedEntity} from "./entity";
 
 let shake = 0;
@@ -12,11 +12,8 @@ export interface Entity {
     targetX: number,
     targetY: number,
   },
-  dimensions: {
-    width: number,
-    height: number
-  }
-  position: Position
+  dimensions: utils.Point,
+  position: utils.Point
 }
 export function isCamera(entity: CombinedEntity): entity is Entity { return "camera" in entity; }
 

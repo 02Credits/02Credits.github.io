@@ -43,9 +43,9 @@ System.register(["./eventManager"], function (exports_1, context_1) {
         entities.delete(entity.id);
     }
     exports_1("removeEntity", removeEntity);
-    function getEntities(guard) {
+    function getEntities(guard, includeDisabled = false) {
         if (sortedEntities.has(guard)) {
-            return Array.from(sortedEntities.get(guard).values());
+            return Array.from(sortedEntities.get(guard).values()).filter((entity) => !("enabled" in entity) || entity.enabled || includeDisabled);
         }
         else {
             let newSet = new Set();
@@ -56,7 +56,7 @@ System.register(["./eventManager"], function (exports_1, context_1) {
                 }
             }
             sortedEntities.set(guard, newSet);
-            return Array.from(newSet.values());
+            return Array.from(newSet.values()).filter((entity) => !("enabled" in entity) || entity.enabled || includeDisabled);
         }
     }
     exports_1("getEntities", getEntities);

@@ -12,6 +12,7 @@ import * as interpolationManager from "./interpolationManager";
 import * as particleManager from "./particleManager";
 import * as inputManager from "./inputManager";
 import * as parentManager from "./parentManager";
+import * as motionManager from "./motionManager";
 
 webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
   await collisionManager.setup();
@@ -24,16 +25,35 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
   await interpolationManager.setup();
   await particleManager.setup();
   await inputManager.setup();
+  await motionManager.setup();
   await parentManager.setup();
 
   ces.addEntity({
     "position": {
-      "x": 0,
-      "y": 0
+      "x": 50,
+      "y": 0,
+      "z": 0
     },
     "dimensions": {
-      "width": 100,
-      "height": 100
+      "x": 10,
+      "y": 100,
+      "z": 0
+    },
+    "wall": true,
+    "collidable": true,
+    "texture": "Wall.png"
+  });
+
+  ces.addEntity({
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "dimensions": {
+      "x": 100,
+      "y": 100,
+      "z": 0
     },
     "camera": {
       "targetX": 0,
@@ -50,18 +70,58 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
       "z": 5
     },
     "dimensions": {
-      "width": 5,
-      "height": 5
+      "x": 5,
+      "y": 5,
+      "z": 0
     },
+    "friction": 0.85,
     "collidable": true,
     "collisionShape": {
       "kind": "circle",
     },
-    "fallable": true,
     "player": {
       "stepSpeed": 0.3,
       "stepSize": 5
+    },
+    "particleGenerator": {
+      relativeStart: {
+      },
+      relativeEnd: {
+      },
+      constant: {
+        texture: "Player.png",
+        dimensions: {
+          x: 1,
+          y: 1,
+          z: 0
+        },
+        position: {x: 0, y: 0, z: 0},
+        restitution: 1,
+        collidable: true,
+        // friction: 0.95,
+        playerParticle: true
+      },
+      length: 10,
+      frequency: 2
     }
+  });
+
+  ces.addEntity({
+    "texture": "Player.png",
+    "position": {
+      "x": 20,
+      "y": 20,
+      "z": 20
+    },
+    "dimensions": {
+      "x": 1,
+      "y": 1,
+      "z": 0
+    },
+    "restitution": 1,
+    "collidable": true,
+    "friction": 0.95,
+    "playerParticle": true
   });
 
   ces.addEntity({
@@ -72,8 +132,9 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
       "z": 4
     },
     "dimensions": {
-      "width": 1,
-      "height": 1
+      "x": 1,
+      "y": 1,
+      "z": 0
     },
     "parent": "player",
     "child": {
@@ -91,13 +152,10 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
       "y": 0,
       "z": 4
     },
-    "center": {
-      "x": 0.5,
-      "y": 0.5
-    },
     "dimensions": {
-      "width": 1,
-      "height": 1
+      "x": 1,
+      "y": 1,
+      "z": 0
     },
     "parent": "player",
     "child": {

@@ -9,6 +9,7 @@ import {Entity as TriggerManagerEntity} from "./triggerManager";
 import {Entity as WallManagerEntity} from "./wallManager";
 import {Entity as InterpolatedEntity} from "./interpolationManager";
 import {Entity as GeneratorEntity} from "./particleManager";
+import {Entity as MovingEntity} from "./motionManager";
 
 export type CombinedEntity =
   CameraManagerEntity |
@@ -21,4 +22,5 @@ export type CombinedEntity =
   TriggerManagerEntity |
   WallManagerEntity |
   InterpolatedEntity |
-  GeneratorEntity;
+  GeneratorEntity |
+  MovingEntity;
