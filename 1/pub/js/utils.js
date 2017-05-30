@@ -61,6 +61,19 @@ System.register([], function (exports_1, context_1) {
         return { x: p.x, y: p.y, z: 0 };
     }
     exports_1("flatten", flatten);
+    function average(ps) {
+        let returnPoint = { x: 0, y: 0, z: 0 };
+        if (ps.length > 0) {
+            for (let p of ps) {
+                returnPoint = sum(returnPoint, p);
+            }
+            return shrink(returnPoint, ps.length);
+        }
+        else {
+            return returnPoint;
+        }
+    }
+    exports_1("average", average);
     function normalize(p) {
         let len = length(p);
         if (len != 0) {

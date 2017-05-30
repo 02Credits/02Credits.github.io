@@ -64,6 +64,18 @@ export function flatten(p: Point): Point {
   return {x: p.x, y: p.y, z: 0};
 }
 
+export function average(ps: Point[]): Point {
+  let returnPoint = {x: 0, y: 0, z: 0};
+  if (ps.length > 0) {
+    for (let p of ps) {
+      returnPoint = sum(returnPoint, p);
+    }
+    return shrink(returnPoint, ps.length);
+  } else {
+    return returnPoint;
+  }
+}
+
 export let distance = length;
 
 export function normalize(p: Point): Point {

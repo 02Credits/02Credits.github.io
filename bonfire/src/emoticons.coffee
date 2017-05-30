@@ -272,6 +272,10 @@ define ["markov"], (markov) ->
     "ScoffJon": "http://imgur.com/qSJN4zh.gif"
     "Aeh": "http://imgur.com/bOxhqMy.png"
     "SadPingu": "http://imgur.com/uXc0Ufz.png"
+    "DudeJon": "http://i.imgur.com/WyPa011.png"
+    "SoDusted": "http://i.imgur.com/JHors09.png"
+    "RingBear": "https://m.popkey.co/157257/rzrbW.gif"
+    "\\:\\)\\<3": "http://i.imgur.com/SWD6uJ5.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"

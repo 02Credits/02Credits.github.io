@@ -57,27 +57,31 @@ function updateFeet(playerEntity: PlayerEntity) {
 
 function updatePlayer(entity: PlayerEntity, time: number) {
   if ("enabled" in entity && !entity.enabled) {
+    let particles = ces.getEntities(isPlayerParticle);
+    let effectingParticles: PlayerParticle[];
     if (time - entity.player.dashStartTime > entity.player.dashLength) {
-      let particles = ces.getEntities(isPlayerParticle);
-      let position = {x: 0, y: 0, z: 0};
-      let velocity = {x: 0, y: 0, z: 0};
-      for (let particle of particles) {
-        position = utils.sum(position, particle.position);
-        velocity = utils.sum(velocity, particle.velocity);
+      effectingParticles = particles;
+    } else {
+      let closeParticles = particles.filter(p => utils.length(utils.sub(p.position, p.dashLocation)) < entity.dimensions.x / 2);
+      if (closeParticles.length > 0) {
+        effectingParticles = closeParticles;
       }
+    }
+
+    if (effectingParticles) {
       entity.position = utils.sum(
-        utils.sub(entity.position, utils.flatten(entity.position)),
-        utils.flatten(utils.shrink(position, particles.length))
+        {x: 0, y: 0, z: entity.position.z},
+        utils.flatten(utils.average(effectingParticles.map(p => p.position)))
       );
-      entity.velocity = utils.flatten(utils.shrink(velocity, particles.length));
+      entity.velocity = utils.flatten(utils.average(effectingParticles.map(p => p.velocity)));
       entity.enabled = true;
     }
   } else {
     let mouseState = input.MouseState();
     if (mouseState.mouseButtons.left) {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 5; i++) {
         let particle = entity.player.pool.New();
-        particle.velocity = utils.scale(utils.normalize({x: Math.random() - 0.5, y: Math.random() - 0.5, z: 0}), 1.5);
+        particle.velocity = utils.scale(utils.normalize({x: Math.random() - 0.5, y: Math.random() - 0.5, z: 0}), Math.random() + 0.5);
         particle.position = entity.position;
         particle.dashLocation = mouseState.position;
         ces.addEntity(particle);
@@ -119,7 +123,7 @@ function updatePlayerParticle(entity: PlayerParticle) {
   if (playerEntities.length != 0) {
     let playerEntity = playerEntities[0];
     target = playerEntity.position;
-    if (utils.length(utils.sub(entity.position, playerEntity.position)) < playerEntity.dimensions.x) {
+    if (utils.length(utils.sub(entity.position, playerEntity.position)) < playerEntity.dimensions.x / 2) {
       ces.removeEntity(entity);
       playerEntity.player.pool.Free(entity);
     }
