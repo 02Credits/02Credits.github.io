@@ -1,4 +1,7 @@
 define ["markov"], (markov) ->
+  escapeRegExp = (string) ->
+    string.replace()
+        
   # When henry whines go to https://static-cdn.jtvnw.net/emoticons
   twitchEmoticons =
     "4Head" : "https://static-cdn.jtvnw.net/emoticons/v1/354/1.0"
