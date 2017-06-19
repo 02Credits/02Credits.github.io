@@ -122,6 +122,7 @@
       }
       return (Promise.all(messagePromises)).then(function(renderedMessages) {
         m.render($('#messages').get(0), m("div", renderedMessages));
+        $('.materialboxed').materialbox();
         return arbiter.publish("messages/rendered");
       });
     };

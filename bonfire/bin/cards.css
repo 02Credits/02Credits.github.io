@@ -8543,3 +8543,9 @@ img.memeCard.open:hover {
 
 img.memeCard:not(.open):hover {
   right: -128px; }
+
+img.memeCard.focusedCard {
+  position: absolute !important;
+  right: 25% !important;
+  bottom: 300px !important;
+  transform: scale(2) translate(-50%, -50%) !important; }

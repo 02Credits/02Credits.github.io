@@ -101,6 +101,7 @@ define ["jquery",
       m.render $('#messages').get(0),
         m "div",
           renderedMessages
+      $('.materialboxed').materialbox();
       arbiter.publish("messages/rendered")
 
   render()
