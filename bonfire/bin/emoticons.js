@@ -281,7 +281,11 @@
       "DudeJon": "http://i.imgur.com/WyPa011.png",
       "SoDusted": "http://i.imgur.com/JHors09.png",
       "RingBear": "https://m.popkey.co/157257/rzrbW.gif",
-      "\\:\\)\\<3": "http://i.imgur.com/SWD6uJ5.png"
+      "\\:\\)\\<3": "http://i.imgur.com/SWD6uJ5.png",
+      "SexyJon": "http://i.imgur.com/aztH9e7.png",
+      "HenryBlazeHenry": "http://i.imgur.com/OWrIo27.png",
+      "HenrySuccHenry": "http://i.imgur.com/g5uMi22.png",
+      "Rickyism": "http://i.imgur.com/rim97Om.png"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",
