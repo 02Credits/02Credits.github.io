@@ -285,7 +285,8 @@
       "SexyJon": "http://i.imgur.com/aztH9e7.png",
       "HenryBlazeHenry": "http://i.imgur.com/OWrIo27.png",
       "HenrySuccHenry": "http://i.imgur.com/g5uMi22.png",
-      "Rickyism": "http://i.imgur.com/rim97Om.png"
+      "Rickyism": "http://i.imgur.com/rim97Om.png",
+      "Fug": "http://i.imgur.com/KkdXvZW.png"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",

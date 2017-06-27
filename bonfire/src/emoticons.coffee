@@ -283,6 +283,7 @@ define ["markov"], (markov) ->
     "HenryBlazeHenry": "http://i.imgur.com/OWrIo27.png"
     "HenrySuccHenry": "http://i.imgur.com/g5uMi22.png"
     "Rickyism": "http://i.imgur.com/rim97Om.png"
+    "Fug": "http://i.imgur.com/KkdXvZW.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
