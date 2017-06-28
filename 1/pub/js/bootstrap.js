@@ -51,7 +51,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
             }
         ],
         execute: function () {
-            webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
+            webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async () => {
                 await collisionManager.setup();
                 await playerManager.setup();
                 await cameraManager.setup();
@@ -87,7 +87,7 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                     },
                     "dimensions": {
                         "x": 100,
-                        "y": 100,
+                        "y": 75,
                         "z": 0
                     },
                     "camera": {
@@ -149,8 +149,30 @@ System.register(["./ces", "./webglManager", "./playerManager", "./collisionManag
                         "stepSpeed": 0.3,
                         "stepSize": 5,
                         "dashLength": 0.5,
+                        "particleCount": 5,
                         "particleBase": "playerParticleBase",
                         "footBase": "playerFootBase"
+                    }
+                });
+                ces.addEntity({
+                    "id": "lightOverlay",
+                    "texture": "LightOverlay.png",
+                    "parent": "player",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 1000
+                    },
+                    "dimensions": {
+                        "x": 400,
+                        "y": 400,
+                        "z": 0
+                    },
+                    "child": {
+                        "relativePosition": {
+                            "x": 0,
+                            "y": 0
+                        }
                     }
                 });
                 animationManager.Setup();

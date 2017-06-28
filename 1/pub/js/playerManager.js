@@ -23,6 +23,7 @@ System.register(["./inputManager", "./ces", "./utils", "./objectPool", "./animat
         }
     }
     function updatePlayer(entity, time) {
+        let mouseState = input.MouseState();
         if ("enabled" in entity && !entity.enabled) {
             let particles = ces.getEntities(isPlayerParticle);
             let effectingParticles;
@@ -30,7 +31,7 @@ System.register(["./inputManager", "./ces", "./utils", "./objectPool", "./animat
                 effectingParticles = particles;
             }
             else {
-                let closeParticles = particles.filter(p => utils.length(utils.sub(p.position, p.dashLocation)) < entity.dimensions.x / 2);
+                let closeParticles = particles.filter(p => utils.length(utils.sub(p.position, mouseState.position)) < entity.dimensions.x / 2);
                 if (closeParticles.length > 0) {
                     effectingParticles = closeParticles;
                 }
@@ -38,17 +39,17 @@ System.register(["./inputManager", "./ces", "./utils", "./objectPool", "./animat
             if (effectingParticles) {
                 entity.position = utils.sum({ x: 0, y: 0, z: entity.position.z }, utils.flatten(utils.average(effectingParticles.map(p => p.position))));
                 entity.velocity = utils.flatten(utils.average(effectingParticles.map(p => p.velocity)));
+                entity.player.lastDashed = time;
                 entity.enabled = true;
             }
         }
         else {
-            let mouseState = input.MouseState();
-            if (mouseState.mouseButtons.left) {
-                for (let i = 0; i < 5; i++) {
+            let strengthLevel = (entity.player.particleCount - 5) / 25;
+            if (mouseState.mouseButtons.left && (time - entity.player.lastDashed) > (1 - strengthLevel) * 1.5) {
+                for (let i = 0; i < entity.player.particleCount; i++) {
                     let particle = entity.player.pool.New();
                     particle.velocity = utils.scale(utils.normalize({ x: Math.random() - 0.5, y: Math.random() - 0.5, z: 0 }), Math.random() + 0.5);
                     particle.position = entity.position;
-                    particle.dashLocation = mouseState.position;
                     ces.addEntity(particle);
                 }
                 entity.enabled = false;
@@ -81,6 +82,7 @@ System.register(["./inputManager", "./ces", "./utils", "./objectPool", "./animat
         }
     }
     function updatePlayerParticle(entity) {
+        let mouseState = input.MouseState();
         let playerEntities = ces.getEntities(isPlayer);
         let target;
         if (playerEntities.length != 0) {
@@ -92,7 +94,7 @@ System.register(["./inputManager", "./ces", "./utils", "./objectPool", "./animat
             }
         }
         else {
-            target = entity.dashLocation;
+            target = mouseState.position;
         }
         entity.velocity = utils.sum(utils.scale(utils.normalize(utils.sub(target, entity.position)), 0.1), entity.velocity);
     }
@@ -101,6 +103,7 @@ System.register(["./inputManager", "./ces", "./utils", "./objectPool", "./animat
             if (isPlayer(entity)) {
                 entity.velocity = { x: 0, y: 0, z: 0 };
                 entity.player.walkAnimation = 0;
+                entity.player.lastDashed = -Infinity;
                 let particleBase = ces.getEntity(entity.player.particleBase);
                 entity.player.pool = new objectPool_1.default(Object.assign({}, particleBase, { velocity: { x: 0, y: 0, z: 0 }, playerParticle: true, enabled: true }));
                 let footBase = ces.getEntity(entity.player.footBase);

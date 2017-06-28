@@ -1,7 +1,7 @@
 import * as ces from "./ces";
-import {sub, mult, scale, shrink, Point} from "./utils";
+import {sub, mult, div, scale, shrink, flatten, Point} from "./utils";
 import {isCamera} from "./cameraManager";
-import {canvasSize} from "./webglManager";
+import {canvasDimensions, visibleDimensions} from "./webglManager";
 
 let keys: { [key: string]: boolean } = {};
 let mouseButtons: { [key: string]: boolean } = {};
@@ -46,10 +46,13 @@ export function KeyDown(key: string) {
 export function MouseState() {
   // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
   let camera = ces.getEntities(isCamera)[0];
-  let canvasDimensions = {x: canvasSize, y: canvasSize, z: 0};
   let mousePos: Point;
-  if (canvasSize != 0) {
-    mousePos = mult(mult(sub(mouseScreenPos, scale(canvasDimensions, 0.5)), shrink(camera.dimensions, canvasSize)), {x: 1, y: -1, z: 0});
+  if (visibleDimensions.x != 0) {
+    // (mP - (vD * 0.5)) * (cD / canvasSize) * {1, -1, 0}
+    mousePos = flatten(mult(mult(
+      sub(mouseScreenPos, scale(visibleDimensions, 0.5)),
+      div(camera.dimensions, visibleDimensions)), {x: 1, y: -1, z: 0}));
+    console.log(mousePos);
   } else {
     mousePos = {x: 0, y: 0, z: 0};
   }

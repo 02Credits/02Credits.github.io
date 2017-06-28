@@ -4,8 +4,10 @@ import {CombinedEntity} from "./entity";
 import {Update} from "./animationManager";
 
 export interface Entity {
+  rotation: number,
   position: utils.Point,
   velocity: utils.Point,
+  angularVelocity: number,
   friction?: number
 }
 export function isMoving(entity: CombinedEntity): entity is Entity { return "velocity" in entity; }

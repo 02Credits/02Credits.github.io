@@ -33,10 +33,11 @@ System.register(["./ces", "./utils", "./cameraManager", "./webglManager"], funct
     function MouseState() {
         // NOTE I should probably change this to not do the transform here and instead leave it to the pixi Manager...
         let camera = ces.getEntities(cameraManager_1.isCamera)[0];
-        let canvasDimensions = { x: webglManager_1.canvasSize, y: webglManager_1.canvasSize, z: 0 };
         let mousePos;
-        if (webglManager_1.canvasSize != 0) {
-            mousePos = utils_1.mult(utils_1.mult(utils_1.sub(mouseScreenPos, utils_1.scale(canvasDimensions, 0.5)), utils_1.shrink(camera.dimensions, webglManager_1.canvasSize)), { x: 1, y: -1, z: 0 });
+        if (webglManager_1.visibleDimensions.x != 0) {
+            // (mP - (vD * 0.5)) * (cD / canvasSize) * {1, -1, 0}
+            mousePos = utils_1.flatten(utils_1.mult(utils_1.mult(utils_1.sub(mouseScreenPos, utils_1.scale(webglManager_1.visibleDimensions, 0.5)), utils_1.div(camera.dimensions, webglManager_1.visibleDimensions)), { x: 1, y: -1, z: 0 }));
+            console.log(mousePos);
         }
         else {
             mousePos = { x: 0, y: 0, z: 0 };

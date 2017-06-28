@@ -4,14 +4,23 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
     function isRenderable(entity) { return "texture" in entity; }
     exports_1("isRenderable", isRenderable);
     function positionCanvas(canvas, gl) {
-        exports_1("canvasSize", canvasSize = Math.min(window.innerWidth, window.innerHeight) - 100);
-        canvas.style.width = canvasSize + "px";
-        canvas.style.height = canvasSize + "px";
-        canvas.style.marginLeft = -canvasSize / 2 + "px";
-        canvas.style.marginTop = -canvasSize / 2 + "px";
-        canvas.width = canvasSize;
-        canvas.height = canvasSize;
-        gl.viewport(0, 0, canvasSize, canvasSize);
+        if (window.innerWidth > window.innerHeight) {
+            let visibleHeight = window.innerHeight - 100;
+            let visibleWidth = visibleHeight * 4 / 3;
+            exports_1("visibleDimensions", visibleDimensions = { x: visibleWidth, y: visibleHeight, z: 0 });
+        }
+        else {
+            let visibleWidth = window.innerWidth - 100;
+            let visibleHeight = visibleWidth * 3 / 4;
+            exports_1("visibleDimensions", visibleDimensions = { x: visibleWidth, y: visibleHeight, z: 0 });
+        }
+        canvas.style.width = visibleDimensions.x + "px";
+        canvas.style.height = visibleDimensions.y + "px";
+        canvas.style.marginLeft = -visibleDimensions.x / 2 + "px";
+        canvas.style.marginTop = -visibleDimensions.y / 2 + "px";
+        canvas.width = canvasDimensions.x;
+        canvas.height = canvasDimensions.y;
+        gl.viewport(0, 0, canvasDimensions.x, canvasDimensions.y);
     }
     async function fetchShader(path) {
         let result = await fetch(path);
@@ -91,7 +100,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
     }
     async function setupTextures(gl, basePath, texturePaths) {
         let result = await loadTextures(basePath, texturePaths);
-        document.body.appendChild(result.canvas);
+        // document.body.appendChild(result.canvas);
         let texture = twgl.createTexture(gl, {
             src: result.canvas,
         });
@@ -229,7 +238,7 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         });
     }
     exports_1("Setup", Setup);
-    var twgl, animationManager_1, ces, cameraManager_1, collisionManager_1, utils_1, debug, obj, canvasSize, spriteArrays;
+    var twgl, animationManager_1, ces, cameraManager_1, collisionManager_1, utils_1, debug, obj, canvasDimensions, visibleDimensions, spriteArrays;
     return {
         setters: [
             function (twgl_1) {
@@ -254,7 +263,8 @@ System.register(["twgl", "./animationManager", "./ces", "./cameraManager", "./co
         execute: function () {
             debug = false;
             obj = {};
-            exports_1("canvasSize", canvasSize = 0);
+            exports_1("canvasDimensions", canvasDimensions = { x: 1000, y: 750, z: 1 });
+            exports_1("visibleDimensions", visibleDimensions = { x: 0, y: 0, z: 1 });
             spriteArrays = {
                 a_coord: { numComponents: 2, data: new Array(400) },
                 a_position: { numComponents: 3, data: new Array(400) },

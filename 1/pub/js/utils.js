@@ -37,6 +37,10 @@ System.register([], function (exports_1, context_1) {
         return { x: p1.x * p2.x, y: p1.y * p2.y, z: p1.z * p2.z };
     }
     exports_1("mult", mult);
+    function div(p1, p2) {
+        return { x: p1.x / p2.x, y: p1.y / p2.y, z: p1.z / p2.z };
+    }
+    exports_1("div", div);
     function dot(p1, p2) {
         return p1.x * p2.x + p1.y * p2.y + p1.z * p2.z;
     }

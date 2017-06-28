@@ -41,12 +41,6 @@ gulp.task('watch', function () {
     gulp.watch(['src/**/*', '!src/**/*.ts', '!src/**/*.sass', '!src/**/*.scss'], ['copy']);
 });
 
-gulp.task('genEntities', function () {
-    fs.readdir(path, function(err, items) {
-
-    });
-});
-
 gulp.task('webserver', function () {
     return gulp.src('..')
         .pipe(webserver({

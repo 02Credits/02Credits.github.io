@@ -3,6 +3,7 @@
     "target": "es2017",
     "module": "system",
     "sourceMap": true,
+    "skipLibCheck": true,
     "noImplicitAny": true,
     "noEmitOnError": false,
     "lib": ["DOM","ES6","DOM.Iterable","ScriptHost", "ES2015.Proxy"]

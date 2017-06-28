@@ -14,7 +14,7 @@ import * as inputManager from "./inputManager";
 import * as parentManager from "./parentManager";
 import * as motionManager from "./motionManager";
 
-webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
+webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async () => {
   await collisionManager.setup();
   await playerManager.setup();
   await cameraManager.setup();
@@ -52,7 +52,7 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
     },
     "dimensions": {
       "x": 100,
-      "y": 100,
+      "y": 75,
       "z": 0
     },
     "camera": {
@@ -117,8 +117,31 @@ webglManager.Setup(["Wall.png", "Player.png"]).then(async () => {
       "stepSpeed": 0.3,
       "stepSize": 5,
       "dashLength": 0.5,
+      "particleCount": 5,
       "particleBase": "playerParticleBase",
       "footBase": "playerFootBase"
+    }
+  });
+
+  ces.addEntity({
+    "id": "lightOverlay",
+    "texture": "LightOverlay.png",
+    "parent": "player",
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 1000
+    },
+    "dimensions": {
+      "x": 400,
+      "y": 400,
+      "z": 0
+    },
+    "child": {
+      "relativePosition": {
+        "x": 0,
+        "y": 0
+      }
     }
   });
 

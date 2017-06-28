@@ -11,7 +11,8 @@ import {CombinedEntity} from "./entity";
 const debug = false;
 const obj: any = {};
 
-export let canvasSize: number = 0;
+export let canvasDimensions: Point = {x: 1000, y: 750, z: 1};
+export let visibleDimensions: Point = {x: 0, y: 0, z: 1};
 
 export interface Color {
   h?: number;
@@ -35,14 +36,23 @@ export interface Entity {
 export function isRenderable(entity: CombinedEntity): entity is Entity { return "texture" in entity; }
 
 function positionCanvas(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
-  canvasSize = Math.min(window.innerWidth, window.innerHeight) - 100;
-  canvas.style.width = canvasSize + "px";
-  canvas.style.height = canvasSize + "px";
-  canvas.style.marginLeft = -canvasSize / 2 + "px";
-  canvas.style.marginTop = -canvasSize / 2 + "px";
-  canvas.width = canvasSize;
-  canvas.height = canvasSize;
-  gl.viewport(0, 0, canvasSize, canvasSize);
+  if (window.innerWidth > window.innerHeight) {
+    let visibleHeight = window.innerHeight - 100;
+    let visibleWidth = visibleHeight * 4 / 3;
+    visibleDimensions = {x: visibleWidth, y: visibleHeight, z: 0};
+  } else {
+    let visibleWidth = window.innerWidth - 100;
+    let visibleHeight = visibleWidth * 3 / 4;
+    visibleDimensions = {x: visibleWidth, y: visibleHeight, z: 0};
+  }
+
+  canvas.style.width = visibleDimensions.x + "px";
+  canvas.style.height = visibleDimensions.y + "px";
+  canvas.style.marginLeft = -visibleDimensions.x / 2 + "px";
+  canvas.style.marginTop = -visibleDimensions.y / 2 + "px";
+  canvas.width = canvasDimensions.x;
+  canvas.height = canvasDimensions.y;
+  gl.viewport(0, 0, canvasDimensions.x, canvasDimensions.y);
 }
 
 async function fetchShader(path: string) {
@@ -135,7 +145,7 @@ async function loadTextures(basePath: string, texturePaths: string[]) {
 
 async function setupTextures(gl: WebGLRenderingContext, basePath: string, texturePaths: string[]) {
   let result = await loadTextures(basePath, texturePaths);
-  document.body.appendChild(result.canvas);
+  // document.body.appendChild(result.canvas);
   let texture = twgl.createTexture(gl, {
     src: result.canvas,
     // wrap: gl.CLAMP_TO_EDGE,
