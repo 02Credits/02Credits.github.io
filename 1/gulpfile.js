@@ -1,59 +1,36 @@
 var gulp = require('gulp');
-var ts = require('gulp-typescript');
-var sass = require('gulp-sass');
-var webserver = require('gulp-webserver');
+var gulpUtil = require('gulp-util');
 var sourcemaps = require('gulp-sourcemaps');
-var del = require('del');
-var fs = require('fs');
+var webpack = require('webpack');
+var stream = require('webpack-stream');
+var WebpackDevServer = require('webpack-dev-server');
+var webpackConfig = require("./webpack.config.js");
 
-var tsProject = ts.createProject('tsconfig.json');
+gulp.task('webpack-dev-server', function (callback) {
+  var config = Object.create(webpackConfig);
+  config.devtool = "eval";
 
-gulp.task('clean', function () {
-    return del([
-        'pub/*'
-    ]);
+  var compiler = webpack(config);
+
+  new WebpackDevServer(compiler, {
+    stats: {
+      colors: true,
+      overlay: true,
+      hot: true
+    }
+  }).listen(8080, "localhost", function (err) {
+    if (err) throw new gulpUtil.PluginError("webpack-dev-server", err);
+    gulpUtil.log("[webpack-dev-server]", "http://localhost:8080/app/index.html");
+  });
 });
 
-gulp.task('copy', function () {
-    return gulp.src(['src/**/*', '!src/{ts,ts/**}', '!src/{sass,sass/**}'])
-        .pipe(gulp.dest('pub'));
+gulp.task('webpack', [], function () {
+  return gulp.src('app')
+    .pipe(sourcemaps.init())
+    .pipe(stream(webpackConfig, require('webpack')))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('app/js'));
 });
 
-gulp.task('build-ts', function () {
-    return gulp.src('src/ts/**/*.ts')
-        .pipe(sourcemaps.init())
-        .pipe(tsProject())
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('pub/js'));
-});
-
-gulp.task('build-sass', function () {
-    return gulp.src('src/sass/**/*.{sass,scss}')
-        .pipe(sass())
-        .pipe(gulp.dest('pub/css'));
-});
-
-gulp.task('build', ['copy', 'build-ts', 'build-sass']);
-
-gulp.task('watch', function () {
-    gulp.watch(['src/sass/**/*.{sass,scss}'], ['build-sass']);
-    gulp.watch('src/ts/**/*.ts', ['build-ts']);
-    gulp.watch(['src/**/*', '!src/**/*.ts', '!src/**/*.sass', '!src/**/*.scss'], ['copy']);
-});
-
-gulp.task('webserver', function () {
-    return gulp.src('..')
-        .pipe(webserver({
-            port: 8080
-        }));
-})
-
-gulp.task('rebuild', ['clean'], function () {
-    return gulp.start('build');
-});
-
-gulp.task('default', ['rebuild']);
-
-gulp.task('dev', ['rebuild', 'watch'], function () {
-    return gulp.start('webserver');
-});
+gulp.task('default', ['webpack']);
+gulp.task('dev', ['webpack-dev-server', 'webpack']);
