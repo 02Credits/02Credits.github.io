@@ -1,4 +1,4 @@
-import * as twgl from "twgl";
+import * as twgl from "twgl.js";
 
 import {Init, Draw} from "./animationManager";
 import * as ces from "./ces";
@@ -157,9 +157,11 @@ async function setupTextures(gl: WebGLRenderingContext, basePath: string, textur
 }
 
 async function compileProgram(gl: WebGLRenderingContext, basePath: string, folder: string) {
+  let vert = await fetchShader(basePath + "assets/Shaders/" + folder + "/vert.glsl");
+  let frag = await fetchShader(basePath + "assets/Shaders/" + folder + "/frag.glsl");
   return twgl.createProgramInfo(gl, [
-    await fetchShader(basePath + "assets/Shaders/" + folder + "/vert.glsl"),
-    await fetchShader(basePath + "assets/Shaders/" + folder + "/frag.glsl")
+    vert,
+    frag
   ]);
 }
 
@@ -237,6 +239,8 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
     index++;
   }
 
+  console.log(spriteArrays);
+
   let bufferInfo = twgl.createBufferInfoFromArrays(gl, spriteArrays);
   twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
   twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo, renderables.length * 6);
@@ -248,17 +252,6 @@ function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
   let indexOffset = 0;
   let coords: number[][] = [];
   let indices: number[][] = [];
-
-  let drawBatch = () => {
-    let arrays = {
-      a_coord: {numComponents: 2, data: [].concat.apply([], coords)},
-      indices: {numComponents: 3, data: [].concat.apply([], indices)}
-    };
-    coords = indices = [];
-    let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
-    twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
-    twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
-  }
 
   for (let entity of ces.getEntities(isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
     let corners = getCorners(entity);
@@ -272,7 +265,15 @@ function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
       indexOffset += poly.length;
     }
   }
-  drawBatch();
+
+  let arrays = {
+    a_coord: {numComponents: 2, data: [].concat.apply([], coords)},
+    indices: {numComponents: 3, data: [].concat.apply([], indices)}
+  };
+  coords = indices = [];
+  let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+  twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
+  twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
 }
 
 export async function Setup(texturePaths: string[]) {
@@ -314,6 +315,7 @@ export async function Setup(texturePaths: string[]) {
 
   Draw.Subscribe(() => {
     clearCanvas(gl, canvas);
+
     drawSprites(gl, spriteProgram, textures);
     if (debug) {
       drawDebug(gl, debugProgram);

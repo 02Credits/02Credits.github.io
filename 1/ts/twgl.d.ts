@@ -125,6 +125,6 @@ declare namespace TWGL {
   }
 }
 
-declare module "twgl" {
+declare module "twgl.js" {
   export = TWGL;
 }

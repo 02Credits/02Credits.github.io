@@ -1,47 +1,41 @@
 var path = require("path");
 var webpack = require("webpack");
-// var HappyPack = require('happypack');
-// var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-// var HtmlWebpackPlugin = require('html-webpack-plugin');
-// var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var { CheckerPlugin } = require('awesome-typescript-loader');
 
 module.exports = {
-  context: __dirname,
-  entry: ["babel-polyfill", "./app/ts/bootstrap"],
+  context: path.resolve('.'),
+  entry: [
+    "babel-polyfill",
+    "./ts/bootstrap"
+  ],
   output: {
-    path: path.resolve(__dirname, "app/js"),
+    path: path.resolve('./js'),
     filename: "bundle.js",
-    publicPath: "/app/",
-    devtoolModuleFilenameTemplate: function(info){
-      return "file:///"+info.resource;
+    publicPath: "/js/",
+    devtoolModuleFilenameTemplate: function (info) {
+      return info.resourcePath;
     }
   },
-  devtool: 'source-map',
+  devtool: 'cheap-eval-source-map',
   module: {
     loaders: [{
       test: /\.tsx?$/,
-      loaders: ["babel-loader", "ts-loader"], //"happypack/loader?id=ts"
-      exclude: /node_modules/
+      loader: "awesome-typescript-loader"
+    }, {
+      test: /\.js$/,
+      enforce: "pre",
+      use: [ "source-map-loader" ],
+      exclude: path.resolve(__dirname, "node_modules")
     }]
   },
+  devServer: {
+    inline: true,
+    port: 8080
+  },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
-    alias: {
-      'twgl': path.join(__dirname, 'node_modules', 'twgl.js/dist/3.x/twgl-full')
-    }
+    extensions: [".ts", ".tsx", ".js", ".json"]
   },
   plugins: [
-    // new HappyPack({
-    //   id: 'ts',
-    //   threads: 2,
-    //   loaders: [
-    //     {
-    //       path: 'ts-loader',
-    //       query: { happyPackMode: true }
-    //     }
-    //   ]
-    // }),
-    // new ForkTsCheckerWebpackPlugin(),
-    // new HtmlWebpackPlugin()
+    new CheckerPlugin()
   ]
 };

@@ -52,7 +52,7 @@ export function MouseState() {
     mousePos = flatten(mult(mult(
       sub(mouseScreenPos, scale(visibleDimensions, 0.5)),
       div(camera.dimensions, visibleDimensions)), {x: 1, y: -1, z: 0}));
-      console.log(mousePos);
+    // console.log("test");
   } else {
     mousePos = {x: 0, y: 0, z: 0};
   }
