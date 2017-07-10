@@ -11,31 +11,43 @@ module.exports = {
   output: {
     path: path.resolve('./js'),
     filename: "bundle.js",
-    publicPath: "/js/",
-    devtoolModuleFilenameTemplate: function (info) {
-      return info.resourcePath;
-    }
+    publicPath: "/js/"
+    // devtoolModuleFilenameTemplate: function (info) {
+    //   return info.resourcePath;
+    // }
   },
-  devtool: 'cheap-eval-source-map',
+  devtool: 'source',
   module: {
     loaders: [{
       test: /\.tsx?$/,
       loader: "awesome-typescript-loader"
     }, {
       test: /\.js$/,
-      enforce: "pre",
-      use: [ "source-map-loader" ],
-      exclude: path.resolve(__dirname, "node_modules")
+      loader: "source-map-loader",
+      enforce: "pre"
+    }, {
+      test: /\.(glsl|frag|vert)$/,
+      loader: 'raw-loader',
+      exclude: /node_modules/
+    }, {
+      test: /\.(glsl|frag|vert)$/,
+      loader: 'glslify-loader',
+      exclude: /node_modules/
     }]
   },
   devServer: {
     inline: true,
+    hot: true,
     port: 8080
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"]
   },
+  externals: [
+    {"twgl.js": "twgl"}
+  ],
   plugins: [
-    new CheckerPlugin()
+    new CheckerPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ]
 };

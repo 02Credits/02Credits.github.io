@@ -5,8 +5,12 @@ import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
 import {spliceArray, Point} from "./utils";
-
 import {CombinedEntity} from "./entity";
+
+let spriteVert: string = require<string>('../assets/Shaders/Sprite/vert.glsl');
+let spriteFrag: string = require<string>('../assets/Shaders/Sprite/frag.glsl');
+let debugVert: string = require<string>('../assets/Shaders/Debug/vert.glsl');
+let debugFrag: string = require<string>('../assets/Shaders/Debug/frag.glsl');
 
 const debug = false;
 const obj: any = {};
@@ -53,11 +57,6 @@ function positionCanvas(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
   canvas.width = canvasDimensions.x;
   canvas.height = canvasDimensions.y;
   gl.viewport(0, 0, canvasDimensions.x, canvasDimensions.y);
-}
-
-async function fetchShader(path: string) {
-  let result = await fetch(path);
-  return await result.text();
 }
 
 interface TextureInfo {
@@ -156,9 +155,7 @@ async function setupTextures(gl: WebGLRenderingContext, basePath: string, textur
   return {texture: texture, ...result};
 }
 
-async function compileProgram(gl: WebGLRenderingContext, basePath: string, folder: string) {
-  let vert = await fetchShader(basePath + "assets/Shaders/" + folder + "/vert.glsl");
-  let frag = await fetchShader(basePath + "assets/Shaders/" + folder + "/frag.glsl");
+function compileProgram(gl: WebGLRenderingContext, vert: string, frag: string) {
   return twgl.createProgramInfo(gl, [
     vert,
     frag
@@ -237,9 +234,7 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
     spliceArray(spriteArrays.indices.data, index * 6,
                 [offset + 0, offset + 1, offset + 2, offset + 2, offset + 1, offset + 3]);
     index++;
-  }
-
-  console.log(spriteArrays);
+}
 
   let bufferInfo = twgl.createBufferInfoFromArrays(gl, spriteArrays);
   twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
@@ -284,8 +279,8 @@ export async function Setup(texturePaths: string[]) {
   canvas.focus();
 
   let textures = await setupTextures(gl, basePath, texturePaths);
-  let spriteProgram = await compileProgram(gl, basePath, "Sprite");
-  let debugProgram = await compileProgram(gl, basePath, "Debug");
+  let spriteProgram = await compileProgram(gl, spriteVert, spriteFrag);
+  let debugProgram = await compileProgram(gl, debugVert, debugFrag);
 
   Init.Subscribe(() => {
     gl.useProgram(spriteProgram.program);
