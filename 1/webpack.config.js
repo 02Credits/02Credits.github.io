@@ -12,9 +12,6 @@ module.exports = {
     path: path.resolve('./js'),
     filename: "bundle.js",
     publicPath: "/js/"
-    // devtoolModuleFilenameTemplate: function (info) {
-    //   return info.resourcePath;
-    // }
   },
   devtool: 'source',
   module: {
@@ -37,7 +34,6 @@ module.exports = {
   },
   devServer: {
     inline: true,
-    hot: true,
     port: 8080
   },
   resolve: {
@@ -47,7 +43,6 @@ module.exports = {
     {"twgl.js": "twgl"}
   ],
   plugins: [
-    new CheckerPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    new CheckerPlugin()
   ]
 };

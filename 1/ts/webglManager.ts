@@ -4,8 +4,9 @@ import {Init, Draw} from "./animationManager";
 import * as ces from "./ces";
 import {isCamera} from "./cameraManager";
 import {isCollidable, getCorners} from "./collisionManager";
-import {spliceArray, Point} from "./utils";
+import {spliceArray, spliceData, Point} from "./utils";
 import {CombinedEntity} from "./entity";
+import * as ImageMapUtils from "./imageMapUtils";
 
 let spriteVert: string = require<string>('../assets/Shaders/Sprite/vert.glsl');
 let spriteFrag: string = require<string>('../assets/Shaders/Sprite/frag.glsl');
@@ -59,102 +60,6 @@ function positionCanvas(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
   gl.viewport(0, 0, canvasDimensions.x, canvasDimensions.y);
 }
 
-interface TextureInfo {
-  size: number,
-  canvas: HTMLCanvasElement,
-  texCoords: { [id: string]: number[] },
-  texture?: WebGLTexture
-}
-
-function packTextures(images: { [id: string]: HTMLImageElement }): TextureInfo {
-  let imageArray: {image: HTMLImageElement, id: string}[] = [];
-  for (let id in images) {
-    imageArray.push({image: images[id], id: id});
-  }
-  imageArray = imageArray.sort((a, b) => a.image.height - b.image.height);
-  let size = 16;
-  let correctSize = true;
-  do {
-    correctSize = true;
-    size *= 2;
-    let x = 0;
-    let y = 0;
-    let rowHeight = imageArray[0].image.height;
-    for (let imageData of imageArray) {
-      let image = imageData.image;
-      x += image.width + 2;
-      if (x > size) {
-        x = 0;
-        y += rowHeight + 2;
-        if (y + image.height > size) {
-          correctSize = false;
-          break;
-        }
-        rowHeight = image.height;
-      }
-    }
-  } while (!correctSize)
-
-  let canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  let ctx = canvas.getContext('2d');
-  let x = 0;
-  let y = 0;
-  let rowHeight = imageArray[0].image.height;
-  let imageLayoutInfo: { [id: string]: number[] } = {};
-  for (let imageData of imageArray) {
-    let image = imageData.image;
-    if (x + image.width > size) {
-      x = 0;
-      y += rowHeight + 2;
-      rowHeight = image.height;
-    }
-    ctx.drawImage(image, x, y);
-    imageLayoutInfo[imageData.id] = [
-      x, y,
-      x + image.width, y,
-      x, y + image.height,
-      x + image.width, y + image.height
-    ];
-    x += image.width + 2;
-  }
-  return {size: size, canvas: canvas, texCoords: imageLayoutInfo};
-}
-
-async function loadTextures(basePath: string, texturePaths: string[]) {
-  let images: { [id: string]: HTMLImageElement } = {};
-  for (let path of texturePaths) {
-    let imagePath = basePath + "assets/Images/" + path;
-    let image = new Image();
-    let loadedPromise = new Promise((resolve) => {
-      let handler = () => {
-        resolve();
-        image.removeEventListener('load', handler);
-      }
-      image.addEventListener('load', handler, false);
-      image.src = imagePath;
-    });
-    await loadedPromise;
-    images[path] = image;
-  }
-
-  return packTextures(images);
-}
-
-async function setupTextures(gl: WebGLRenderingContext, basePath: string, texturePaths: string[]) {
-  let result = await loadTextures(basePath, texturePaths);
-  // document.body.appendChild(result.canvas);
-  let texture = twgl.createTexture(gl, {
-    src: result.canvas,
-    // wrap: gl.CLAMP_TO_EDGE,
-    // mag: gl.NEAREST,
-    // min: gl.NEAREST
-  });
-
-  return {texture: texture, ...result};
-}
-
 function compileProgram(gl: WebGLRenderingContext, vert: string, frag: string) {
   return twgl.createProgramInfo(gl, [
     vert,
@@ -182,13 +87,6 @@ function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement) {
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 }
 
-function spliceData(array: {numComponents: number, data: number[]}, entityIndex: number, data: number[]) {
-  let expectedCount = array.numComponents * 4;
-  for (let i = 0; i < expectedCount; i += data.length) {
-    spliceArray(array.data, entityIndex * expectedCount + i, data);
-  }
-}
-
 let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
   a_coord: {numComponents: 2, data: new Array(400)},
   a_position: {numComponents: 3, data: new Array(400)},
@@ -200,7 +98,7 @@ let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
   indices: {numComponents: 3, data: new Array(400)}
 };
 
-function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: TextureInfo) {
+function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: ImageMapUtils.TextureInfo) {
   gl.useProgram(spriteProgram.program);
   let renderables = ces.getEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
 
@@ -278,7 +176,7 @@ export async function Setup(texturePaths: string[]) {
   let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
   canvas.focus();
 
-  let textures = await setupTextures(gl, basePath, texturePaths);
+  let textures = await ImageMapUtils.setupTextures(gl, basePath, texturePaths);
   let spriteProgram = await compileProgram(gl, spriteVert, spriteFrag);
   let debugProgram = await compileProgram(gl, debugVert, debugFrag);
 

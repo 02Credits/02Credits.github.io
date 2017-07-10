@@ -176,3 +176,10 @@ export function castOnPolygon(rp: Point, rd: Point, poly: Polygon): Point | unde
   }
   return closest;
 }
+
+export function spliceData(array: {numComponents: number, data: number[]}, entityIndex: number, data: number[]) {
+  let expectedCount = array.numComponents * 4;
+  for (let i = 0; i < expectedCount; i += data.length) {
+    spliceArray(array.data, entityIndex * expectedCount + i, data);
+  }
+}

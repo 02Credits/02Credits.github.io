@@ -14,18 +14,6 @@ import * as inputManager from "./inputManager";
 import * as parentManager from "./parentManager";
 import * as motionManager from "./motionManager";
 
-import * as EventManagers from "./eventManager";
-
-export abstract class System<S, E> {
-  state: S;
-  events: EventManagers.EventManager;
-  polls: EventManagers.PollManager<any>[];
-
-  abstract setup(): void;
-  abstract cleanup(): void;
-  abstract upgrade(oldSystem: any): void;
-}
-
 webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async () => {
   await collisionManager.setup();
   await playerManager.setup();

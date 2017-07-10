@@ -48,6 +48,10 @@ acorn@4.X, acorn@^4.0.3:
   version "4.0.13"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-4.0.13.tgz#105495ae5361d697bd195c825192e1ad7f253787"
 
+acorn@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-0.12.0.tgz#337b0bb293dfd6239d7e66c92c727c56a08d403e"
+
 acorn@^1.0.3:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-1.2.2.tgz#c8ce27de0acc76d896d2b1fad3df588d9e82f014"
@@ -3866,6 +3870,13 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
+monkey-hot-loader@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/monkey-hot-loader/-/monkey-hot-loader-0.0.3.tgz#f5bb2a59cca7d38e6ca7e7cb5db4095a241399bb"
+  dependencies:
+    acorn "^0.12.0"
+    source-map "^0.4.2"
+
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
@@ -5303,7 +5314,7 @@ source-map@^0.1.38, source-map@~0.1.33:
   dependencies:
     amdefine ">=0.0.4"
 
-source-map@~0.4.1:
+source-map@^0.4.2, source-map@~0.4.1:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.4.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
   dependencies:

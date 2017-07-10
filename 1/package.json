@@ -34,6 +34,7 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
+    "monkey-hot-loader": "^0.0.3",
     "pixi.js": "^4.5.3",
     "twgl.js": "^3.4.0"
   }
