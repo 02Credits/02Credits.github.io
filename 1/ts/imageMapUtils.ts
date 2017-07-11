@@ -39,6 +39,7 @@ export function packTextures(images: { [id: string]: HTMLImageElement }): Textur
   let canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
+  document.body.appendChild(canvas);
   let ctx = canvas.getContext('2d');
   let x = 0;
   let y = 0;

@@ -14,7 +14,7 @@ import * as inputManager from "./inputManager";
 import * as parentManager from "./parentManager";
 import * as motionManager from "./motionManager";
 
-webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async () => {
+webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody.png", "CharacterHead.png", "Foot.png", "DustGrey.png", "FlashFuzz.png", "OpaqueSmoke.png"]).then(async () => {
   await collisionManager.setup();
   await playerManager.setup();
   await cameraManager.setup();
@@ -67,7 +67,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async ()
     "dimensions": {
       x: 1, y: 1, z: 0
     },
-    "texture": "Player.png",
+    "texture": "DustGrey.png",
     "collidable": true,
     "collisionShape": {
       kind: "circle"
@@ -79,7 +79,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async ()
 
   ces.addEntity({
     "id": "playerFootBase",
-    "texture": "Wall.png",
+    "texture": "Foot.png",
     "position": {
       "x": 0,
       "y": 0,
@@ -97,7 +97,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async ()
 
   ces.addEntity({
     "id": "player",
-    "texture": "Player.png",
+    "texture": "CharacterHead.png",
     "position": {
       "x": 0,
       "y": 0,
@@ -130,7 +130,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png"]).then(async ()
     "position": {
       "x": 0,
       "y": 0,
-      "z": 1000
+      "z": 0
     },
     "dimensions": {
       "x": 400,

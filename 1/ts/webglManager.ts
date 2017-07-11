@@ -60,13 +60,6 @@ function positionCanvas(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
   gl.viewport(0, 0, canvasDimensions.x, canvasDimensions.y);
 }
 
-function compileProgram(gl: WebGLRenderingContext, vert: string, frag: string) {
-  return twgl.createProgramInfo(gl, [
-    vert,
-    frag
-  ]);
-}
-
 function setCameraUniforms(program: twgl.ProgramInfo) {
   let camera = ces.getEntities(isCamera)[0];
   let cameraWidth = (camera.dimensions || obj).x || 100;
@@ -177,8 +170,8 @@ export async function Setup(texturePaths: string[]) {
   canvas.focus();
 
   let textures = await ImageMapUtils.setupTextures(gl, basePath, texturePaths);
-  let spriteProgram = await compileProgram(gl, spriteVert, spriteFrag);
-  let debugProgram = await compileProgram(gl, debugVert, debugFrag);
+  let spriteProgram = twgl.createProgramInfo(gl, [spriteVert, spriteFrag]);
+  let debugProgram = twgl.createProgramInfo(gl, [debugVert, debugFrag]);
 
   Init.Subscribe(() => {
     gl.useProgram(spriteProgram.program);
@@ -188,6 +181,9 @@ export async function Setup(texturePaths: string[]) {
       u_texmap: textures.texture,
       u_map_dimensions: textures.size
     });
+
+    gl.enable(gl.BLEND);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
     if (debug) {
       gl.useProgram(debugProgram.program);
