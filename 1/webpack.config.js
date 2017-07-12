@@ -11,9 +11,12 @@ module.exports = {
   output: {
     path: path.resolve('./js'),
     filename: "bundle.js",
-    publicPath: "/js/"
+    publicPath: "/js/",
+    devtoolModuleFilenameTemplate: function(info){
+      return "../" + info.resourcePath;
+    }
   },
-  devtool: 'source',
+  devtool: 'source-map',
   module: {
     loaders: [{
       test: /\.tsx?$/,

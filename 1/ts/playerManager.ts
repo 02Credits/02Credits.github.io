@@ -12,6 +12,7 @@ import {CombinedEntity} from "./entity";
 export interface PlayerEntity extends RenderedEntity, MotionEntity {
   player: {
     particleCount: number,
+    bodyWiggle: number,
     stepSpeed: number,
     stepSize: number,
     dashLength: number,
@@ -56,6 +57,14 @@ function updateFeet(playerEntity: PlayerEntity) {
   }
 }
 
+function updateBody(entity: PlayerEntity) {
+  var body = ces.getEntity("body") as ChildEntity;
+  body.child.relativeRotation =
+    Math.sin(entity.player.walkAnimation) *
+    entity.player.speed *
+    entity.player.bodyWiggle;
+}
+
 function updatePlayer(entity: PlayerEntity, time: number) {
   let mouseState = input.MouseState();
   if ("enabled" in entity && !entity.enabled) {
@@ -84,7 +93,10 @@ function updatePlayer(entity: PlayerEntity, time: number) {
     if (mouseState.mouseButtons.left && (time - entity.player.lastDashed) > (1 - strengthLevel) * 1.5) {
       for (let i = 0; i < entity.player.particleCount; i++) {
         let particle = entity.player.pool.New();
-        particle.velocity = utils.scale(utils.normalize({x: Math.random() - 0.5, y: Math.random() - 0.5, z: 0}), Math.random() + 0.5);
+        let perterbation = Math.random() - 0.5
+        let dashAngle = utils.xyAngle(utils.sub(mouseState.position, entity.position)) + perterbation * Math.PI;
+        let dashDir = {x: Math.cos(dashAngle), y: Math.sin(dashAngle), z: 0};
+        particle.velocity = utils.scale(dashDir, Math.random() * (1 + Math.abs(perterbation)));
         particle.position = entity.position;
         particle.rotation = Math.random() * Math.PI * 2;
         ces.addEntity(particle);
@@ -134,7 +146,7 @@ function updatePlayerParticle(entity: PlayerParticle) {
   } else {
     target = mouseState.position;
   }
-  entity.velocity = utils.sum(utils.scale(utils.normalize(utils.sub(target, entity.position)), 0.1), entity.velocity);
+  entity.velocity = utils.sum(utils.scale(utils.normalize(utils.sub(target, entity.position)), 0.08), entity.velocity);
 }
 
 export function setup() {
@@ -165,7 +177,7 @@ export function setup() {
         },
         child: {
           relativePosition: {
-            x: 2
+            x: 2.3
           }
         }
       });
@@ -174,7 +186,7 @@ export function setup() {
         id: "leftFoot",
         child: {
           relativePosition: {
-            x: -2
+            x: -2.3
           }
         }
       });
@@ -185,6 +197,7 @@ export function setup() {
     for (let entity of ces.getEntities(isPlayer, true)) {
       updatePlayer(entity, time);
       updateFeet(entity);
+      updateBody(entity);
     }
 
     for (let entity of ces.getEntities(isPlayerParticle)) {

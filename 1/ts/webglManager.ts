@@ -7,6 +7,7 @@ import {isCollidable, getCorners} from "./collisionManager";
 import {spliceArray, spliceData, Point} from "./utils";
 import {CombinedEntity} from "./entity";
 import * as ImageMapUtils from "./imageMapUtils";
+import * as LightManager from "./lightManager";
 
 let spriteVert: string = require<string>('../assets/Shaders/Sprite/vert.glsl');
 let spriteFrag: string = require<string>('../assets/Shaders/Sprite/frag.glsl');
@@ -35,6 +36,7 @@ export interface Entity {
   rotation?: number;
   color?: Color;
 }
+
 export function isRenderable(entity: CombinedEntity): entity is Entity { return "texture" in entity; }
 
 function positionCanvas(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
@@ -71,7 +73,7 @@ function setCameraUniforms(program: twgl.ProgramInfo) {
 
 function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement) {
   positionCanvas(canvas, gl);
-  gl.clearColor(1, 1, 1, 1);
+  gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -162,7 +164,7 @@ export async function Setup(texturePaths: string[]) {
 
   Draw.Subscribe(() => {
     clearCanvas(gl, canvas);
-
+    LightManager.UpdateLightSourceUniforms(spriteProgram);
     drawSprites(gl, spriteProgram, textures);
   });
 }

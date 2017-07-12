@@ -9,6 +9,7 @@ attribute vec4 a_color;
 
 varying highp vec2 v_texcoord;
 varying highp vec4 v_color;
+varying highp vec2 v_world_pos;
 
 uniform vec4 u_camera_dimensions;
 
@@ -17,6 +18,7 @@ void main() {
   vec2 rotatedPosition = vec2(cos(a_rotation) * relativePosition.x - sin(a_rotation) * relativePosition.y,
                               sin(a_rotation) * relativePosition.x + cos(a_rotation) * relativePosition.y);
   vec3 worldCoords = vec3(rotatedPosition + a_position.xy, 0);
+  v_world_pos = worldCoords.xy;
   gl_Position = vec4((worldCoords.xy - u_camera_dimensions.xy) / (u_camera_dimensions.zw / 2.0), worldCoords.z, 1);
   v_texcoord = a_texcoord;
 }

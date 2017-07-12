@@ -14,7 +14,7 @@ import * as inputManager from "./inputManager";
 import * as parentManager from "./parentManager";
 import * as motionManager from "./motionManager";
 
-webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody.png", "CharacterHead.png", "Foot.png", "DustGrey.png", "FlashFuzz.png", "OpaqueSmoke.png"]).then(async () => {
+webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "CharacterBody.png", "CharacterHead.png", "Foot.png", "DustGrey.png", "FlashFuzz.png", "OpaqueSmoke.png"]).then(async () => {
   await collisionManager.setup();
   await playerManager.setup();
   await cameraManager.setup();
@@ -65,15 +65,16 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
     "id": "playerParticleBase",
     "position": {x: 0, y: 0, z: 0},
     "dimensions": {
-      x: 10, y: 10, z: 0
+      x: 3, y: 3, z: 0
     },
     "texture": "DustGrey.png",
     "collidable": true,
     "collisionShape": {
       kind: "circle"
     },
-    "friction": 0.85,
+    "friction": 0.9,
     "restitution": 1.5,
+    "lightIntensity": 2,
     "enabled": false
   });
 
@@ -87,7 +88,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
     },
     "dimensions": {
       "x": 2,
-      "y": 4,
+      "y": 3,
       "z": 0
     },
     "parent": "player",
@@ -116,6 +117,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
     "player": {
       "stepSpeed": 0.3,
       "stepSize": 1,
+      "bodyWiggle": 0.3,
       "dashLength": 0.5,
       "particleCount": 5,
       "particleBase": "playerParticleBase",
@@ -137,6 +139,7 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
       "y": 8,
       "z": 0
     },
+    "lightIntensity": 50,
     "child": {
       "relativePosition": {
         "x": 0,
@@ -144,28 +147,19 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
         "z": 5
       }
     }
-  })
+  });
 
   ces.addEntity({
-    "id": "lightOverlay",
-    "texture": "LightOverlay.png",
-    "parent": "player",
+    "texture": "GroundDebugTexture.png",
     "position": {
       "x": 0,
       "y": 0,
-      "z": 0
+      "z": -100000
     },
     "dimensions": {
-      "x": 400,
-      "y": 400,
+      "x": 100,
+      "y": 100,
       "z": 0
-    },
-    "child": {
-      "relativePosition": {
-        "x": 0,
-        "y": 0,
-        "z": 0
-      }
     }
   });
 

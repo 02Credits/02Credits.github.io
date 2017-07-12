@@ -10,6 +10,7 @@ import {Entity as WallManagerEntity} from "./wallManager";
 import {Entity as InterpolatedEntity} from "./interpolationManager";
 import {Entity as GeneratorEntity} from "./particleManager";
 import {Entity as MovingEntity} from "./motionManager";
+import {Entity as LightSourceEntity} from "./lightManager";
 
 export type CombinedEntity =
   CameraManagerEntity |
@@ -23,4 +24,5 @@ export type CombinedEntity =
   WallManagerEntity |
   InterpolatedEntity |
   GeneratorEntity |
-  MovingEntity;
+  MovingEntity |
+  LightSourceEntity;
