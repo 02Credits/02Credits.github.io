@@ -10,10 +10,7 @@ import * as ImageMapUtils from "./imageMapUtils";
 
 let spriteVert: string = require<string>('../assets/Shaders/Sprite/vert.glsl');
 let spriteFrag: string = require<string>('../assets/Shaders/Sprite/frag.glsl');
-let debugVert: string = require<string>('../assets/Shaders/Debug/vert.glsl');
-let debugFrag: string = require<string>('../assets/Shaders/Debug/frag.glsl');
 
-const debug = false;
 const obj: any = {};
 
 export let canvasDimensions: Point = {x: 1000, y: 750, z: 1};
@@ -92,7 +89,7 @@ let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
 };
 
 function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: ImageMapUtils.TextureInfo) {
-  gl.useProgram(spriteProgram.program);
+  gl.useProgram(spriteProgram.program)
   let renderables = ces.getEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
 
   for (let id in spriteArrays) {
@@ -125,53 +122,22 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
     spliceArray(spriteArrays.indices.data, index * 6,
                 [offset + 0, offset + 1, offset + 2, offset + 2, offset + 1, offset + 3]);
     index++;
-}
+  }
 
   let bufferInfo = twgl.createBufferInfoFromArrays(gl, spriteArrays);
   twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
   twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo, renderables.length * 6);
 }
 
-function drawDebug(gl: WebGLRenderingContext, debugProgram: twgl.ProgramInfo) {
-  gl.useProgram(debugProgram.program);
-
-  let indexOffset = 0;
-  let coords: number[][] = [];
-  let indices: number[][] = [];
-
-  for (let entity of ces.getEntities(isCollidable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0))) {
-    let corners = getCorners(entity);
-    for (let poly of corners) {
-      coords.push([].concat.apply([], poly));
-      let polyIndices: number[] = [];
-      for (let i = 2; i < poly.length; i++) {
-        polyIndices = polyIndices.concat([indexOffset + i, indexOffset, indexOffset + i - 1])
-      }
-      indices.push(polyIndices);
-      indexOffset += poly.length;
-    }
-  }
-
-  let arrays = {
-    a_coord: {numComponents: 2, data: [].concat.apply([], coords)},
-    indices: {numComponents: 3, data: [].concat.apply([], indices)}
-  };
-  coords = indices = [];
-  let bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
-  twgl.setBuffersAndAttributes(gl, debugProgram, bufferInfo);
-  twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo);
-}
-
 export async function Setup(texturePaths: string[]) {
   let canvas = document.createElement('canvas');
   document.getElementById("game").appendChild(canvas);
-  let gl = canvas.getContext('webgl');
+  let gl = canvas.getContext('webgl', {alpha: false});
   let basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
   canvas.focus();
 
   let textures = await ImageMapUtils.setupTextures(gl, basePath, texturePaths);
   let spriteProgram = twgl.createProgramInfo(gl, [spriteVert, spriteFrag]);
-  let debugProgram = twgl.createProgramInfo(gl, [debugVert, debugFrag]);
 
   Init.Subscribe(() => {
     gl.useProgram(spriteProgram.program);
@@ -181,18 +147,10 @@ export async function Setup(texturePaths: string[]) {
       u_texmap: textures.texture,
       u_map_dimensions: textures.size
     });
-
+    gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
-    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    if (debug) {
-      gl.useProgram(debugProgram.program);
-
-      setCameraUniforms(debugProgram);
-      twgl.setUniforms(debugProgram, {
-        u_color: [1, 0, 0, 0.5]
-      });
-    }
   });
 
   ces.CheckEntity.Subscribe((entity) => {
@@ -206,8 +164,5 @@ export async function Setup(texturePaths: string[]) {
     clearCanvas(gl, canvas);
 
     drawSprites(gl, spriteProgram, textures);
-    if (debug) {
-      drawDebug(gl, debugProgram);
-    }
   });
 }

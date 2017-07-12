@@ -86,6 +86,7 @@ function updatePlayer(entity: PlayerEntity, time: number) {
         let particle = entity.player.pool.New();
         particle.velocity = utils.scale(utils.normalize({x: Math.random() - 0.5, y: Math.random() - 0.5, z: 0}), Math.random() + 0.5);
         particle.position = entity.position;
+        particle.rotation = Math.random() * Math.PI * 2;
         ces.addEntity(particle);
       }
       entity.enabled = false;
@@ -157,9 +158,14 @@ export function setup() {
       let rightFoot = ces.addEntity({
           ...footPool.New(),
         id: "rightFoot",
+        dimensions: {
+          x: -(footBase as any).dimensions.x,
+          y: (footBase as any).dimensions.y,
+          z: 0
+        },
         child: {
           relativePosition: {
-            x: 1
+            x: 2
           }
         }
       });
@@ -168,7 +174,7 @@ export function setup() {
         id: "leftFoot",
         child: {
           relativePosition: {
-            x: -1
+            x: -2
           }
         }
       });

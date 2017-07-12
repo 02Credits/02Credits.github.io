@@ -65,14 +65,14 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
     "id": "playerParticleBase",
     "position": {x: 0, y: 0, z: 0},
     "dimensions": {
-      x: 1, y: 1, z: 0
+      x: 10, y: 10, z: 0
     },
     "texture": "DustGrey.png",
     "collidable": true,
     "collisionShape": {
       kind: "circle"
     },
-    "friction": 0.90,
+    "friction": 0.85,
     "restitution": 1.5,
     "enabled": false
   });
@@ -86,8 +86,8 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
       "z": 4
     },
     "dimensions": {
-      "x": 1,
-      "y": 1,
+      "x": 2,
+      "y": 4,
       "z": 0
     },
     "parent": "player",
@@ -104,8 +104,8 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
       "z": 5
     },
     "dimensions": {
-      "x": 5,
-      "y": 5,
+      "x": 6,
+      "y": 6,
       "z": 0
     },
     "friction": 0.85,
@@ -115,13 +115,36 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
     },
     "player": {
       "stepSpeed": 0.3,
-      "stepSize": 5,
+      "stepSize": 1,
       "dashLength": 0.5,
       "particleCount": 5,
       "particleBase": "playerParticleBase",
       "footBase": "playerFootBase"
     }
   });
+
+  ces.addEntity({
+    "id": "body",
+    "texture": "CharacterBody.png",
+    "parent": "player",
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 4
+    },
+    "dimensions": {
+      "x": 8,
+      "y": 8,
+      "z": 0
+    },
+    "child": {
+      "relativePosition": {
+        "x": 0,
+        "y": 0,
+        "z": 5
+      }
+    }
+  })
 
   ces.addEntity({
     "id": "lightOverlay",
@@ -140,7 +163,8 @@ webglManager.Setup(["Wall.png", "Player.png", "LightOverlay.png", "CharacterBody
     "child": {
       "relativePosition": {
         "x": 0,
-        "y": 0
+        "y": 0,
+        "z": 0
       }
     }
   });
