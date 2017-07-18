@@ -25,7 +25,7 @@ export function setup() {
         let parentScale = parent.scale || 1;
         let parentX = parent.position.x || 0;
         let parentY = parent.position.y || 0;
-        // let parentAlpha = parent.rendered.alpha || 1;
+        let parentAlpha = parent.color.a || 1;
         childEntity.child.relativePosition = childEntity.child.relativePosition || {x: 0, y: 0, z: 0};
         childEntity.position.x =
           (Math.cos(parentRotation) * childEntity.child.relativePosition.x -
@@ -39,8 +39,8 @@ export function setup() {
         childEntity.rotation = childEntity.child.relativeRotation + parentRotation;
         childEntity.child.relativeScale = childEntity.child.relativeScale || 1;
         childEntity.scale = childEntity.child.relativeScale * parentScale;
-        // childEntity.child.relativeAlpha = childEntity.child.relativeAlpha || 1;
-        // childEntity.rendered.alpha = childEntity.child.relativeAlpha * parentAlpha;
+        childEntity.child.relativeAlpha = childEntity.child.relativeAlpha || 1;
+        childEntity.color.a = childEntity.child.relativeAlpha * parentAlpha;
         if ("enabled" in parent) {
           childEntity.enabled = parent.enabled;
         } else {

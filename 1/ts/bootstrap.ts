@@ -63,18 +63,18 @@ webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "Charact
 
   ces.addEntity({
     "id": "playerParticleBase",
-    "position": {x: 0, y: 0, z: 0},
+    "position": {x: 0, y: 0, z: 5},
     "dimensions": {
-      x: 3, y: 3, z: 0
+      x: 2, y: 2, z: 0
     },
     "texture": "DustGrey.png",
     "collidable": true,
     "collisionShape": {
       kind: "circle"
     },
-    "friction": 0.9,
+    "friction": 0.93,
     "restitution": 1.5,
-    "lightIntensity": 2,
+    "lightIntensity": 0.2,
     "enabled": false
   });
 
@@ -114,11 +114,13 @@ webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "Charact
     "collisionShape": {
       "kind": "circle"
     },
+    "color": {r: 1, g: 1, b: 1, a: 1},
+    "lightIntensity": 1,
     "player": {
       "stepSpeed": 0.3,
       "stepSize": 1,
       "bodyWiggle": 0.3,
-      "dashLength": 0.5,
+      "dashLength": 1.5,
       "particleCount": 5,
       "particleBase": "playerParticleBase",
       "footBase": "playerFootBase"
@@ -139,7 +141,6 @@ webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "Charact
       "y": 8,
       "z": 0
     },
-    "lightIntensity": 50,
     "child": {
       "relativePosition": {
         "x": 0,

@@ -21,4 +21,5 @@ void main() {
   v_world_pos = worldCoords.xy;
   gl_Position = vec4((worldCoords.xy - u_camera_dimensions.xy) / (u_camera_dimensions.zw / 2.0), worldCoords.z, 1);
   v_texcoord = a_texcoord;
+  v_color = a_color;
 }

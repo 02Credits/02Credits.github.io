@@ -6,7 +6,6 @@ import {Update} from "./animationManager";
 import {Entity as RenderedEntity} from "./webglManager";
 import {Entity as ChildEntity} from "./parentManager";
 import {Entity as MotionEntity} from "./motionManager";
-
 import {CombinedEntity} from "./entity";
 
 export interface PlayerEntity extends RenderedEntity, MotionEntity {
@@ -18,12 +17,15 @@ export interface PlayerEntity extends RenderedEntity, MotionEntity {
     dashLength: number,
     particleBase: string,
     footBase: string,
+    lightPerParticle?: number,
+    storedParticles?: number,
     speed?: number,
     walkAnimation?: number,
     dashStartTime?: number,
     lastDashed?: number,
     pool?: ObjectPool<PlayerParticle>
   },
+  lightIntensity: number,
   enabled?: boolean
 }
 export function isPlayer(entity: CombinedEntity): entity is PlayerEntity { return "player" in entity; };
@@ -102,7 +104,10 @@ function updatePlayer(entity: PlayerEntity, time: number) {
         ces.addEntity(particle);
       }
       entity.enabled = false;
+      entity.player.storedParticles = 0;
       entity.player.dashStartTime = time;
+      entity.lightIntensity = 0;
+      entity.color.a = 0;
     } else {
       let delta = {x: 0, y: 0, z: 0};
       if (input.KeyDown("a")) {
@@ -128,6 +133,7 @@ function updatePlayer(entity: PlayerEntity, time: number) {
       var playerSpeed = utils.length(entity.velocity);
       entity.player.speed = playerSpeed;
       entity.player.walkAnimation += playerSpeed * entity.player.stepSpeed;
+      entity.color.a += ((entity.player.storedParticles / entity.player.particleCount) - entity.color.a) * 0.1;
     }
   }
 }
@@ -142,6 +148,8 @@ function updatePlayerParticle(entity: PlayerParticle) {
     if (utils.length(utils.sub(entity.position, playerEntity.position)) < playerEntity.dimensions.x / 2) {
       ces.removeEntity(entity);
       playerEntity.player.pool.Free(entity);
+      playerEntity.player.storedParticles ++;
+      playerEntity.lightIntensity = playerEntity.player.lightPerParticle * playerEntity.player.storedParticles;
     }
   } else {
     target = mouseState.position;
@@ -162,6 +170,8 @@ export function setup() {
         playerParticle: true,
         enabled: true
       });
+      entity.player.lightPerParticle = particleBase.lightIntensity;
+      entity.player.storedParticles = entity.player.particleCount;
       let footBase = ces.getEntity(entity.player.footBase);
       let footPool = new ObjectPool({
           ...footBase,

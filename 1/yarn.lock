@@ -23,6 +23,10 @@
   version "2.0.48"
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.48.tgz#3e90d8cde2d29015e5583017f7830cb3975b2eef"
 
+"@types/noisejs@^0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@types/noisejs/-/noisejs-0.0.28.tgz#797ac259d592004f8e13526cc9afeaf9f1fcb26e"
+
 "@types/pixi.js@^4.4.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/@types/pixi.js/-/pixi.js-4.5.0.tgz#bdb44481bc42de9fd37a2277d9a4d6386819b71b"
@@ -4010,6 +4014,10 @@ node.extend@^1.0.10:
   resolved "https://registry.yarnpkg.com/node.extend/-/node.extend-1.1.6.tgz#a7b882c82d6c93a4863a5504bd5de8ec86258b96"
   dependencies:
     is "^3.1.0"
+
+noisejs@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/noisejs/-/noisejs-2.1.0.tgz#84b4c4cd04ff43367034f65253e213e0d9fe1aff"
 
 nopt@^4.0.1:
   version "4.0.1"

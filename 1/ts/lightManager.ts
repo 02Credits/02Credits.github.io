@@ -10,9 +10,9 @@ export interface Entity {
 export function isLightSource(entity: CombinedEntity): entity is Entity { return "lightIntensity" in entity; }
 
 let lightUniforms = {
-  u_light_position: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  u_light_intensity: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  u_light_enabled: [true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+  u_light_position: new Array(32 * 2),
+  u_light_intensity: new Array(32),
+  u_light_enabled: new Array(32),
   u_ambient_light: 0.2
 }
 

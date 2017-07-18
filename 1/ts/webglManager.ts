@@ -87,6 +87,7 @@ let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
   a_dimensions: {numComponents: 2, data: new Array(400)},
   a_center: {numComponents: 2, data: new Array(400)},
   a_scale: {numComponents: 1, data: new Array(400)},
+  a_color: {numComponents: 4, data: new Array(400)},
   indices: {numComponents: 3, data: new Array(400)}
 };
 
@@ -120,6 +121,7 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
       (entity.center || obj).y || 0.5
     ]);
     spliceData(spriteArrays.a_scale, index, [entity.scale || 1]);
+    spliceData(spriteArrays.a_color, index, [entity.color.r, entity.color.g, entity.color.b, entity.color.a]);
     let offset = index * 4;
     spliceArray(spriteArrays.indices.data, index * 6,
                 [offset + 0, offset + 1, offset + 2, offset + 2, offset + 1, offset + 3]);

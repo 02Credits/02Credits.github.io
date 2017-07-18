@@ -34,7 +34,9 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
+    "@types/noisejs": "^0.0.28",
     "monkey-hot-loader": "^0.0.3",
+    "noisejs": "^2.1.0",
     "pixi.js": "^4.5.3",
     "twgl.js": "^3.4.0"
   }
