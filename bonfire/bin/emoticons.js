@@ -286,7 +286,9 @@
       "HenryBlazeHenry": "http://i.imgur.com/OWrIo27.png",
       "HenrySuccHenry": "http://i.imgur.com/g5uMi22.png",
       "Rickyism": "http://i.imgur.com/rim97Om.png",
-      "Fug": "http://i.imgur.com/KkdXvZW.png"
+      "Fug": "http://i.imgur.com/KkdXvZW.png",
+      "PalmJo": "http://i.imgur.com/HzzHOP1.png",
+      "ThrashHon": "http://i.imgur.com/ky2clQx.gif"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",
