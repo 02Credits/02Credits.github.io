@@ -1,22 +1,19 @@
 var gulp = require('gulp');
 var gulpUtil = require('gulp-util');
-var sourcemaps = require('gulp-sourcemaps');
 var webpack = require('webpack');
 var stream = require('webpack-stream');
+var sourcemaps = require('gulp-sourcemaps');
 var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require("./webpack.config.js");
 
 gulp.task('webpack-dev-server', function (callback) {
   var config = Object.create(webpackConfig);
-  config.devtool = "eval";
-
   var compiler = webpack(config);
 
   new WebpackDevServer(compiler, {
     stats: {
       colors: true,
-      overlay: true,
-      hot: true
+      overlay: true
     }
   }).listen(8080, "localhost", function (err) {
     if (err) throw new gulpUtil.PluginError("webpack-dev-server", err);
@@ -29,7 +26,7 @@ gulp.task('webpack', [], function () {
     .pipe(sourcemaps.init())
     .pipe(stream(webpackConfig, require('webpack')))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('app/js'));
+    .pipe(gulp.dest('js'));
 });
 
 gulp.task('default', ['webpack']);

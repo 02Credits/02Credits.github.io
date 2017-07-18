@@ -1,4 +1,5 @@
 node_modules/
 .awcache/
+js/
 npm-debug.log.*
 .#*
