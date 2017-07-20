@@ -22,8 +22,9 @@ void main() {
     }
   }
 
-  // brightness = clamp(brightness, 0.0, 1.0);
-
-  vec4 sampledColor = texture2D(u_texmap, vec2(v_texcoord.s / u_map_dimensions, v_texcoord.t / u_map_dimensions));
+  vec4 sampledColor = texture2D(
+    u_texmap,
+    vec2(v_texcoord.s / u_map_dimensions, v_texcoord.t / u_map_dimensions)
+  );
   gl_FragColor = vec4(sampledColor.rgb * brightness, sampledColor.a * v_color.a);
 }

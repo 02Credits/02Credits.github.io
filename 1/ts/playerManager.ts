@@ -92,7 +92,7 @@ function updatePlayer(entity: PlayerEntity, time: number) {
     }
   } else {
     let strengthLevel = (entity.player.particleCount - 5) / 25;
-    if (mouseState.mouseButtons.left && (time - entity.player.lastDashed) > (1 - strengthLevel) * 1.5) {
+    if (mouseState.mouseButtons.left && (time - entity.player.lastDashed) > (1 - strengthLevel) * 1.5 && entity.player.storedParticles == entity.player.particleCount) {
       for (let i = 0; i < entity.player.particleCount; i++) {
         let particle = entity.player.pool.New();
         let perterbation = Math.random() - 0.5
@@ -165,7 +165,7 @@ export function setup() {
       entity.player.lastDashed = -Infinity;
       let particleBase = ces.getEntity(entity.player.particleBase) as any;
       entity.player.pool = new ObjectPool({
-          ...particleBase,
+        ...particleBase,
         velocity: {x: 0, y: 0, z: 0},
         playerParticle: true,
         enabled: true
@@ -187,7 +187,7 @@ export function setup() {
         },
         child: {
           relativePosition: {
-            x: 2.3
+            x: (footBase as any).position.x
           }
         }
       });
@@ -196,7 +196,7 @@ export function setup() {
         id: "leftFoot",
         child: {
           relativePosition: {
-            x: -2.3
+            x: -(footBase as any).position.x
           }
         }
       });

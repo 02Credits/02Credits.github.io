@@ -154,7 +154,6 @@ export async function Setup(texturePaths: string[]) {
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
   });
 
   ces.CheckEntity.Subscribe((entity) => {
@@ -166,6 +165,7 @@ export async function Setup(texturePaths: string[]) {
 
   Draw.Subscribe(() => {
     clearCanvas(gl, canvas);
+    setCameraUniforms(spriteProgram);
     LightManager.UpdateLightSourceUniforms(spriteProgram);
     drawSprites(gl, spriteProgram, textures);
   });

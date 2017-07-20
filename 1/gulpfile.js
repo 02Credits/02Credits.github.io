@@ -7,15 +7,8 @@ var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require("./webpack.config.js");
 
 gulp.task('webpack-dev-server', function (callback) {
-  var config = Object.create(webpackConfig);
-  var compiler = webpack(config);
-
-  new WebpackDevServer(compiler, {
-    stats: {
-      colors: true,
-      overlay: true
-    }
-  }).listen(8080, "localhost", function (err) {
+  var compiler = webpack(webpackConfig);
+  new WebpackDevServer(compiler).listen(8080, "localhost", function (err) {
     if (err) throw new gulpUtil.PluginError("webpack-dev-server", err);
     gulpUtil.log("[webpack-dev-server]", "http://localhost:8080/app/index.html");
   });

@@ -25,7 +25,7 @@ export function setup() {
         let parentScale = parent.scale || 1;
         let parentX = parent.position.x || 0;
         let parentY = parent.position.y || 0;
-        let parentAlpha = parent.color.a || 1;
+        let parentAlpha = isNaN(parent.color.a) ? 1 : parent.color.a;
         childEntity.child.relativePosition = childEntity.child.relativePosition || {x: 0, y: 0, z: 0};
         childEntity.position.x =
           (Math.cos(parentRotation) * childEntity.child.relativePosition.x -

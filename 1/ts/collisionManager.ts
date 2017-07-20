@@ -28,8 +28,13 @@ interface CompoundPoly {
 
 const obj: any = {};
 
-export interface GeometryEntity extends RenderableEntity {
+export interface GeometryEntity {
   collisionShape?: Circle | Rectangle | Poly | CompoundPoly;
+  position: utils.Point;
+  dimensions: utils.Point;
+  scale?: number,
+  rotation?: number,
+  center?: utils.Point
 }
 
 export interface Entity extends GeometryEntity {
