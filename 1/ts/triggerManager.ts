@@ -1,6 +1,6 @@
 import {CheckEntity} from "./ces";
 import {Collision, Entity as CollidableEntity} from "./collisionManager";
-import {isPlayer} from "./playerManager";
+import {isPlayer, isPlayerParticle} from "./playerManager";
 
 import {CombinedEntity} from "./entity";
 
@@ -8,21 +8,26 @@ export interface Entity extends CollidableEntity {
   trigger: {
     action: () => void
     once?: boolean,
-    complete?: boolean
+    complete?: boolean,
+    coolDown?: number,
+    lastTriggered?: number
   }
 }
 export function isTrigger(entity: CombinedEntity): entity is Entity { return "trigger" in entity; }
 
 export function setup() {
   Collision.Subscribe((player, collidable, details) => {
-    if (isPlayer(player)) {
+    if (isPlayer(player) || isPlayerParticle(player)) {
       if (isTrigger(collidable)) {
         if (collidable.trigger.once) {
           if (!collidable.trigger.complete) {
             collidable.trigger.action();
           }
-        } else {
+        } else if (isNaN(collidable.trigger.coolDown) ||
+                   isNaN(collidable.trigger.lastTriggered) ||
+                   (details.time - collidable.trigger.lastTriggered) > collidable.trigger.coolDown) {
           collidable.trigger.action();
+          collidable.trigger.lastTriggered = details.time;
         }
         collidable.trigger.complete = true;
       }

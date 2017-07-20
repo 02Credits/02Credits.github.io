@@ -17,6 +17,7 @@ import * as particleManager from "./particleManager";
 import * as inputManager from "./inputManager";
 import * as parentManager from "./parentManager";
 import * as motionManager from "./motionManager";
+import * as noiseManager from "./noiseManager";
 
 webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "CharacterBody.png", "CharacterHead.png", "Foot.png", "DustGrey.png", "FlashFuzz.png", "OpaqueSmoke.png"]).then(async () => {
   await collisionManager.setup();
@@ -31,6 +32,7 @@ webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "Charact
   await inputManager.setup();
   await motionManager.setup();
   await parentManager.setup();
+  await noiseManager.setup();
 
   ces.addEntity({
     "position": {

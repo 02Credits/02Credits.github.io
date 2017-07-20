@@ -40,17 +40,19 @@ export function Setup() {
             "targetX": targetX,
             "targetY": targetY
           }
-        }
+        },
+        "coolDown": 1
       }
     })
   }
 
-  addWall(-15.625, 6.25, 3.125, -3.125);
-  addWall(-31.25, -25, 25, -25);
-  addWall(-25, 25, -18.75, -25);
-  addWall(-25, 25, 25, 18.75);
-  addWall(25, 31.25, 25, 6.25);
-  addWall(25, 31.25, -6.25, -25);
-  addCameraTrigger(31.25, 37.5, 6.25, -6.25, 75, 0);
-  addCameraTrigger(25, 31.25, 6.25, -6.25, 0, 0);
+  //Room 1
+  addWall(-15.625, 6.25, 3.125, -3.125); // Coffin
+  addWall(-31.25, -25, 25, -25);  // Left Wall
+  addWall(-25, 25, -18.75, -25);  // Bottom Wall
+  addWall(-25, 25, 25, 18.75);  // Top Wall
+  addWall(21.875, 28.125, 25, 6.25); // Top Right Wall
+  addWall(21.875, 28.125, -6.25, -25); // Bottom Right Wall
+  addCameraTrigger(31.25, 37.5, 6.25, -6.25, 75, 0); // Right Trigger
+  addCameraTrigger(25, 31.25, 6.25, -6.25, 0, 0); // Left Trigger
 }

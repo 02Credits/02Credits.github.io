@@ -122,7 +122,7 @@ function updatePlayer(entity: PlayerEntity, time: number) {
       if (input.KeyDown("s")) {
         delta.y -= 10;
       }
-
+      debugger;
       entity.rotation = utils.xyAngle(entity.velocity) + Math.PI / 2;
       let length = utils.length(delta);
       if (length != 0) {

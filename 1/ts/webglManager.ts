@@ -163,9 +163,12 @@ export async function Setup(texturePaths: string[]) {
     return true;
   });
 
-  Draw.Subscribe(() => {
+  Draw.Subscribe((time) => {
     clearCanvas(gl, canvas);
     setCameraUniforms(spriteProgram);
+    twgl.setUniforms(spriteProgram, {
+      u_time: time
+    });
     LightManager.UpdateLightSourceUniforms(spriteProgram);
     drawSprites(gl, spriteProgram, textures);
   });

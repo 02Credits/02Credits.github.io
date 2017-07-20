@@ -147,10 +147,10 @@ function getOverlap(e1: Entity, e2: Entity) {
   return result;
 }
 
-export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: utils.Point}>();
+export let Collision = new EventManager3<Entity, Entity, {depth: number, normal: utils.Point, time: number}>();
 
 export function setup() {
-  Update.Subscribe(() => {
+  Update.Subscribe((time) => {
     let collidables = ces.getEntities(isCollidable);
 
     for (let collider of collidables) {
@@ -158,7 +158,7 @@ export function setup() {
         if (collidable !== collider) {
           let result = getOverlap(collider, collidable);
           if (result !== null) {
-            Collision.Publish(collider, collidable, result);
+            Collision.Publish(collider, collidable, {...result, time: time});
           }
         }
       }

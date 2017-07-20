@@ -15,7 +15,11 @@ export function Setup() {
     "friction": 0.93,
     "restitution": 1.5,
     "lightIntensity": 0.2,
-    "enabled": false
+    "enabled": false,
+    "jittery": {
+      "amount": 0.3,
+      "speed": 0.1
+    }
   });
 
   ces.addEntity({

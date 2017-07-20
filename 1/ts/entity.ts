@@ -11,6 +11,7 @@ import {Entity as InterpolatedEntity} from "./interpolationManager";
 import {Entity as GeneratorEntity} from "./particleManager";
 import {Entity as MovingEntity} from "./motionManager";
 import {Entity as LightSourceEntity} from "./lightManager";
+import {Entity as JitteryEntity} from "./noiseManager";
 
 export type CombinedEntity =
   CameraManagerEntity |
@@ -25,4 +26,5 @@ export type CombinedEntity =
   InterpolatedEntity |
   GeneratorEntity |
   MovingEntity |
-  LightSourceEntity;
+  LightSourceEntity |
+  JitteryEntity;

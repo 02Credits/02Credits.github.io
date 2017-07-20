@@ -1,5 +1,5 @@
 import * as ces from "./ces";
-import {sub, mult, div, scale, shrink, flatten, Point} from "./utils";
+import {sum, sub, mult, div, scale, shrink, flatten, Point} from "./utils";
 import {isCamera} from "./cameraManager";
 import {canvasDimensions, visibleDimensions} from "./webglManager";
 
@@ -49,9 +49,10 @@ export function MouseState() {
   let mousePos: Point;
   if (visibleDimensions.x != 0) {
     // (mP - (vD * 0.5)) * (cD / canvasSize) * {1, -1, 0}
-    mousePos = flatten(mult(mult(
+    mousePos = sum(flatten(mult(mult(
       sub(mouseScreenPos, scale(visibleDimensions, 0.5)),
-      div(camera.dimensions, visibleDimensions)), {x: 1, y: -1, z: 0}));
+      div(camera.dimensions, visibleDimensions)), {x: 1, y: -1, z: 0})),
+                   camera.position);
     // console.log("test");
   } else {
     mousePos = {x: 0, y: 0, z: 0};
