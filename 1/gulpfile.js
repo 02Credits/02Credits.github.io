@@ -23,4 +23,4 @@ gulp.task('webpack', [], function () {
 });
 
 gulp.task('default', ['webpack']);
-gulp.task('dev', ['webpack-dev-server', 'webpack']);
+gulp.task('dev', ['webpack-dev-server']);

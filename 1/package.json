@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@types/noisejs": "^0.0.28",
+    "glsl-noise": "^0.0.0",
     "monkey-hot-loader": "^0.0.3",
     "noisejs": "^2.1.0",
     "pixi.js": "^4.5.3",
