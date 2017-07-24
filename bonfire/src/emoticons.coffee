@@ -286,6 +286,7 @@ define ["markov"], (markov) ->
     "Fug": "http://i.imgur.com/KkdXvZW.png"
     "PalmJo": "http://i.imgur.com/HzzHOP1.png"
     "ThrashHon": "http://i.imgur.com/ky2clQx.gif"
+    "Yee": "http://i.imgur.com/V1gcXUQ.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
