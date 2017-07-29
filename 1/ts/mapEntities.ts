@@ -20,9 +20,10 @@ export function Setup() {
     });
   }
 
-  function addCameraTrigger(left: number, right: number, top: number, bottom: number,
-                            targetX: number, targetY: number) {
+  function addCameraZone(left: number, right: number, top: number, bottom: number) {
     ces.addEntity({
+      "cameraZone": true,
+      "texture": "Wall.png",
       "position": {
         "x": (left + right) / 2,
         "y": (top + bottom) / 2,
@@ -33,15 +34,10 @@ export function Setup() {
         "y": top - bottom,
         "z": 0
       },
-      "collidable": true,
-      "trigger": {
-        "action": () => {
-          ces.getEntities(isCamera)[0].camera = {
-            "targetX": targetX,
-            "targetY": targetY
-          }
-        },
-        "coolDown": 1
+      "color": {
+        "r": 0,
+        "g": 1,
+        "b": 0
       }
     })
   }
@@ -53,6 +49,6 @@ export function Setup() {
   addWall(-25, 25, 25, 18.75);  // Top Wall
   addWall(21.875, 28.125, 25, 6.25); // Top Right Wall
   addWall(21.875, 28.125, -6.25, -25); // Bottom Right Wall
-  addCameraTrigger(31.25, 37.5, 6.25, -6.25, 75, 0); // Right Trigger
-  addCameraTrigger(25, 31.25, 6.25, -6.25, 0, 0); // Left Trigger
+  addCameraZone(-28.125, 28.125, 18.75, -18.75); // Left Trigger
+
 }

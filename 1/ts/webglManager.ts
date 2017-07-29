@@ -79,26 +79,29 @@ function clearCanvas(gl: WebGLRenderingContext, canvas: HTMLCanvasElement) {
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 }
 
-let spriteArrays: {[id: string]: {numComponents: number, data: number[]}} = {
-  a_coord: {numComponents: 2, data: new Array(400)},
-  a_position: {numComponents: 3, data: new Array(400)},
-  a_texcoord: {numComponents: 2, data: new Array(400)},
-  a_rotation: {numComponents: 1, data: new Array(400)},
-  a_dimensions: {numComponents: 2, data: new Array(400)},
-  a_center: {numComponents: 2, data: new Array(400)},
-  a_scale: {numComponents: 1, data: new Array(400)},
-  a_color: {numComponents: 4, data: new Array(400)},
-  indices: {numComponents: 3, data: new Array(400)}
-};
-
-function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo, textureInfo: ImageMapUtils.TextureInfo) {
+function drawSprites(gl: WebGLRenderingContext,
+                     spriteArrays: {[id: string]: {numComponents: number, data: Float32Array | Uint16Array, drawType: number}},
+                     spriteProgram: twgl.ProgramInfo,
+                     textureInfo: ImageMapUtils.TextureInfo,
+                     bufferInfo: twgl.BufferInfo) {
   gl.useProgram(spriteProgram.program)
   let renderables = ces.getEntities(isRenderable).sort((a, b) => (a.position.z || 0) - (b.position.z || 0));
 
   for (let id in spriteArrays) {
-    let expectedLength = renderables.length * spriteArrays[id].numComponents;
+    let expectedLength = 0;
+    if (id == "indices") {
+      expectedLength = renderables.length * spriteArrays[id].numComponents * 2;
+    } else {
+      expectedLength = renderables.length * spriteArrays[id].numComponents * 4;
+    }
+
     if (spriteArrays[id].data.length < expectedLength) {
-      spriteArrays[id].data = new Array(expectedLength);
+      console.log(expectedLength);
+      if (id == "indices") {
+        spriteArrays[id].data = new Uint16Array(expectedLength);
+      } else {
+        spriteArrays[id].data = new Float32Array(expectedLength);
+      }
     }
   }
 
@@ -128,7 +131,14 @@ function drawSprites(gl: WebGLRenderingContext, spriteProgram: twgl.ProgramInfo,
     index++;
   }
 
-  let bufferInfo = twgl.createBufferInfoFromArrays(gl, spriteArrays);
+  for (let id in spriteArrays) {
+    if (id != "indices") {
+      twgl.setAttribInfoBufferFromArray(gl, bufferInfo.attribs[id], spriteArrays[id]);
+    } else {
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferInfo.indices);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, spriteArrays[id].data, spriteArrays[id].drawType);
+    }
+  }
   twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
   twgl.drawBufferInfo(gl, gl.TRIANGLES, bufferInfo, renderables.length * 6);
 }
@@ -142,6 +152,20 @@ export async function Setup(texturePaths: string[]) {
 
   let textures = await ImageMapUtils.setupTextures(gl, basePath, texturePaths);
   let spriteProgram = twgl.createProgramInfo(gl, [spriteVert, spriteFrag]);
+
+  let spriteArrays: {[id: string]: {numComponents: number, data: Float32Array | Uint16Array, drawType: number}} = {
+    a_coord: {numComponents: 2, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_position: {numComponents: 3, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_texcoord: {numComponents: 2, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_rotation: {numComponents: 1, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_dimensions: {numComponents: 2, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_center: {numComponents: 2, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_scale: {numComponents: 1, data: new Float32Array(800), drawType: gl.DYNAMIC_DRAW},
+    a_color: {numComponents: 4, data: new Float32Array(400), drawType: gl.DYNAMIC_DRAW},
+    indices: {numComponents: 3, data: new Uint16Array(800), drawType: gl.DYNAMIC_DRAW}
+  };
+
+  let bufferInfo = twgl.createBufferInfoFromArrays(gl, spriteArrays);
 
   Init.Subscribe(() => {
     gl.useProgram(spriteProgram.program);
@@ -170,6 +194,6 @@ export async function Setup(texturePaths: string[]) {
       u_time: time
     });
     LightManager.UpdateLightSourceUniforms(spriteProgram);
-    drawSprites(gl, spriteProgram, textures);
+    drawSprites(gl, spriteArrays, spriteProgram, textures, bufferInfo);
   });
 }

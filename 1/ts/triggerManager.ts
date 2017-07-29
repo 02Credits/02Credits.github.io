@@ -9,8 +9,6 @@ export interface Entity extends CollidableEntity {
     action: () => void
     once?: boolean,
     complete?: boolean,
-    coolDown?: number,
-    lastTriggered?: number
   }
 }
 export function isTrigger(entity: CombinedEntity): entity is Entity { return "trigger" in entity; }
@@ -23,11 +21,8 @@ export function setup() {
           if (!collidable.trigger.complete) {
             collidable.trigger.action();
           }
-        } else if (isNaN(collidable.trigger.coolDown) ||
-                   isNaN(collidable.trigger.lastTriggered) ||
-                   (details.time - collidable.trigger.lastTriggered) > collidable.trigger.coolDown) {
+        } else {
           collidable.trigger.action();
-          collidable.trigger.lastTriggered = details.time;
         }
         collidable.trigger.complete = true;
       }

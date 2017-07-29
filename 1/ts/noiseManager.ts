@@ -104,6 +104,7 @@ const noise = new ClassicalNoise();
 
 export interface Entity {
   jittery: {
+    roughness: number,
     amount: number,
     speed: number
   },
@@ -115,12 +116,12 @@ export function setup() {
   Update.Subscribe((time) => {
     for (let jitteryEntity of ces.getEntities(isJittery)) {
       jitteryEntity.position.x += noise.compute(
-        jitteryEntity.position.x,
+        jitteryEntity.position.x * jitteryEntity.jittery.roughness,
         time * jitteryEntity.jittery.speed,
         0
       ) * jitteryEntity.jittery.amount;
       jitteryEntity.position.y += noise.compute(
-        jitteryEntity.position.y,
+        jitteryEntity.position.y * jitteryEntity.jittery.roughness,
         time * jitteryEntity.jittery.speed,
         1000
       ) * jitteryEntity.jittery.amount;

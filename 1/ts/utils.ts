@@ -8,7 +8,7 @@ export function absoluteMin(xs: number[]) {
   return currentMin;
 }
 
-export function spliceArray<T>(dest: T[], offset: number, data: T[]) {
+export function spliceArray(dest: Uint16Array | Float32Array, offset: number, data: number[]) {
   for (let i = 0; i < data.length; i++) {
     dest[offset + i] = data[i];
   }
@@ -177,7 +177,7 @@ export function castOnPolygon(rp: Point, rd: Point, poly: Polygon): Point | unde
   return closest;
 }
 
-export function spliceData(array: {numComponents: number, data: number[]}, entityIndex: number, data: number[]) {
+export function spliceData(array: {numComponents: number, data: Float32Array | Uint16Array}, entityIndex: number, data: number[]) {
   let expectedCount = array.numComponents * 4;
   for (let i = 0; i < expectedCount; i += data.length) {
     spliceArray(array.data, entityIndex * expectedCount + i, data);

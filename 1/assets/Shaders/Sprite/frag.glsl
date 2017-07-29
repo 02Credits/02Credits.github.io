@@ -4,9 +4,9 @@ precision highp float;
 
 uniform float u_map_dimensions;
 uniform sampler2D u_texmap;
-uniform vec2 u_light_position[16];
-uniform float u_light_intensity[16];
-uniform bool u_light_enabled[16];
+uniform vec2 u_light_position[100];
+uniform float u_light_intensity[100];
+uniform bool u_light_enabled[100];
 uniform float u_ambient_light;
 uniform float u_time;
 
@@ -19,7 +19,7 @@ const float PI = 3.1415926535897932384626433832795;
 void main() {
   float brightness = u_ambient_light;
 
-  for (int i = 0; i < 32; i++) {
+  for (int i = 0; i < 100; i++) {
     if (u_light_enabled[i]) {
       vec2 diff = v_world_pos - u_light_position[i];
       float dist = distance(v_world_pos, u_light_position[i]);
@@ -35,5 +35,5 @@ void main() {
     u_texmap,
     vec2(v_texcoord.s / u_map_dimensions, v_texcoord.t / u_map_dimensions)
   );
-  gl_FragColor = vec4(sampledColor.rgb * brightness, sampledColor.a * v_color.a);
+  gl_FragColor = vec4(sampledColor.rgb * brightness * v_color.rgb, sampledColor.a * v_color.a);
 }

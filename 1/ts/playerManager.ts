@@ -89,6 +89,7 @@ function updatePlayer(entity: PlayerEntity, time: number) {
       entity.velocity = utils.flatten(utils.average(effectingParticles.map(p => p.velocity)));
       entity.player.lastDashed = time;
       entity.enabled = true;
+      entity.rotation = utils.xyAngle(entity.velocity) + Math.PI / 2;
     }
   } else {
     let strengthLevel = (entity.player.particleCount - 5) / 25;
@@ -122,8 +123,20 @@ function updatePlayer(entity: PlayerEntity, time: number) {
       if (input.KeyDown("s")) {
         delta.y -= 10;
       }
-      debugger;
-      entity.rotation = utils.xyAngle(entity.velocity) + Math.PI / 2;
+      if (delta.x != 0 || delta.y != 0) {
+        let targetRotation = utils.xyAngle(delta) + Math.PI / 2;
+        let r = entity.rotation;
+        if (targetRotation >= r + Math.PI) {
+          r += Math.PI * 2;
+        } else {
+          if (targetRotation < (r - Math.PI)) {
+            targetRotation += Math.PI * 2;
+          }
+        }
+        let dr = targetRotation - r;
+        entity.rotation += dr * 0.2;
+        entity.rotation = entity.rotation % (Math.PI * 2)
+      }
       let length = utils.length(delta);
       if (length != 0) {
         delta = utils.shrink(delta, length);
@@ -160,6 +173,7 @@ function updatePlayerParticle(entity: PlayerParticle) {
 export function setup() {
   ces.EntityAdded.Subscribe((entity) => {
     if (isPlayer(entity)) {
+      entity.rotation = 0;
       entity.velocity = {x: 0, y: 0, z: 0};
       entity.player.walkAnimation = 0;
       entity.player.lastDashed = -Infinity;

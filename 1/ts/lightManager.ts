@@ -10,15 +10,15 @@ export interface Entity {
 export function isLightSource(entity: CombinedEntity): entity is Entity { return "lightIntensity" in entity; }
 
 let lightUniforms = {
-  u_light_position: new Array(32 * 2),
-  u_light_intensity: new Array(32),
-  u_light_enabled: new Array(32),
+  u_light_position: new Array(100 * 2),
+  u_light_intensity: new Array(100),
+  u_light_enabled: new Array(100),
   u_ambient_light: 0.2
 }
 
 export function UpdateLightSourceUniforms(spriteProgram: twgl.ProgramInfo) {
   let lightSources = ces.getEntities(isLightSource);
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 100; i++) {
     if (i < lightSources.length) {
       lightUniforms.u_light_enabled[i] = true;
       lightUniforms.u_light_intensity[i] = lightSources[i].lightIntensity;

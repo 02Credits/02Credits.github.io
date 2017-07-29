@@ -51,20 +51,6 @@ webglManager.Setup(["GroundDebugTexture.png", "Wall.png", "Player.png", "Charact
     }
   });
 
-  ces.addEntity({
-    "texture": "GroundDebugTexture.png",
-    "position": {
-      "x": 0,
-      "y": 0,
-      "z": -100000
-    },
-    "dimensions": {
-      "x": 100,
-      "y": 100,
-      "z": 0
-    }
-  });
-
   playerEntities.Setup();
   mapEntities.Setup();
 

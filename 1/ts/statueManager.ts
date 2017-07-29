@@ -115,7 +115,7 @@ export function setup() {
           targetDelta = utils.shrink(targetDelta, distance);
           let targetRotation = utils.xyAngle(targetDelta);
           let r = entity.rotation;
-          let dr = utils.absoluteMin([targetRotation - r, (targetRotation + (2 * Math.PI)) - r, (targetRotation - (2 * Math.PI)) - r]);
+          let dr = utils.absoluteMin([(targetRotation + (2 * Math.PI)) - (r + (2 * Math.PI)), (r + (2 * Math.PI)) - (targetRotation + (2 * Math.PI))]);
           if (time - statue.lastJumped > statue.timeBetweenJumps && Math.abs(dr) < 0.01) {
             statue.jumpState = {
               jumpTime: 0,

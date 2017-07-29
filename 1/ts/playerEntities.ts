@@ -14,9 +14,10 @@ export function Setup() {
     },
     "friction": 0.93,
     "restitution": 1.5,
-    "lightIntensity": 0.2,
+    "lightIntensity": 1/50,
     "enabled": false,
     "jittery": {
+      "roughness": 0.08,
       "amount": 0.3,
       "speed": 0.1
     }
@@ -88,7 +89,7 @@ export function Setup() {
       "stepSize": 1.4,
       "bodyWiggle": 0.3,
       "dashLength": 1.5,
-      "particleCount": 5,
+      "particleCount": 50,
       "particleBase": "playerParticleBase",
       "footBase": "playerFootBase"
     }

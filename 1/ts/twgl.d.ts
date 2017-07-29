@@ -8,6 +8,7 @@ declare namespace TWGL {
   function createTexture(gl: WebGLRenderingContext, options: TextureOptions, callback?: TextureReadyCallback): WebGLTexture;
   function createTextures(gl: WebGLRenderingContext, options: { [id: string]: TextureOptions }, callback?: TexturesReadyCallback): { [id: string]: WebGLTexture };
   function createFrameBufferInfo(gl: WebGLRenderingContext, attachments?: AttachmentOptions[], width?: number, height?: number): FramebufferInfo;
+  function setAttribInfoBufferFromArray(gl: WebGLRenderingContext, attribInfo: AttribInfo, array: ArraySpec, offset?: number);
 
   interface ProgramOptions {
     errorCallback: (err: any) => void;
@@ -54,7 +55,7 @@ declare namespace TWGL {
   type ArraySpec = number | number[] | ArrayBuffer | FullArraySpec;
 
   interface FullArraySpec {
-    data: number | number[] | ArrayBuffer;
+    data: number | number[] | Float32Array | Uint16Array | ArrayBuffer;
     numComponents?: number;
     "type"?: any;
     size?: number;
