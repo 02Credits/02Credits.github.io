@@ -1,5 +1,5 @@
 define ["mithril"], (m) ->
-  imageRegex = /.(?:jpg|gif|png|jpeg|bmp|JPG|GIF|PNG|JPEG|BMP)$/
+  imageRegex = /.(?:jpg|gif|png|jpeg|bmp|JPG|GIF|PNG|JPEG|BMP)(\?[^=]+=[^=](&[^=]+=[^=]+)*)?$/
   imageConfig = (element, isInitialized) ->
     if not isInitialized
       $(element).materialbox()

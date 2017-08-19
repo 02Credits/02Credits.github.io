@@ -2,7 +2,7 @@
 (function() {
   define(["mithril"], function(m) {
     var gfycatConfig, gfycatRegex, gifvRegex, imageConfig, imageRegex, imgurRegex, preventDrag, videoRegex, youtubeRegex;
-    imageRegex = /.(?:jpg|gif|png|jpeg|bmp|JPG|GIF|PNG|JPEG|BMP)$/;
+    imageRegex = /.(?:jpg|gif|png|jpeg|bmp|JPG|GIF|PNG|JPEG|BMP)(\?[^=]+=[^=](&[^=]+=[^=]+)*)?$/;
     imageConfig = function(element, isInitialized) {
       if (!isInitialized) {
         return $(element).materialbox();
