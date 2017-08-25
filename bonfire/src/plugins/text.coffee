@@ -2,7 +2,11 @@ define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linki
   renderText = (text, author, id) ->
     classText = if text.indexOf(">") == 0 then ".greentext" else ""
     if text.indexOf("<") != 0
-      text = linkify("#{text}")
+      text = linkify "#{text}",
+        format: (value, type) ->
+          if (type == 'url' && value.length > 50)
+            value = value.slice(0, 50) + '…';
+          return value
       if emoticons.singleEmoticon(text)
         return m ".emoticon", {
           style: {width: "100%", textAlign: "center"}

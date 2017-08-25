@@ -6,7 +6,14 @@
       var classText;
       classText = text.indexOf(">") === 0 ? ".greentext" : "";
       if (text.indexOf("<") !== 0) {
-        text = linkify("" + text);
+        text = linkify("" + text, {
+          format: function(value, type) {
+            if (type === 'url' && value.length > 50) {
+              value = value.slice(0, 50) + '…';
+            }
+            return value;
+          }
+        });
         if (emoticons.singleEmoticon(text)) {
           return m(".emoticon", {
             style: {
