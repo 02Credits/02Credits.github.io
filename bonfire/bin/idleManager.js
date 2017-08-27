@@ -2,7 +2,7 @@
 (function() {
   define(["jquery", "underscore", "pouchdbManager", "focusManager", "moment", "mithril", "arbiter"], function($, _, PouchDB, focusManager, moment, m, arbiter) {
     var lastSeen, remoteDB, render, renderUserList;
-    remoteDB = new PouchDB('http://uwhouse.ddns.net:5984/statuses');
+    remoteDB = new PouchDB('http://parentalunit.ddns.net:5984/statuses');
     render = function() {
       return remoteDB.allDocs({
         include_docs: true,

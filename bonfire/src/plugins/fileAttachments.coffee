@@ -1,5 +1,5 @@
 define ["mithril", "arbiter", "pouchdbManager"], (m, arbiter, PouchDB) ->
-  db = new PouchDB('http://uwhouse.ddns.net:5984/attachments')
+  db = new PouchDB('http://parentalunit.ddns.net:5984/attachments')
   name: "fileAttachments"
   parent: "text"
   position: "after"

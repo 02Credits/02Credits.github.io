@@ -2,7 +2,7 @@
 (function() {
   define(["pouchdbManager", "moment", "arbiter"], function(PouchDB, moment, arbiter) {
     var errorDB;
-    errorDB = new PouchDB('http://uwhouse.ddns.net:5984/errors');
+    errorDB = new PouchDB('http://parentalunit.ddns.net:5984/errors');
     console.log("errorLogger initialized");
     window.onerror = function(err) {
       return arbiter.publish("error", err);

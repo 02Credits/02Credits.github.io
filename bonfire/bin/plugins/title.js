@@ -9,12 +9,13 @@
         return (renderBefore(doc)).then(function(beforeChildren) {
           return (renderInner(doc)).then(function(innerChildren) {
             return (renderAfter(doc)).then(function(afterChildren) {
-              var editIcon;
+              var editIcon, titleClass;
               if (doc.author == null) {
                 doc.author = "error";
               }
+              titleClass = doc.fb ? ".card-title.fb-card-title" : ".card-title";
               editIcon = doc.edited ? m("i.material-icons.editIcon", "mode_edit") : null;
-              return [beforeChildren, m("span.card-title", [m.trust(doc.author), editIcon, innerChildren]), afterChildren];
+              return [beforeChildren, m("span" + titleClass, [m.trust(doc.author), editIcon, innerChildren]), afterChildren];
             });
           });
         });

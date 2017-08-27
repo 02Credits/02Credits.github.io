@@ -9,7 +9,7 @@ define ["jquery",
         "arbiter",
         "scrollManager"],
 ($, _, PouchDB, m, moment, collate, messageRenderer, inputManager, arbiter, scrollManager) ->
-  remoteDB = new PouchDB('http://uwhouse.ddns.net:5984/messages')
+  remoteDB = new PouchDB('http://parentalunit.ddns.net:5984/messages')
   localDB = new PouchDB('messages')
 
   currentDB = remoteDB

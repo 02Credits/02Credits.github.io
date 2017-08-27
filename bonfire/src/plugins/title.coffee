@@ -8,10 +8,11 @@ define ["mithril"], (m) ->
         (renderAfter doc).then (afterChildren) ->
           if !doc.author?
             doc.author = "error"
+          titleClass = if doc.fb then ".card-title.fb-card-title" else ".card-title"
           editIcon = if doc.edited then m "i.material-icons.editIcon", "mode_edit" else null
           [
             beforeChildren
-            m "span.card-title", [
+            m "span" + titleClass, [
               m.trust(doc.author)
               editIcon
               innerChildren

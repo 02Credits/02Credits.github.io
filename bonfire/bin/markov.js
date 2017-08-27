@@ -4,7 +4,7 @@
 
   define(["pouchdbManager", "arbiter"], function(PouchDB, arbiter) {
     var attempts, authorMappings, messages, pickWeighted, setupData, stepObject, tryGenerate;
-    messages = new PouchDB('http://uwhouse.ddns.net:5984/messages');
+    messages = new PouchDB('http://parentalunit.ddns.net:5984/messages');
     authorMappings = {
       Jonjo: ["JonJo"],
       Derek: ["Derek", "Daeryk", "Derk"],

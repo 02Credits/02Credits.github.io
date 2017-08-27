@@ -2,7 +2,7 @@
 (function() {
   define(["jquery", "underscore", "pouchdbManager", "mithril", "moment", "pouchdb-collate", "messageRenderer", "inputManager", "arbiter", "scrollManager"], function($, _, PouchDB, m, moment, collate, messageRenderer, inputManager, arbiter, scrollManager) {
     var caughtUp, currentDB, editPrimed, handleChange, localDB, primeQueries, remoteChanges, remoteDB, render, renderMessages, searchPrimed;
-    remoteDB = new PouchDB('http://uwhouse.ddns.net:5984/messages');
+    remoteDB = new PouchDB('http://parentalunit.ddns.net:5984/messages');
     localDB = new PouchDB('messages');
     currentDB = remoteDB;
     caughtUp = false;

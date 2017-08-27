@@ -1,6 +1,6 @@
 define ["pouchdbManager", "arbiter"],
 (PouchDB, arbiter) ->
-  messages = new PouchDB('http://uwhouse.ddns.net:5984/messages')
+  messages = new PouchDB('http://parentalunit.ddns.net:5984/messages')
 
   authorMappings =
     Jonjo: ["JonJo"]
