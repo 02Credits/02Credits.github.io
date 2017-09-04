@@ -189,7 +189,7 @@
       "RipKeith": "http://i.imgur.com/JEb2zrl.png",
       "BanePostCia": "http://i.imgur.com/TxZfAFh.png",
       "BanePostBane": "http://i.imgur.com/2tP8nq2.png",
-      "GoodShit": "http://emojipedia-us.s3.amazonaws.com/cache/4e/34/4e349487baad811746c02a09fcea0f56.png",
+      "GoodShit": "https://i.imgur.com/iDNM4pZ.jpg",
       "DankMemes": "http://i.imgur.com/TKbLBWy.png",
       "DankestMemes": "http://i.imgur.com/bXTDR2r.png",
       "200%Mad": "http://i.imgur.com/DuxEKjJ.png",
@@ -289,7 +289,9 @@
       "Fug": "http://i.imgur.com/KkdXvZW.png",
       "PalmJo": "http://i.imgur.com/HzzHOP1.png",
       "ThrashHon": "http://i.imgur.com/ky2clQx.gif",
-      "Yee": "http://i.imgur.com/V1gcXUQ.png"
+      "Yee": "http://i.imgur.com/V1gcXUQ.png",
+      "Derek": "https://i.imgur.com/iDNM4pZ.jpg",
+      "Derk": "https://i.imgur.com/iDNM4pZ.jpg"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",
