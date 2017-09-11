@@ -2,7 +2,7 @@ define ["jquery", "underscore",
         "pouchdbManager"
         "focusManager", "moment"
         "mithril", "arbiter"], ($, _, PouchDB, focusManager, moment, m, arbiter) ->
-  remoteDB = new PouchDB('http://parentalunit.ddns.net:5984/statuses')
+  remoteDB = new PouchDB('http://73.193.51.132:5984/statuses')
 
   render = ->
     remoteDB.allDocs

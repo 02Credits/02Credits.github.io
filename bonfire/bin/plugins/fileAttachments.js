@@ -2,7 +2,7 @@
 (function() {
   define(["mithril", "arbiter", "pouchdbManager"], function(m, arbiter, PouchDB) {
     var db;
-    db = new PouchDB('http://parentalunit.ddns.net:5984/attachments');
+    db = new PouchDB('http://73.193.51.132:5984/attachments');
     return {
       name: "fileAttachments",
       parent: "text",
