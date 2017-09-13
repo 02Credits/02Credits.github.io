@@ -13,6 +13,7 @@ define [
     "http://i.imgur.com/Dr9ekTi.gif",
     "http://i.imgur.com/DieNi7L.jpg",
     "http://i.imgur.com/a1epPuB.jpg",
+    "http://i.imgur.com/4ER9a4v.jpg"
     "http://i.imgur.com/DIl4w3p.gif",
     "http://i.imgur.com/cPwAnaL.jpg",
     "http://i.imgur.com/doHAiPD.jpg",
