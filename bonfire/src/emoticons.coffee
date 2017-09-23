@@ -289,6 +289,7 @@ define ["markov"], (markov) ->
     "Yee": "http://i.imgur.com/V1gcXUQ.png"
     "Derek": "https://i.imgur.com/iDNM4pZ.jpg"
     "Derk": "https://i.imgur.com/iDNM4pZ.jpg"
+    "HypeWizardHype": "https://i.imgur.com/RQGMdFS.gif"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
