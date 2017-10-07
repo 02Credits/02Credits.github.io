@@ -18,7 +18,8 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'bin')
+    path: path.resolve(__dirname, 'bin'),
+    publicPath: "bin"
   },
   node: {
     fs: 'empty'
