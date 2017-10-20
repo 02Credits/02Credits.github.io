@@ -2,9 +2,11 @@ import * as $ from "jquery";
 import * as _ from "underscore";
 import * as moment from "moment";
 import * as m from "mithril";
+
 import * as focusManager from "./focusManager";
 import * as errorLogger from "./errorLogger"
 import PouchDB from "./pouchdbManager";
+import { rerender } from "./uiRenderer";
 
 interface Status {
   name: string;
@@ -15,23 +17,22 @@ interface Status {
 
 var remoteDB = new PouchDB<Status>('http://73.193.51.132:5984/statuses');
 
-async function render() {
+export async function render() {
   try {
-  var results = await remoteDB.allDocs({
-    include_docs: true,
-    conflicts: false,
-    attachments: false,
-    binary: false,
-    descending: true
-  });
-    renderUserList(results.rows.map(row => row.doc));
+    var results = await remoteDB.allDocs({
+      include_docs: true,
+      conflicts: false,
+      attachments: false,
+      binary: false,
+      descending: true
+    });
+    return renderUserList(results.rows.map(row => row.doc));
   } catch (err) {
     errorLogger.handleError(err);
   }
 }
 
 async function renderUserList(userList: Status[]) {
-  var userListTag = $('#seen-user-list');
   var renderedUsers = [];
   for (var user of userList) {
     if (user.name != localStorage.displayName) {
@@ -65,7 +66,7 @@ async function renderUserList(userList: Status[]) {
       renderedUsers.push(m(".chip-wrapper", chipContents));
     }
   }
-  m.render(userListTag.get(0), renderedUsers);
+  return m("#seen-user-list", renderedUsers);
 }
 
 var lastSeen = moment();
@@ -80,7 +81,7 @@ $(document).ready(() => {
   })
 })
 
-setInterval(render, 1000);
+setInterval(rerender, 1000);
 setInterval(() => {
   remoteDB.upsert(localStorage.displayName, (doc) => {
     doc.name = localStorage.displayName;

@@ -57,7 +57,7 @@ function clickCard(card: string) {
   }
 }
 
-function render() {
+export function render() {
   var cardList = $('#card-list');
   $('body').click(closeCards);
   var renderedCards = [];
@@ -65,7 +65,7 @@ function render() {
     renderedCards.push(m("img.memeCard", {src: card, onclick: clickCard(card)}));
   }
 
-  m.render(cardList.get(0), renderedCards);
+  return m("#card-list", renderedCards);
 }
 
 render();

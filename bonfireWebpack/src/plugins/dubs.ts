@@ -29,7 +29,7 @@ var dubsPlugin: Plugin = {
       var newDubsString = "";
       var dubsChar = dubsString.charAt(dubsString.length - 1);
       var dubsList = dubsChar;
-      for (var i = dubsString.length - 2; i >= 0; i++) {
+      for (var i = dubsString.length - 2; i >= 0; i--) {
         var char = dubsString.charAt(i);
         if (char != dubsChar) {
           newDubsString = char + newDubsString;

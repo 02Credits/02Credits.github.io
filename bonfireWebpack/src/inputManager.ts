@@ -74,7 +74,7 @@ $(document).keydown((e: JQuery.Event<HTMLElement, null>) => {
   }
 });
 
-if (openDevTools != null && openDevTools != undefined) {
+if ("openDevTools" in window) {
   $('#dev-tools')
     .css("visibility", "visible")
     .click(openDevTools);

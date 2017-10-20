@@ -1,11 +1,9 @@
 import * as $ from "jquery";
+import * as m from "mithril";
 
-var nameInput = $("#displayName");
-var statusInput = $("#status");
+import {withKey} from "./utils";
 
-if ("displayName" in localStorage) {
-  nameInput.val(localStorage.displayName);
-} else {
+if (!("displayName" in localStorage)) {
   var dumbNames = [
       "Village Idiot",
       "Dirty Peasant",
@@ -13,15 +11,11 @@ if ("displayName" in localStorage) {
       "assfaggot"
     ];
   var randomIndex = Math.floor(Math.random() * dumbNames.length);
-  nameInput.val(dumbNames[randomIndex]);
   localStorage.displayName = dumbNames[randomIndex];
 }
 
-if ("status" in localStorage) {
-  statusInput.val(localStorage.status);
-} else {
+if (!("status" in localStorage)) {
   localStorage.status = "Breathing";
-  statusInput.val(localStorage.status);
 }
 
 var settingsInputs = $(".settings-input");
@@ -34,3 +28,31 @@ settingsInputs.keydown((e: any) => {
 settingsInputs.blur((e: any) => {
   localStorage[$(this).attr('id')] = $(this).val();
 });
+
+export function render() {
+  var devToolsButton = null;
+  if ("openDevTools" in window) {
+    devToolsButton = m("a#dev-tools.btn", "Open Dev Tools");
+  }
+
+  return m("#modal-content", [
+    m("h4", "Settings"),
+    m(".settings-row", [
+      m(".input", [
+        m("input#displayName.settings-input", {
+          onInput: m.withAttr("value", localStorage.displayName),
+          value: localStorage.displayName
+        }),
+        m("label", {for: "displayName"}, "Name")
+      ]),
+      m(".input", [
+        m("input#status.settings-input", {
+          onInput: m.withAttr("value", localStorage.status),
+          value: localStorage.status
+        }),
+        m("label", {for: "status"}, "Status")
+      ]),
+      devToolsButton
+    ])
+  ]);
+}

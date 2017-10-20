@@ -1,4 +1,3 @@
-require("./style.sass")
 require("./errorLogger");
 require("./chatCommands");
 require("./emoticons");

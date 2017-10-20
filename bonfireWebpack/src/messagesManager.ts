@@ -51,7 +51,6 @@ function primeQueries () {
     }).then(() => {
       if (!editPrimed) {
         editPrimed = true;
-        Materialize.toast("Edit Ready", 4000);
       }
     }).catch(errorLogger.handleError);
     localDB.search({
@@ -60,7 +59,6 @@ function primeQueries () {
     }).then(() => {
       if (!searchPrimed) {
         searchPrimed = true;
-        Materialize.toast("Search Ready", 4000);
       }
     }).catch(errorLogger.handleError);
   }
@@ -114,7 +112,6 @@ async function renderMessages (messages: Message[], preventCombining = false) {
     m.render($('#messages').get(0),
       m("div",
         renderedMessages));
-    $('.materialboxed').materialbox();
     MessagesRendered.Publish();
   });
 }
@@ -146,7 +143,6 @@ var remoteChanges = remoteDB.changes({
 
 localDB.sync(remoteDB)
   .then(() => {
-    $('.progress').fadeOut();
     caughtUp = true;
     primeQueries();
     localDB.sync(remoteDB, {
@@ -169,17 +165,14 @@ $('#input').prop('disabled', false);
 
 
 export function editMessage(id: string, text: string, skipMarkEdit: boolean) {
-  $('.progress').fadeIn();
   currentDB.get(id)
     .then((doc) => {
-      $('.progress').fadeOut();
       doc.text = text;
       if (!skipMarkEdit) {
         doc.edited = true;
       }
       currentDB.put(doc as any);
     }).catch((err) => {
-      $('.progress').fadeOut();
       errorLogger.handleError(err);
     });
 }
@@ -187,20 +180,16 @@ export function editMessage(id: string, text: string, skipMarkEdit: boolean) {
 export function search(query: string) {
   if (caughtUp) {
     renderMessages([]);
-    $('.progress').fadeIn();
     localDB.search({
       "query": query,
       "fields": ['text'],
       "include_docs": true
     }).then((results) => {
-      $('.progress').fadeOut();
       renderMessages(results.rows.reverse().map(row => row.doc), true);
     }).catch((err) => {
-      $('.progress').fadeOut();
       errorLogger.handleError(err);
     });
   } else {
-    Materialize.toast("Sync still in progress", 2000);
   }
 }
 
@@ -224,7 +213,6 @@ export function send(doc: Message) {
 
 export async function getLast(callback: (message: Message) => void) {
   if (caughtUp) {
-    $('.progress').fadeIn();
     try {
       var result = await currentDB.query("by_author", {
         "key": localStorage.displayName,
@@ -233,14 +221,11 @@ export async function getLast(callback: (message: Message) => void) {
         "descending": true
       });
 
-      $('.progress').fadeOut();
       callback(result.rows[0].doc as any as Message);
     } catch (err) {
-      $('.progress').fadeOut();
       errorLogger.handleError(err);
     }
   } else {
-    Materialize.toast("Sync still in progress", 2000);
   }
 }
 
