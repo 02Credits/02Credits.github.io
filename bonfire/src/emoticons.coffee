@@ -185,7 +185,7 @@ define ["markov"], (markov) ->
     "ShittersClogged" : "http://i.imgur.com/mawXVw5.png"
     "RipKeith" : "http://i.imgur.com/JEb2zrl.png"
     "BanePostCia" : "http://i.imgur.com/TxZfAFh.png"
-    "BanePostBane" : "http://i.imgur.com/2tP8nq2.png" # 3 shields applied as of 2016
+    "BanePostBane" : "http://i.imgur.com/2tP8nq2.png" # 6 shields applied as of 2017
     "GoodShit" : "https://i.imgur.com/i1rF9Mg.png"
     "DankMemes" : "http://i.imgur.com/TKbLBWy.png"
     "DankestMemes" : "http://i.imgur.com/bXTDR2r.png"
