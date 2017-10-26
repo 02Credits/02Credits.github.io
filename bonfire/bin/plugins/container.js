@@ -27,7 +27,7 @@
         return (renderBefore(doc)).then(function(beforeChildren) {
           return (renderInner(doc)).then(function(innerChildren) {
             return (renderAfter(doc)).then(function(afterChildren) {
-              return m(".message-container", {
+              return m(".message-container." + doc.author, {
                 key: doc["_id"]
               }, m(".message.blue-grey.lighten-5", {
                 ondblclick: function() {

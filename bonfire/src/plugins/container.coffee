@@ -16,7 +16,7 @@ define ["mithril", "arbiter", "linkify"], (m, arbiter, linkify) ->
     (renderBefore doc).then (beforeChildren) ->
       (renderInner doc).then (innerChildren) ->
         (renderAfter doc).then (afterChildren) ->
-          m ".message-container", { key: doc["_id"] },
+          m ".message-container." + doc.author, { key: doc["_id"] },
             m ".message.blue-grey.lighten-5",
             {
               ondblclick: ->
