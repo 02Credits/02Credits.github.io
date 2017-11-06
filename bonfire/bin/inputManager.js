@@ -14,8 +14,8 @@
     messageIdToReact = "";
     sendMessage = function() {
       var commandRegex, i, len, line, lines, possibleMatch, results, text;
-      text = input.val();
-      input.val('');
+      text = input.text();
+      input.text('');
       if (text !== "") {
         commandRegex = /^\\[^\s]+/;
         possibleMatch = text.match(commandRegex);
@@ -64,7 +64,7 @@
       trailing: false
     });
     editDoc = function(doc) {
-      input.val(doc.text);
+      input.text(doc.text);
       exportObject.editing = true;
       exportObject.searching = false;
       exportObject.reacting = false;
@@ -75,7 +75,7 @@
       return input.focus();
     };
     reactDoc = function(doc) {
-      input.val("");
+      input.text("");
       exportObject.reacting = true;
       exportObject.editing = false;
       exportObject.searching = false;
@@ -96,7 +96,7 @@
       input.removeClass("searching");
       input.removeClass("reacting");
       $('.progress').fadeOut();
-      input.val("");
+      input.text("");
       return arbiter.publish("messages/render");
     };
     $(document).keydown(function(e) {

@@ -13,8 +13,9 @@
           for (emoticon in ref) {
             users = ref[emoticon];
             if (users.length !== 0) {
-              reactions.push([
-                m.trust(emoticons.genEmoticon(emoticon)), m("span", {
+              reactions.push(m.trust(emoticons.genEmoticon(emoticon)));
+              if (users.length > 1) {
+                reactions.push(m("span", {
                   style: {
                     padding: "2px",
                     borderRadius: "5px",
@@ -22,8 +23,8 @@
                     backgroundColor: "rgb(236, 239, 241)",
                     boxShadow: "0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2)"
                   }
-                }, users.length.toString())
-              ]);
+                }, users.length.toString()));
+              }
             }
           }
         }

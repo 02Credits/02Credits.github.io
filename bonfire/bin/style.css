@@ -17062,10 +17062,12 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   border-style: none;
   margin: 15px;
   height: auto;
-  padding: 10px 0px 0px 15px;
+  padding: 10px 0px 10px 15px;
   width: 100%;
   transition: all 0.5s ease;
-  resize: none; }
+  resize: none;
+  outline: none;
+  white-space: pre-line; }
 
 .editing {
   border-color: orange !important;

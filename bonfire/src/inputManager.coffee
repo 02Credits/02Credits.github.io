@@ -17,8 +17,8 @@ define ["jquery",
   messageIdToReact = ""
 
   sendMessage = () ->
-    text = input.val()
-    input.val('')
+    text = input.text()
+    input.text('')
     if text != ""
       commandRegex = /^\\[^\s]+/
       possibleMatch = text.match commandRegex
@@ -48,7 +48,7 @@ define ["jquery",
   sendMessage = _.throttle(sendMessage, 1000, {trailing: false})
 
   editDoc = (doc) ->
-    input.val(doc.text)
+    input.text(doc.text)
     exportObject.editing = true
     exportObject.searching = false
     exportObject.reacting = false
@@ -59,7 +59,7 @@ define ["jquery",
     input.focus()
 
   reactDoc = (doc) ->
-    input.val ""
+    input.text ""
     exportObject.reacting = true
     exportObject.editing = false
     exportObject.searching = false
@@ -79,7 +79,7 @@ define ["jquery",
     input.removeClass "searching"
     input.removeClass "reacting"
     $('.progress').fadeOut()
-    input.val ""
+    input.text ""
     arbiter.publish("messages/render")
 
   $(document).keydown (e) ->
