@@ -6,6 +6,9 @@ define ["jquery",
 ($, _, arbiter, processCommand, emoticons) ->
   exportObject = {}
   input = $('#input')
+  hiddenDiv = $(document.createElement('div'))
+  hiddenDiv.addClass('hiddendiv')
+  $('body').append(hiddenDiv)
 
   exportObject.editing = false
   exportObject.searching = false
@@ -16,7 +19,6 @@ define ["jquery",
   sendMessage = () ->
     text = input.val()
     input.val('')
-
     if text != ""
       commandRegex = /^\\[^\s]+/
       possibleMatch = text.match commandRegex
@@ -36,7 +38,11 @@ define ["jquery",
       else if exportObject.searching
         arbiter.publish "messages/search", text
       else
-        arbiter.publish "messages/send", {text: text, author: localStorage.displayName}
+        lines = [text]
+        if not text.startsWith("<")
+          lines = text.split("\n")
+        for line in lines
+          arbiter.publish "messages/send", {text: line, author: localStorage.displayName}
     else
       clear()
   sendMessage = _.throttle(sendMessage, 1000, {trailing: false})
@@ -77,7 +83,7 @@ define ["jquery",
     arbiter.publish("messages/render")
 
   $(document).keydown (e) ->
-    if (e.which == 13)
+    if (e.which == 13 and not e.shiftKey)
       e.preventDefault()
       sendMessage()
     else if (e.which == 40)

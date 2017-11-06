@@ -245,7 +245,7 @@
         now = moment().utc();
         args.time = now.valueOf();
         args.messageNumber = (parseInt(lastDoc.messageNumber) + 1).toString();
-        idNumber = parseInt(args.messageNumber.toString() + args.time.toString());
+        idNumber = args.messageNumber.toString() + args.time.toString();
         args["_id"] = collate.toIndexableString(idNumber).replace(/\u0000/g, '\u0001');
         return currentDB.put(args);
       })["catch"](function(err) {

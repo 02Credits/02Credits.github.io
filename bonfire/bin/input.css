@@ -8535,10 +8535,11 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   border-radius: 2px;
   border-style: none;
   margin: 15px;
-  height: 40px;
-  padding: 0px 0px 0px 15px;
+  height: auto;
+  padding: 10px 0px 0px 15px;
   width: 100%;
-  transition: all 0.5s ease; }
+  transition: all 0.5s ease;
+  resize: none; }
 
 .editing {
   border-color: orange !important;
