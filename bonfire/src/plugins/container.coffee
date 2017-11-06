@@ -22,6 +22,9 @@ define ["mithril", "arbiter", "linkify"], (m, arbiter, linkify) ->
               ondblclick: ->
                 if not Array.isArray(doc.text)
                   arbiter.publish "messages/startEdit", doc._id
+              style: {
+                position: "relative"
+              }
             }, [
               beforeChildren
               m ".message-content.black-text",

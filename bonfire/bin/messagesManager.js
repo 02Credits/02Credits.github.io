@@ -182,6 +182,37 @@
         return $('.progress').fadeOut();
       });
     });
+    arbiter.subscribe("messages/react", function(args) {
+      var emoticon, id;
+      id = args.id;
+      emoticon = args.emoticon;
+      return currentDB.get(id).then(function(doc) {
+        var currentEmoticon, obj, ref, users;
+        if (doc.reactions != null) {
+          ref = doc.reactions;
+          for (currentEmoticon in ref) {
+            users = ref[currentEmoticon];
+            doc.reactions[currentEmoticon] = users.filter(function(name) {
+              return name !== localStorage.displayName;
+            });
+          }
+          if (doc.reactions[emoticon] != null) {
+            doc.reactions[emoticon].push(localStorage.displayName);
+          } else {
+            doc.reactions[emoticon] = [localStorage.displayName];
+          }
+        } else {
+          doc.reactions = (
+            obj = {},
+            obj["" + emoticon] = [localStorage.displayName],
+            obj
+          );
+        }
+        return currentDB.put(doc);
+      })["catch"](function(err) {
+        return arbiter.publish("error", err);
+      });
+    });
     arbiter.subscribe("messages/search", function(query) {
       if (caughtUp) {
         renderMessages([]);

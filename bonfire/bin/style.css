@@ -17076,6 +17076,11 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   border-width: 4px !important;
   border-style: solid !important; }
 
+.reacting {
+  border-color: green !important;
+  border-width: 4px !important;
+  border-style: solid !important; }
+
 .materialize-red.lighten-5 {
   background-color: #fdeaeb !important; }
 

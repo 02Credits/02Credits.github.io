@@ -294,7 +294,18 @@
       "Derk": "https://i.imgur.com/iDNM4pZ.jpg",
       "HypeWizardHype": "https://i.imgur.com/RQGMdFS.gif",
       "Franklin": "https://i.imgur.com/FmRkYEZ.png",
-      "Michael": "https://i.imgur.com/GbkyHDg.png"
+      "Michael": "https://i.imgur.com/GbkyHDg.png",
+      "Zero": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-zero_30-fe0f-20e3.png",
+      "One": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-one_31-fe0f-20e3.png",
+      "Two": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-two_32-fe0f-20e3.png",
+      "Three": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-three_33-fe0f-20e3.png",
+      "Four": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-four_34-fe0f-20e3.png",
+      "Five": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-five_35-fe0f-20e3.png",
+      "Six": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-six_36-fe0f-20e3.png",
+      "Seven": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-seven_37-fe0f-20e3.png",
+      "Eight": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-eight_38-fe0f-20e3.png",
+      "Nine": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-nine_39-fe0f-20e3.png",
+      "Ten": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-ten_1f51f.png"
     };
     textEmoticons = {
       "Denko": "(´・ω・｀)",

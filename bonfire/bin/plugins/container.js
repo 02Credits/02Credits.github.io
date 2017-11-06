@@ -34,6 +34,9 @@
                   if (!Array.isArray(doc.text)) {
                     return arbiter.publish("messages/startEdit", doc._id);
                   }
+                },
+                style: {
+                  position: "relative"
                 }
               }, [beforeChildren, m(".message-content.black-text", innerChildren), afterChildren]));
             });

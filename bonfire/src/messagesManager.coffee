@@ -159,6 +159,24 @@ define ["jquery",
       arbiter.publish "error", err
       $('.progress').fadeOut()
 
+  arbiter.subscribe "messages/react", (args) ->
+    id = args.id
+    emoticon = args.emoticon
+    currentDB.get(id)
+    .then (doc) ->
+      if doc.reactions?
+        for currentEmoticon, users of doc.reactions
+          doc.reactions[currentEmoticon] = users.filter((name) -> name != localStorage.displayName)
+        if doc.reactions[emoticon]?
+          doc.reactions[emoticon].push(localStorage.displayName)
+        else
+          doc.reactions[emoticon] = [localStorage.displayName]
+      else
+        doc.reactions = { "#{emoticon}": [localStorage.displayName]}
+      currentDB.put doc
+    .catch (err) ->
+      arbiter.publish "error", err
+
   arbiter.subscribe "messages/search", (query) ->
     if caughtUp
       renderMessages []

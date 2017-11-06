@@ -1,4 +1,4 @@
-define ["mithril"], (m) ->
+define ["mithril", "arbiter"], (m, arbiter) ->
   position: "before"
   name: "title"
   parent: "text"
@@ -12,7 +12,9 @@ define ["mithril"], (m) ->
           editIcon = if doc.edited then m "i.material-icons.editIcon", "mode_edit" else null
           [
             beforeChildren
-            m "span" + titleClass, [
+            m "span" + titleClass, {
+                ondblclick: -> arbiter.publish "messages/startReact", doc._id
+              }, [
               m.trust(doc.author)
               editIcon
               innerChildren

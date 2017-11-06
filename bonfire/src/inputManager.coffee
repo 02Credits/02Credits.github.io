@@ -1,14 +1,17 @@
 define ["jquery",
         "underscore",
         "arbiter",
-        "chatCommands"],
-($, _, arbiter, processCommand) ->
+        "chatCommands",
+        "emoticons"],
+($, _, arbiter, processCommand, emoticons) ->
   exportObject = {}
   input = $('#input')
 
   exportObject.editing = false
   exportObject.searching = false
+  exportObject.reacting = false
   messageIdToEdit = ""
+  messageIdToReact = ""
 
   sendMessage = () ->
     text = input.val()
@@ -22,11 +25,18 @@ define ["jquery",
       else if exportObject.editing
         arbiter.publish "messages/edit", {id: messageIdToEdit, text: text}
         input.removeClass "editing"
+        exportObject.editing = false
+      else if exportObject.reacting
+        if emoticons.emoticons[text]?
+          arbiter.publish "messages/react", {id: messageIdToReact, emoticon: text}
+        else
+          Materialize.toast("#{text} isn't an emoticon")
+        input.removeClass "reacting"
+        exportObject.reacting = false
       else if exportObject.searching
         arbiter.publish "messages/search", text
       else
         arbiter.publish "messages/send", {text: text, author: localStorage.displayName}
-      exportObject.editing = false
     else
       clear()
   sendMessage = _.throttle(sendMessage, 1000, {trailing: false})
@@ -35,9 +45,22 @@ define ["jquery",
     input.val(doc.text)
     exportObject.editing = true
     exportObject.searching = false
+    exportObject.reacting = false
     input.removeClass "searching"
+    input.removeClass "reacting"
     messageIdToEdit = doc._id
     input.addClass "editing"
+    input.focus()
+
+  reactDoc = (doc) ->
+    input.val ""
+    exportObject.reacting = true
+    exportObject.editing = false
+    exportObject.searching = false
+    input.removeClass "searching"
+    input.removeClass "editing"
+    messageIdToReact = doc._id
+    input.addClass "reacting"
     input.focus()
 
   clear = (e) ->
@@ -45,8 +68,10 @@ define ["jquery",
       e.preventDefault()
     exportObject.editing = false
     exportObject.searching = false
+    exportObject.reacting = false
     input.removeClass "editing"
     input.removeClass "searching"
+    input.removeClass "reacting"
     $('.progress').fadeOut()
     input.val ""
     arbiter.publish("messages/render")
@@ -79,5 +104,12 @@ define ["jquery",
       callback: (doc) ->
         if doc.author == localStorage.displayName
           editDoc doc
+
+  arbiter.subscribe "messages/startReact", (id) ->
+    arbiter.publish "messages/get",
+      id: id
+      callback: (doc) ->
+        if doc.author != localStorage.displayName
+          reactDoc doc
 
   exportObject

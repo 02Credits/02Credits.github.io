@@ -6,6 +6,7 @@ define [
   "plugins/images"
   "plugins/dubs"
   "plugins/imageAttachments"
-  "plugins/fileAttachments"
+  "plugins/fileAttachments",
+  "plugins/reactions"
   ], ->
     arguments

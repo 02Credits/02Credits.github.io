@@ -2,7 +2,7 @@
 (function() {
   define(["mithril", "arbiter", "linkify-string", "emoticons"], function(m, arbiter, linkify, emoticons) {
     var renderText;
-    renderText = function(text, author, id) {
+    renderText = function(text, author, id, children) {
       var classText;
       classText = text.indexOf(">") === 0 ? ".greentext" : "";
       if (text.indexOf("<") !== 0) {
@@ -32,31 +32,33 @@
         ondblclick: function() {
           return arbiter.publish("messages/startEdit", id);
         }
-      }, m.trust(text));
+      }, [m.trust(text), children]);
     };
     return {
       name: "text",
       parent: "container",
-      render: function(doc, renderBefore, renderAfter) {
+      render: function(doc, renderBefore, renderInner, renderAfter) {
         return (renderBefore(doc)).then(function(beforeChildren) {
-          return (renderAfter(doc)).then(function(afterChildren) {
-            var elements, i, len, ref, text;
-            if (doc.text != null) {
-              if (Array.isArray(doc.text)) {
-                elements = [beforeChildren];
-                ref = doc.text;
-                for (i = 0, len = ref.length; i < len; i++) {
-                  text = ref[i];
-                  elements.push(renderText(text.text, doc.author, text.id));
+          return (renderInner(doc)).then(function(innerChildren) {
+            return (renderAfter(doc)).then(function(afterChildren) {
+              var elements, i, len, ref, text;
+              if (doc.text != null) {
+                if (Array.isArray(doc.text)) {
+                  elements = [beforeChildren];
+                  ref = doc.text;
+                  for (i = 0, len = ref.length; i < len; i++) {
+                    text = ref[i];
+                    elements.push(renderText(text.text, doc.author, text.id, innerChildren));
+                  }
+                  elements.push(afterChildren);
+                  return elements;
+                } else {
+                  return [beforeChildren, renderText(doc.text, doc.author, doc._id), afterChildren];
                 }
-                elements.push(afterChildren);
-                return elements;
               } else {
-                return [beforeChildren, renderText(doc.text, doc.author, doc._id), afterChildren];
+                return [beforeChildren, afterChildren];
               }
-            } else {
-              return [beforeChildren, afterChildren];
-            }
+            });
           });
         });
       }
