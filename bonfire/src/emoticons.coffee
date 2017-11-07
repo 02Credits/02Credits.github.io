@@ -303,6 +303,8 @@ define ["markov"], (markov) ->
     "Eight": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-eight_38-fe0f-20e3.png"
     "Nine": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-digit-nine_39-fe0f-20e3.png"
     "Ten": "https://emojipedia-us.s3.amazonaws.com/thumbs/72/facebook/111/keycap-ten_1f51f.png"
+    "WojackCry": "https://i.imgur.com/Hq9Bw02.png"
+    "(:D)": "https://i.imgur.com/cS6so1h.png"
   textEmoticons =
     "Denko": "(´・ω・｀)"
     "Lenny": "( ͡° ͜ʖ ͡°)"
