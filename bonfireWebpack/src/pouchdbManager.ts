@@ -1,6 +1,8 @@
-import PouchDB from "pouchdb";
+import * as PouchDB from "pouchdb";
 
-PouchDB.plugin(require('pouchdb-quick-search'));
-PouchDB.plugin(require('pouchdb-upsert'));
+var pouchdb = require("pouchdb").default;
 
-export default PouchDB;
+pouchdb.plugin(require('pouchdb-quick-search'));
+pouchdb.plugin(require('pouchdb-upsert'));
+
+export default pouchdb as PouchDB.Static;

@@ -4,7 +4,6 @@ import * as moment from "moment";
 import * as m from "mithril";
 
 import * as focusManager from "./focusManager";
-import * as errorLogger from "./errorLogger"
 import PouchDB from "./pouchdbManager";
 import { rerender } from "./uiRenderer";
 
@@ -18,18 +17,14 @@ interface Status {
 var remoteDB = new PouchDB<Status>('http://73.193.51.132:5984/statuses');
 
 export async function render() {
-  try {
-    var results = await remoteDB.allDocs({
-      include_docs: true,
-      conflicts: false,
-      attachments: false,
-      binary: false,
-      descending: true
-    });
-    return renderUserList(results.rows.map(row => row.doc));
-  } catch (err) {
-    errorLogger.handleError(err);
-  }
+  var results = await remoteDB.allDocs({
+    include_docs: true,
+    conflicts: false,
+    attachments: false,
+    binary: false,
+    descending: true
+  });
+  return renderUserList(results.rows.map(row => row.doc));
 }
 
 async function renderUserList(userList: Status[]) {
@@ -89,5 +84,5 @@ setInterval(() => {
     doc.lastConnected = moment().utc().valueOf();
     doc.status = localStorage.status;
     return doc;
-  }).catch((err) => errorLogger.handleError);
+  });
 }, 10000);

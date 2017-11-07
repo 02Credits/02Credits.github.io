@@ -1,9 +1,10 @@
 import * as m from "mithril";
-import linkify from "linkifyjs";
 import * as emoticons from "../emoticons";
 import * as inputManager from "../inputManager";
 import * as messagesManager from "../messagesManager";
 import { Plugin } from "../messageRenderer";
+
+var linkify = require('linkifyjs/html') as Linkify.LinkifyHTMLInstance;
 
 function renderText(text: string, author: string, id: string) {
   var classText = text.indexOf(">") == 0 ? ".greentext" : "";

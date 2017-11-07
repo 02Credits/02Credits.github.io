@@ -1,7 +1,8 @@
-import linkify from "linkifyjs";
 import * as m from "mithril";
 import * as inputManager from "../inputManager";
 import { Plugin } from "../messageRenderer";
+
+var linkify: Linkify.LinkifyInstance = require('linkify');
 
 var containerPlugin: Plugin  = {
   name: "container",

@@ -1,13 +1,3 @@
-require("./errorLogger");
-require("./chatCommands");
-require("./emoticons");
-require("./plugins");
-require("./messageRenderer");
-require("./messagesManager");
-require("./scrollManager");
-require("./uiSetup");
-require("./inputManager");
-require("./idleManager");
-require("./settings");
-require("./fileCache");
-require("./fileManager");
+import "./uiRenderer";
+
+import "./style.sass";

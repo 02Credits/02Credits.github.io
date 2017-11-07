@@ -1,6 +1,5 @@
 import * as _ from "underscore";
 import pluginsList from "./plugins";
-import * as errorLogger from "./errorLogger"
 import { Message } from "./messagesManager";
 import * as m from "mithril";
 
@@ -37,7 +36,7 @@ for (var plugin of plugins) {
 
 for (var plugin of plugins) {
   if (!(plugin.parent in pluginDirectory) && plugin.parent != "root") {
-    errorLogger.handleError("nonexistant plugin parent " + plugin.parent);
+    throw "nonexistant plugin parent " + plugin.parent;
   } else if (plugin != root) {
     var parent = pluginDirectory[plugin.parent];
     if ("position" in parent) {

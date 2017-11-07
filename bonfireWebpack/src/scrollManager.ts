@@ -59,8 +59,11 @@ export function scrollIfStuck() {
   }
 }
 
-setInterval(scrollIfStuck, 100);
-scrollElement.scroll(scrollIfStuck);
+export function onScroll() {
+  scrollIfStuck();
+}
+
+// setInterval(scrollIfStuck, 100);
 
 export var lastTouchY = 0;
 function touchShim(e: TouchEvent) {

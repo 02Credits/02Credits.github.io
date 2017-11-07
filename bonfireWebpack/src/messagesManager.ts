@@ -7,7 +7,6 @@ import * as inputManager from "./inputManager";
 import PouchDB from "./pouchdbManager";
 import * as scrollManager from "./scrollManager";
 import * as messageRenderer from "./messageRenderer";
-import * as errorLogger from "./errorLogger";
 import { EventManager0 } from "./eventManager";
 
 import {EventManager1, EventManager3} from "./eventManager";
@@ -52,7 +51,7 @@ function primeQueries () {
       if (!editPrimed) {
         editPrimed = true;
       }
-    }).catch(errorLogger.handleError);
+    });
     localDB.search({
       fields: ['text'],
       build: true
@@ -60,7 +59,7 @@ function primeQueries () {
       if (!searchPrimed) {
         searchPrimed = true;
       }
-    }).catch(errorLogger.handleError);
+    });
   }
 }
 
@@ -128,7 +127,7 @@ export function render () {
       startkey: "_design"
     }).then((results) => {
       renderMessages(results.rows.reverse().map(row => row.doc));
-    }).catch(errorLogger.handleError);
+    });
   }
 }
 
@@ -139,7 +138,6 @@ var remoteChanges = remoteDB.changes({
   "live": true,
   "include_docs": true
 }).on('change', handleChange)
-  .on('error', errorLogger.handleError);
 
 localDB.sync(remoteDB)
   .then(() => {
@@ -148,18 +146,17 @@ localDB.sync(remoteDB)
     localDB.sync(remoteDB, {
       live: true,
       retry: true
-    }).on('error', errorLogger.handleError);
+    });
 
     localDB.changes({
       "since": 'now',
       "live": true,
       "include_docs": true
     }).on('change', handleChange)
-      .on('error', errorLogger.handleError);
 
     remoteChanges.cancel();
     currentDB = localDB;
-  }).catch(errorLogger.handleError);
+  });
 
 $('#input').prop('disabled', false);
 
@@ -172,8 +169,6 @@ export function editMessage(id: string, text: string, skipMarkEdit: boolean) {
         doc.edited = true;
       }
       currentDB.put(doc as any);
-    }).catch((err) => {
-      errorLogger.handleError(err);
     });
 }
 
@@ -186,8 +181,6 @@ export function search(query: string) {
       "include_docs": true
     }).then((results) => {
       renderMessages(results.rows.reverse().map(row => row.doc), true);
-    }).catch((err) => {
-      errorLogger.handleError(err);
     });
   } else {
   }
@@ -208,23 +201,19 @@ export function send(doc: Message) {
     var idNumber = parseInt(doc.messageNumber.toString() + doc.time.toString());
     doc["_id"] = collate.toIndexableString(idNumber).replace(/\u000/g, '\u0001');
     currentDB.put(doc);
-  }).catch(errorLogger.handleError);
+  });
 }
 
 export async function getLast(callback: (message: Message) => void) {
   if (caughtUp) {
-    try {
-      var result = await currentDB.query("by_author", {
-        "key": localStorage.displayName,
-        "limit": 1,
-        "include_docs": true,
-        "descending": true
-      });
+    var result = await currentDB.query("by_author", {
+      "key": localStorage.displayName,
+      "limit": 1,
+      "include_docs": true,
+      "descending": true
+    });
 
-      callback(result.rows[0].doc as any as Message);
-    } catch (err) {
-      errorLogger.handleError(err);
-    }
+    callback(result.rows[0].doc as any as Message);
   } else {
   }
 }
