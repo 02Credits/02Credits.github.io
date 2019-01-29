@@ -1,2 +1,2 @@
-build: ok clean; parcel build src/index.html --public-url ./bonfire/dist/
+build: ok clean; parcel build src/index.html --public-url ./
 clean: rm dist -for -rec
