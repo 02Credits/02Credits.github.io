@@ -12,7 +12,7 @@ import "./settings"
 import "./fileCache"
 import "./fileManager"
 import "./markov"
-import "./style.sass"
 import "./materialize.scss"
+import "./style.sass"
 
 window.baseTitle = "Bonfire"
