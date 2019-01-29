@@ -32,7 +32,8 @@ sendMessage = () ->
       if emoticons.emoticons[text]?
         arbiter.publish "messages/react", {id: messageIdToReact, emoticon: text}
       else
-        Materialize.toast("#{text} isn't an emoticon")
+        Materialize.toast
+          html: "#{text} isn't an emoticon"
       input.removeClass "reacting"
       exportObject.reacting = false
     else if exportObject.searching

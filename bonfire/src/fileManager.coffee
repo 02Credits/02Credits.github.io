@@ -58,7 +58,9 @@ div.ondrop = (e) ->
           arbiter.publish 'messages/send', {text: result.data.link, author: localStorage.displayName}
           $('.progress').fadeOut()
         error: () ->
-          Materialize.toast("Image URL Upload Failed", 4000)
+          Materialize.toast
+            html: "Image URL Upload Failed"
+            displayLength: 4000
           $('.progress').fadeOut()
     else
       if e.dataTransfer.files.length != 0

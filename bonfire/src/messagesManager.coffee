@@ -33,7 +33,9 @@ primeQueries = () ->
     .then () ->
       if not editPrimed
         editPrimed = true
-        materialize.toast("Edit Ready", 4000)
+        materialize.toast
+          html: "Edit Ready"
+          displayLength: 4000
     .catch (err) ->
       arbiter.publish "error", err
     localDB.search
@@ -42,7 +44,9 @@ primeQueries = () ->
     .then () ->
       if not searchPrimed
         searchPrimed = true
-        materialize.toast("Search Ready", 4000)
+        materialize.toast
+          html: "Search Ready"
+          displayLength: 4000
     .catch (err) ->
       arbiter.publish "error", err
 
@@ -193,7 +197,8 @@ arbiter.subscribe "messages/search", (query) ->
       arbiter.publish "error", err
       $('.progress').fadeOut()
   else
-    materialize.toast("Sync still in progress")
+    materialize.toast
+      html: "Sync still in progress"
 
 arbiter.subscribe "messages/send", (args) ->
   currentDB.allDocs
@@ -227,7 +232,8 @@ arbiter.subscribe "messages/getLast", (callback) ->
       $('.progress').fadeOut()
       arbiter.publish "error", err
   else
-    materialize.toast("Sync still in progress")
+    materialize.toast
+      html: "Sync still in progress"
 
 arbiter.subscribe "messages/get", (args) ->
   id = args.id
