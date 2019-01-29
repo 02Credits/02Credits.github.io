@@ -2,7 +2,7 @@ define ["pouchdbManager",
         "moment",
         "arbiter"],
 (PouchDB, moment, arbiter) ->
-  errorDB = new PouchDB('http://73.193.51.132:5984/errors')
+  errorDB = new PouchDB('http://02credits.ddns.net:5984/errors')
 
   console.log "errorLogger initialized"
 

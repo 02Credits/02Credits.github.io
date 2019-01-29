@@ -2,7 +2,7 @@
 (function() {
   define(["arbiter", "pouchdbManager"], function(arbiter, PouchDB) {
     var currentSize, db, fileMap, idQueue, maxSize;
-    db = new PouchDB('http://73.193.51.132:5984/attachments');
+    db = new PouchDB('http://02credits.ddns.net:5984/attachments');
     // 15 * 10 megs or 150 megs
     maxSize = 15 * 1000 * 1000 * 10;
     currentSize = 0;

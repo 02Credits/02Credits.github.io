@@ -1,11 +1,10 @@
 define ["pouchdbManager", "arbiter"],
 (PouchDB, arbiter) ->
-  messages = new PouchDB('http://73.193.51.132:5984/messages')
+  messages = new PouchDB('http://02credits.ddns.net:5984/messages')
 
   authorMappings =
     Jonjo: ["JonJo"]
     Derek: ["Derek", "Daeryk", "Derk"]
-    Honry: ["Honry", "Henry", "Eri", "Honri"]
     Keith: ["Keith", "Keith Surface", "Keith Test", "Keith Mobile"]
 
   stepObject = (obj) ->

@@ -2,7 +2,7 @@
 (function() {
   define(["jquery", "arbiter", "pouchdbManager", "moment"], function($, arbiter, PouchDB, moment) {
     var db, div, uploadFiles;
-    db = new PouchDB('http://73.193.51.132:5984/attachments');
+    db = new PouchDB('http://02credits.ddns.net:5984/attachments');
     div = document.getElementById('content');
     div.ondragenter = div.ondragover = function(e) {
       e.preventDefault();

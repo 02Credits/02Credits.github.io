@@ -1,5 +1,5 @@
 define ["jquery", "arbiter", "pouchdbManager", "moment"], ($, arbiter, PouchDB, moment) ->
-  db = new PouchDB('http://73.193.51.132:5984/attachments')
+  db = new PouchDB('http://02credits.ddns.net:5984/attachments')
   div = document.getElementById('content')
   div.ondragenter = div.ondragover = (e) ->
     e.preventDefault()
