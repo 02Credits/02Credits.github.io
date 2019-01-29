@@ -3,6 +3,8 @@
     "@types/express": "^4.0.37"
   },
   "dependencies": {
-    "@types/socket.io-client": "^1.4.30"
+    "@types/socket.io-client": "^1.4.30",
+    "coffee": "^5.2.1",
+    "node-sass": "^4.11.0"
   }
 }
