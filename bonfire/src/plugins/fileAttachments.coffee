@@ -1,5 +1,10 @@
-define ["mithril", "arbiter", "pouchdbManager"], (m, arbiter, PouchDB) ->
-  db = new PouchDB('http://02credits.ddns.net:5984/attachments')
+import m from "mithril"
+import arbiter from "promissory-arbiter"
+import PouchDB from "pouchdb"
+
+db = new PouchDB('http://02credits.ddns.net:5984/attachments')
+
+export default
   name: "fileAttachments"
   parent: "text"
   position: "after"

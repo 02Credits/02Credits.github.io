@@ -1,4 +1,7 @@
-define ["mithril", "arbiter"], (m, arbiter) ->
+import m from "mithril"
+import arbiter from "promissory-arbiter"
+
+export default
   position: "before"
   name: "title"
   parent: "text"
@@ -10,7 +13,7 @@ define ["mithril", "arbiter"], (m, arbiter) ->
             doc.author = "error"
           titleClass = if doc.fb then ".card-title.fb-card-title" else ".card-title"
           editIcon = if doc.edited then m "i.material-icons.editIcon", "mode_edit" else null
-          [
+          m "div", [
             beforeChildren
             m "span" + titleClass, {
                 ondblclick: -> arbiter.publish "messages/startReact", doc._id

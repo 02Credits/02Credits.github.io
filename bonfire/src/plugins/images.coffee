@@ -1,19 +1,21 @@
-define ["mithril"], (m) ->
-  imageRegex = /\.(?:jpg|gif|png|jpeg|bmp|JPG|GIF|PNG|JPEG|BMP)(?:\?[^=&]+=[^=&]+(?:&[^=&]+=[^=&]+)*)?$/
-  imageConfig = (element, isInitialized) ->
-    if not isInitialized
-      $(element).materialbox()
-  imgurRegex = /https?:\/\/(i\.)?imgur\.com\/(gallery\/)?(.*?)(?:[#\/].*|$)/
-  gfycatRegex = /(?:^https?:\/\/gfycat.com\/)/
-  gfycatConfig = (element, isInitialized) ->
-    if not isInitialized
-      new gfyObject(element).init()
-  gifvRegex = /.(?:gifv|GIFV)$/
-  videoRegex = /.webm|.wmv|.mp4$/
-  youtubeRegex = /(?:(?:https?:\/\/www\.youtube\.com\/watch\?v=)|(?:^https?:\/\/youtu.be\/))([^#\&\?]*)(?:\?t=(\d+h)?(\d+m)?(\d+s)?)?/
+import m from "mithril"
 
-  preventDrag = (event) => event.preventDefault()
+imageRegex = /\.(?:jpg|gif|png|jpeg|bmp|JPG|GIF|PNG|JPEG|BMP)(?:\?[^=&]+=[^=&]+(?:&[^=&]+=[^=&]+)*)?$/
+imageConfig = (element, isInitialized) ->
+  if not isInitialized
+    $(element).materialbox()
+imgurRegex = /https?:\/\/(i\.)?imgur\.com\/(gallery\/)?(.*?)(?:[#\/].*|$)/
+gfycatRegex = /(?:^https?:\/\/gfycat.com\/)/
+gfycatConfig = (element, isInitialized) ->
+  if not isInitialized
+    new gfyObject(element).init()
+gifvRegex = /.(?:gifv|GIFV)$/
+videoRegex = /.webm|.wmv|.mp4$/
+youtubeRegex = /(?:(?:https?:\/\/www\.youtube\.com\/watch\?v=)|(?:^https?:\/\/youtu.be\/))([^#\&\?]*)(?:\?t=(\d+h)?(\d+m)?(\d+s)?)?/
 
+preventDrag = (event) => event.preventDefault()
+
+export default
   name: "images"
   parent: "container"
   position: "before"

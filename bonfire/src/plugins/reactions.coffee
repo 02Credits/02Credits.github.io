@@ -1,4 +1,9 @@
-define ["mithril", "arbiter", "linkify-string", "emoticons"], (m, arbiter, linkify, emoticons) ->
+import m from "mithril"
+import arbiter from "promissory-arbiter"
+import linkify from "linkifyjs/string"
+import emoticons from "../emoticons"
+
+export default
   name: "reactions"
   parent: "container"
   position: "after"

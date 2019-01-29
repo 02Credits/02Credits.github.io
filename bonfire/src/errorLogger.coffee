@@ -1,17 +1,18 @@
-define ["pouchdbManager",
-        "moment",
-        "arbiter"],
-(PouchDB, moment, arbiter) ->
-  errorDB = new PouchDB('http://02credits.ddns.net:5984/errors')
+require "./pouchdbManager"
+import PouchDB from "pouchdb"
+import moment from "moment"
+import arbiter from "promissory-arbiter"
 
-  console.log "errorLogger initialized"
+errorDB = new PouchDB('http://02credits.ddns.net:5984/errors')
 
-  window.onerror = (err) ->
-    arbiter.publish "error", err
+console.log "errorLogger initialized"
 
-  arbiter.subscribe "error", (information) ->
-    console.log information
-    errorDB.put
-      "_id": moment().utc().valueOf().toString()
-      "user": localStorage.displayName
-      "information": information
+window.onerror = (err) ->
+  arbiter.publish "error", err
+
+arbiter.subscribe "error", (information) ->
+  console.log information
+  errorDB.put
+    "_id": moment().utc().valueOf().toString()
+    "user": localStorage.displayName
+    "information": information

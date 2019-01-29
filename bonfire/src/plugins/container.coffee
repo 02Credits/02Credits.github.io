@@ -1,4 +1,8 @@
-define ["mithril", "arbiter", "linkify"], (m, arbiter, linkify) ->
+import m from "mithril"
+import arbiter from "promissory-arbiter"
+import * as linkify from "linkifyjs"
+
+export default
   name: "container"
   parent: "root"
   render: (doc, renderBefore, renderInner, renderAfter) ->

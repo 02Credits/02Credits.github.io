@@ -1,4 +1,7 @@
-define ["mithril", "moment"], (m, moment) ->
+import m from "mithril"
+import moment from "moment"
+
+export default
   position: "after"
   name: "time"
   parent: "title"

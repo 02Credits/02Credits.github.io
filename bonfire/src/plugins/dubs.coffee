@@ -1,4 +1,8 @@
-define ["mithril", "moment", "jquery"], (m, moment, $) ->
+import m from "mithril"
+import moment from "moment"
+import $ from "jquery"
+
+export default
   position: "inner"
   name: "dubs"
   parent: "time"

@@ -1,4 +1,2 @@
-compile: ok coffee; ok sass
-coffee: coffee -o ./bin -c ./src
-sass: node-sass ./src --output ./bin
-add: git add *
+build: ok clean; parcel build src/index.html
+clean: rm dist -for -rec
