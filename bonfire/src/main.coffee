@@ -1,8 +1,6 @@
 import "./errorLogger"
 import "./chatCommands"
 import "./emoticons"
-import "./plugins"
-import "./messageRenderer"
 import "./messagesManager"
 import "./scrollManager"
 import "./uiSetup"

@@ -5,7 +5,7 @@ import PouchDB from "pouchdb"
 import * as collate from "pouchdb-collate"
 import moment from "moment"
 import arbiter from "promissory-arbiter"
-import messageRenderer from "./messageRenderer"
+import messageRenderer from "./plugins/message"
 import inputManager from "./inputManager"
 import scrollManager from "./scrollManager"
 import materialize from "materialize-css"
@@ -99,7 +99,7 @@ renderMessages = (messages, preventCombining) ->
 
   messagePromises = []
   for message in groupedMessages
-    renderedMessage = messageRenderer.render(message.doc)
+    renderedMessage = messageRenderer(message.doc)
     if renderedMessage?
       messagePromises.push(renderedMessage)
   (Promise.all messagePromises).then (renderedMessages) ->
