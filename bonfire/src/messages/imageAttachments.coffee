@@ -19,7 +19,8 @@ export default
                 doc.imageAttachments.push fileData.attachment.data
               arbiter.unsubscribe id
               resolve()
-    await Promise.all(thenables)
+      await Promise.all(thenables)
   render: (context) ->
-    for imageAttachment in imageAttachments
-      m "img.materialboxed", {src: URL.createObjectURL(imageAttachment)}
+    if context.imageAttachments?
+      for imageAttachment in context.imageAttachments
+        m "img.materialboxed", {src: URL.createObjectURL(imageAttachment)}

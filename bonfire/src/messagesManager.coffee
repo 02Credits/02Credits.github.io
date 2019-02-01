@@ -5,7 +5,7 @@ import PouchDB from "pouchdb"
 import * as collate from "pouchdb-collate"
 import moment from "moment"
 import arbiter from "promissory-arbiter"
-import messageContainer from "./messages/container"
+import container from "./messages/container"
 import inputManager from "./inputManager"
 import scrollManager from "./scrollManager"
 import materialize from "materialize-css"
@@ -99,12 +99,10 @@ renderMessages = (messages, preventCombining) ->
 
   messagePromises = []
   for message in groupedMessages
-    renderedMessage = messageRenderer(message.doc)
-    if renderedMessage?
-      messagePromises.push(renderedMessage)
+    messagePromises.push container.buildContext(message.doc)
   (Promise.all messagePromises).then () ->
     m.render $('#messages').get(0),
-      m "div", container.render message for message in groupedMessages
+      m "div", container.render message.doc for message in groupedMessages
     materialize.AutoInit();
     arbiter.publish("messages/rendered")
 
