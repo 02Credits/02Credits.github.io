@@ -1,3 +1,4 @@
+import "babel-polyfill"
 import "./errorLogger"
 import "./chatCommands"
 import "./emoticons"
@@ -10,6 +11,7 @@ import "./settings"
 import "./fileCache"
 import "./fileManager"
 import "./markov"
+
 import "./materialize.scss"
 import "./style.sass"
 
