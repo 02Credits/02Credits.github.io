@@ -1,3 +1,3 @@
-build: ok clean; parcel build src/index.html
-dev: ok clean; parcel src/index.html
+build: ok clean; parcel build src/index.html --public-url / --open
+dev: ok clean; parcel src/index.html --public-url / --open
 clean: rm dist -for -rec
