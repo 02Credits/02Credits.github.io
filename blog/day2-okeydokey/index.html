@@ -75,16 +75,16 @@ arguments in this version of the tool to make that portion paramaterized.</p>
 project.json files to find the scripts in those files and add them to the list.
 I think this is an added complexity I don't need right now, and I only used it
 once anyway, so for now I am ommiting it for simplicity.</p>
-<h1 id="the-code">The Code</h1>
+<h1 id="dotpeek">dotPeek</h1>
 <p>I'll be using the free and wonderful
 <a href="https://www.jetbrains.com/decompiler/">dotPeek</a> from
 <a href="https://www.jetbrains.com/">JetBrains</a> to decompile my binary and recover a
 version of the source code used to create the tool. Decompiling was as simple as
 pointing dotPeek at the folder containing my compiled tool, expanding the entry
 with the name of my tool, and double clicking on Program.cs.</p>
-<p><img src="./dotPeek.png" alt="dotPeek" /></p>
+<p><img src="http://02credits.com/blog/day2-okeydokey/dotPeek.png" alt="dotPeek" /></p>
 <p>After a brief moment, this code popped up in an eerily visual studios like editor:</p>
-<p><img src="./decompiled.png" alt="decompiled" /></p>
+<p><img src="http://02credits.com/blog/day2-okeydokey/decompiled.png" alt="decompiled" /></p>
 <p>The decompiled source in its entirety can be found
 <a href="https://gist.github.com/Kethku/ee982b01ef4ef022da3522b28e3997ad">here</a>. I would
 say the decompiler does an... alright job. It does some strange things to
