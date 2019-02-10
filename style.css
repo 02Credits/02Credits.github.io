@@ -1,0 +1,27 @@
+h1, h2, h3, p, date, ul {
+    font-family: 'Roboto', sans-serif;
+    line-height: 160%;
+}
+
+h1, h2, h3, p, date, pre, ul {
+    max-width: 8.5in;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+}
+
+pre {
+    padding: 25px;
+}
+
+a {
+    color: #36e !important;
+}
+
+a:visited {
+    color: #36e !important;
+}
