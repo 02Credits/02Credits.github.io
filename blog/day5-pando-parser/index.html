@@ -179,7 +179,6 @@ handled simply with <code>map!</code>. <code>unwrap_or</code> is used to provide
 the parser would have returned None.</p>
 <pre style="background-color:#2b303b;">
 <span style="color:#65737e;">// fn optional_dependency_list(input: CompleteStr) -&gt; Option&lt;Vec&lt;&amp;str&gt;&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">map!(opt!(complete!(delimited!(</span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">char</span><span style="color:#c0c5ce;">!(&#39;</span><span style="color:#a3be8c;">[</span><span style="color:#c0c5ce;">&#39;),</span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">separated_list!(</span><span style="color:#b48ead;">char</span><span style="color:#c0c5ce;">!(&#39;</span><span style="color:#a3be8c;">,</span><span style="color:#c0c5ce;">&#39;), map!(is_not!(&quot;</span><span style="color:#a3be8c;">,]</span><span style="color:#c0c5ce;">&quot;), |</span><span style="color:#bf616a;">dep</span><span style="color:#c0c5ce;">| dep.</span><span style="color:#96b5b4;">trim</span><span style="color:#c0c5ce;">())),</span><span style="color:#c0c5ce;">
