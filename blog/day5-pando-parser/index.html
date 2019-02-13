@@ -50,7 +50,7 @@ the file format.</p>
 <a href="../day4-pando/">Pando</a> for more details) there are 3 parts of a todo item: the
 status bullet, the identifier, and the dependencies list. We will implement
 parsers for each. We will then combine the combinators in a future post.</p>
-<h2 id="todo-status">Todo Status</h2>
+<h2 id="status">Status</h2>
 <pre style="background-color:#2b303b;">
 <span style="color:#c0c5ce;">- Command Line [ IP, DG ]</span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">^</span><span style="color:#c0c5ce;">
@@ -92,7 +92,7 @@ The type parameters specify the expected input and output types.</p>
 to be parsed, <code>O</code> is the output of the combinator, and <code>E</code> is the nom error
 type. So in the case of the test we expect an empty string remaining, and the
 enum value.</p>
-<h2 id="todo-identifier">Todo Identifier</h2>
+<h2 id="identifier">Identifier</h2>
 <pre style="background-color:#2b303b;">
 <span style="color:#c0c5ce;">- Command Line [ IP, DG ]</span><span style="color:#c0c5ce;">
 </span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">^^^^^^^^^^^^</span><span style="color:#c0c5ce;">
