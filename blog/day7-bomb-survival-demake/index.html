@@ -53,7 +53,7 @@ while still being easy enough to build without much infrastructure. An example
 of one of my implementations can be found on the
 <a href="https://www.lexaloffle.com/bbs/?tid=3546">Pico-8</a> forums.</p>
 <p>Fast forward to a couple weeks ago when I learned about
-<a href="https://script-8.github.io/">script-8</a> a fantasy console in the same vein as
+<a href="https://script-8.github.io/">SCRIPT-8</a> a fantasy console in the same vein as
 Pico-8 but written in JavaScript and containing a fascinating editor with time
 travel and easy game sharing. The project seems not to have gotten a lot of love
 online yet, so I decided to try my hand at building a game with it. Naturally I
@@ -63,8 +63,8 @@ most naturally for a resource constrained destructible terrain game is a pixel
 based system. I will go into further detail about how to implement such a system
 later. Suffice it to say that we need some way to query the engine for what color
 a given pixel is.</p>
-<p>Unfortunately script-8 doesn't currently have an API to do this. So for today's
-daily post I delved into the source code for script-8 and made a PR to add the
+<p>Unfortunately SCRIPT-8 doesn't currently have an API to do this. So for today's
+daily post I delved into the source code for SCRIPT-8 and made a PR to add the
 functions I needed. Along the way I will highlight some things I've learned
 about how to effectively work with open source projects.</p>
 <h2 id="first-contact">First Contact</h2>
@@ -72,7 +72,7 @@ about how to effectively work with open source projects.</p>
 some pixel API changes. I tried hard to communicate clearly exactly what I was
 thinking of changing, why I wanted to change it, and that I was completely
 willing to build and own the feature. That last piece is crucial for small
-projects with a friendly main developer. Gabriel, the author of script-8 showed
+projects with a friendly main developer. Gabriel, the author of SCRIPT-8 showed
 that he was very willing to merge PR's from people other than himself, so
 offering to contribute was very likely to open doors. The issue I created can be
 found <a href="https://github.com/script-8/script-8.github.io/issues/187">here</a>.</p>
@@ -96,7 +96,7 @@ the project page.</p>
 <p>After forking its generally a good idea to look for instructions for how to get
 a development build of the project working on your machine. Many projects have
 these instructions in the root level README however some hide them in the GitHub
-wiki or docs. In the case of script-8 I found them at the bottom of the
+wiki or docs. In the case of SCRIPT-8 I found them at the bottom of the
 <a href="https://github.com/script-8/script-8.github.io/blob/f037aaf6baae69724ed3e190413b09c4d65f766b/README.md">README</a>.</p>
 <h2 id="stumbles">Stumbles</h2>
 <p>Unfortunately after cloning, installing the correct dependencies, and running
@@ -193,7 +193,7 @@ embarrased to continue.</p>
 project I scan files trying to understand their patterns and formatting style.
 Programmers feel strongly about coding style. They are much more likely to merge
 a PR if the code feels like something they would have written.</p>
-<p>In the case of script-8, the author tends to omit semicolons (brave), use <code>let</code>
+<p>In the case of SCRIPT-8, the author tends to omit semicolons (brave), use <code>let</code>
 for variable declarations (awesome), and use es6 module style (even more
 awesome). I tried to keep these things in mind while making my changes.</p>
 <h2 id="finishing-it-up">Finishing it Up</h2>
