@@ -1,0 +1,193 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=false">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    
+    <title>02Credits 
+
+Keith&#x27;s Blog
+</title>
+  </head>
+  <body>
+    <header>
+      <h3>
+
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;">02Credits</a>
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;">Keith&#x27;s Blog</a>
+
+</h3>
+    </header>
+    <main>
+      
+<article>
+  <h1>Day8 - Pando Abbreviations</h1>
+  <summary>
+    
+      <h3>Resolving abbreviations in the Pando file format</h3>
+    
+    
+      <p>2019-02-14</p>
+    
+  </summary>
+  <p><img src="./output.svg" alt="Output" /></p>
+<p>Short day today, so instead of completing the DOT generator as I had planned, I
+split the task into two parts; the Abbreviation Resolver and the Generator
+itself. Today I am tackling the Abbreviation Resolver.</p>
+<p>The Pando format <a href="../day4-pando/">specification</a> has a quality of life feature
+which allows the user to specify dependencies as abbreviations of the full
+dependency name. To make the problem tractable, I defined the abbreviation as a
+camel case concatenation of one or more prefixes of words in an identifier. Read
+further in the <a href="../day4-pando/">specification</a> post.</p>
+<p>Implementing the abbreviation resolution was an interesting tour of Rust's
+string and iterator functions.</p>
+<h2 id="splitting">Splitting</h2>
+<p>Since each of the identifiers and abbreviations are compared pairwise, we need
+functions to split both of them. Identifiers are split on spaces. Easy enough.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">split_identifier</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">identifier</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">) -&gt; Vec&lt;String&gt; {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">identifier.</span><span style="color:#96b5b4;">split</span><span style="color:#c0c5ce;">(&quot; &quot;).</span><span style="color:#96b5b4;">map</span><span style="color:#c0c5ce;">(|</span><span style="color:#bf616a;">part</span><span style="color:#c0c5ce;">| part.</span><span style="color:#96b5b4;">to_lowercase</span><span style="color:#c0c5ce;">()).</span><span style="color:#96b5b4;">collect</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">identifier_split_works</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(</span><span style="color:#96b5b4;">split_identifier</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Specify Format</span><span style="color:#c0c5ce;">&quot;), vec![&quot;</span><span style="color:#a3be8c;">specify</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">format</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(</span><span style="color:#96b5b4;">split_identifier</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">DOJ Appointment</span><span style="color:#c0c5ce;">&quot;), vec![&quot;</span><span style="color:#a3be8c;">doj</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">appointment</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>Note: I force the identifier words to lowercase for easier comparison down the
+line.</p>
+<p>Splitting the abbreviations was somewhat more complicated. The idea is to split
+the abbreviation into sections that start with a capital letter. So <code>SF</code> would
+split into <code>s</code> and <code>f</code> and <code>DotA</code> would split into <code>dot</code> and <code>a</code>. Similar to the
+identifiers, I also lowercase the resulting components for easier matching.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">split_abbreviation</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">abbreviation</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">) -&gt; Vec&lt;String&gt; {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let mut</span><span style="color:#c0c5ce;"> parts = Vec::new();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> remainder = abbreviation.</span><span style="color:#96b5b4;">chars</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">fold</span><span style="color:#c0c5ce;">(String::new(), |</span><span style="color:#b48ead;">mut </span><span style="color:#bf616a;">current</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">character</span><span style="color:#c0c5ce;">| {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> character.</span><span style="color:#96b5b4;">is_uppercase</span><span style="color:#c0c5ce;">() &amp;&amp; current.</span><span style="color:#96b5b4;">len</span><span style="color:#c0c5ce;">() != </span><span style="color:#d08770;">0 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                </span><span style="color:#c0c5ce;">parts.</span><span style="color:#96b5b4;">push</span><span style="color:#c0c5ce;">(current);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                </span><span style="color:#c0c5ce;">character.</span><span style="color:#96b5b4;">to_string</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">} </span><span style="color:#b48ead;">else </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                </span><span style="color:#c0c5ce;">current.</span><span style="color:#96b5b4;">push</span><span style="color:#c0c5ce;">(character);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                </span><span style="color:#c0c5ce;">current</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">});</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">!remainder.</span><span style="color:#96b5b4;">is_empty</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">parts.</span><span style="color:#96b5b4;">push</span><span style="color:#c0c5ce;">(remainder);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">parts.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">map</span><span style="color:#c0c5ce;">(|</span><span style="color:#bf616a;">part</span><span style="color:#c0c5ce;">| part.</span><span style="color:#96b5b4;">to_lowercase</span><span style="color:#c0c5ce;">()).</span><span style="color:#96b5b4;">collect</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">abbreviation_split_works</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(</span><span style="color:#96b5b4;">split_abbreviation</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">DotA</span><span style="color:#c0c5ce;">&quot;), vec![&quot;</span><span style="color:#a3be8c;">dot</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">a</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>Not super complicated. The majority of the calculation can be done in a fold
+iteration where the accumulate is the current string being built up. When a new
+capital letter is found, we push it into the parts vector that gets captured in
+the iteration closure.</p>
+<p>Finally as cleanup, we add the remainder to the parts if it isn't empty, and
+return the lowercase versions of the parts.</p>
+<h2 id="matching">Matching</h2>
+<p>Once we have a clean way to split the identifiers and abbreviations, determining
+if a given abbreviation is a match for an identifier is fairly simple.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">abbreviation_matches</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">identifier</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">abbreviation</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">) -&gt; </span><span style="color:#b48ead;">bool </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> identifier_words = </span><span style="color:#96b5b4;">split_identifier</span><span style="color:#c0c5ce;">(identifier);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> abbreviation_parts = </span><span style="color:#96b5b4;">split_abbreviation</span><span style="color:#c0c5ce;">(abbreviation);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> identifier_words.</span><span style="color:#96b5b4;">len</span><span style="color:#c0c5ce;">() != abbreviation_parts.</span><span style="color:#96b5b4;">len</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">return </span><span style="color:#d08770;">false</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let mut</span><span style="color:#c0c5ce;"> pairs = abbreviation_parts.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">zip</span><span style="color:#c0c5ce;">(identifier_words.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">());</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">pairs.</span><span style="color:#96b5b4;">all</span><span style="color:#c0c5ce;">(|(</span><span style="color:#bf616a;">abbreviation_part</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">identifier_word</span><span style="color:#c0c5ce;">)| identifier_word.</span><span style="color:#96b5b4;">starts_with</span><span style="color:#c0c5ce;">(abbreviation_part))</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">abbreviation_matches_works</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert!(</span><span style="color:#96b5b4;">abbreviation_matches</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Implement Parser</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">IP</span><span style="color:#c0c5ce;">&quot;));</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert!(!</span><span style="color:#96b5b4;">abbreviation_matches</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">DOT Generator</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">IP</span><span style="color:#c0c5ce;">&quot;));</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert!(</span><span style="color:#96b5b4;">abbreviation_matches</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">DOJ Appointment</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">DojA</span><span style="color:#c0c5ce;">&quot;));</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert!(!</span><span style="color:#96b5b4;">abbreviation_matches</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">DOJ Appointment</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">Doj</span><span style="color:#c0c5ce;">&quot;));</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>If there are different numbers of identifier words or abbreviation parts,
+clearly we don't have a match. Otherwise I pair up the abbreviation parts with
+the identifier words and check if all of the abbreviation parts are prefixes of
+the identifier words. If any are not, the match fails.</p>
+<h2 id="building-the-lookup">Building the Lookup</h2>
+<p>Hooking it all together, we would like to cache these results in reverse
+direction, so that each task has a list of tasks that depend on it. DOT files
+specify dependencies from the dependency to the dependent task because that is
+the direction we want the arrows to point.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">resolve_dependent_tasks</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">tasks</span><span style="color:#c0c5ce;">: Vec&lt;Todo&gt;) -&gt; Option&lt;HashMap&lt;String, Vec&lt;String&gt;&gt;&gt; {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let mut</span><span style="color:#c0c5ce;"> dependent_tasks = HashMap::new();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> task in tasks.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">dependent_tasks.</span><span style="color:#96b5b4;">insert</span><span style="color:#c0c5ce;">(task.identifier.</span><span style="color:#96b5b4;">clone</span><span style="color:#c0c5ce;">(), Vec::new());</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> task in tasks.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> dependency_abbreviation in task.dependencies.</span><span style="color:#96b5b4;">clone</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> tasks.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">find</span><span style="color:#c0c5ce;">(|</span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">| </span><span style="color:#96b5b4;">abbreviation_matches</span><span style="color:#c0c5ce;">(&amp;task.identifier, &amp;dependency_abbreviation)) {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                </span><span style="color:#c0c5ce;">Some(dependency) =&gt; dependent_tasks</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                    </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">entry</span><span style="color:#c0c5ce;">(dependency.identifier.</span><span style="color:#96b5b4;">clone</span><span style="color:#c0c5ce;">())</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                    </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">and_modify</span><span style="color:#c0c5ce;">(|</span><span style="color:#bf616a;">dependent_tasks</span><span style="color:#c0c5ce;">| dependent_tasks.</span><span style="color:#96b5b4;">push</span><span style="color:#c0c5ce;">(task.identifier.</span><span style="color:#96b5b4;">clone</span><span style="color:#c0c5ce;">())),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">                </span><span style="color:#c0c5ce;">None =&gt; </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">None</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">};</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">Some(dependent_tasks)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">abbreviation_resolution_works</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> resolved_abbreviations = </span><span style="color:#96b5b4;">resolve_dependent_tasks</span><span style="color:#c0c5ce;">(vec![</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Completed, &quot;</span><span style="color:#a3be8c;">Brainstorm</span><span style="color:#c0c5ce;">&quot;, vec![]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::InProgress, &quot;</span><span style="color:#a3be8c;">Specify Format</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">B</span><span style="color:#c0c5ce;">&quot;]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Waiting, &quot;</span><span style="color:#a3be8c;">Implement Parser</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">SF</span><span style="color:#c0c5ce;">&quot;]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Waiting, &quot;</span><span style="color:#a3be8c;">DOT Generator</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">B</span><span style="color:#c0c5ce;">&quot;]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Waiting, &quot;</span><span style="color:#a3be8c;">Command Line</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">IP</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">DG</span><span style="color:#c0c5ce;">&quot;])</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">]).</span><span style="color:#96b5b4;">unwrap</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(resolved_abbreviations[&quot;</span><span style="color:#a3be8c;">Brainstorm</span><span style="color:#c0c5ce;">&quot;], vec![&quot;</span><span style="color:#a3be8c;">Specify Format</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">DOT Generator</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(resolved_abbreviations[&quot;</span><span style="color:#a3be8c;">Specify Format</span><span style="color:#c0c5ce;">&quot;], vec![&quot;</span><span style="color:#a3be8c;">Implement Parser</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(resolved_abbreviations[&quot;</span><span style="color:#a3be8c;">Implement Parser</span><span style="color:#c0c5ce;">&quot;], vec![&quot;</span><span style="color:#a3be8c;">Command Line</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(resolved_abbreviations[&quot;</span><span style="color:#a3be8c;">DOT Generator</span><span style="color:#c0c5ce;">&quot;], vec![&quot;</span><span style="color:#a3be8c;">Command Line</span><span style="color:#c0c5ce;">&quot;]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert!(resolved_abbreviations.[&quot;</span><span style="color:#a3be8c;">Command Line</span><span style="color:#c0c5ce;">&quot;].</span><span style="color:#96b5b4;">is_empty</span><span style="color:#c0c5ce;">());</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>I construct a dependent task lookup, add empty collections for each identifier,
+and loop over each of the tasks. Then for each abbreviation in a given task, I
+find the matching task, and add an entry in the correct list. The <code>entry</code>
+function is a very clean way to to modify an entry in the <code>HashMap</code> while
+iterating over it. Since it is guaranteed for the tasks to already have entries
+in the <code>HashMap</code> from the first loop, I use <code>and_modify</code> without a default and
+throw away the entry object.</p>
+<p>I return an option from this function so that if any of the abbreviations don't
+have a matching identifier, we can track that failure.</p>
+<p>That about wraps it up. This was the hardest portion of the DOT file generator,
+so next time it will be some simple string interpolation and we should be able
+to produce an end to end execution. On the home stretch for V1 of Pando!</p>
+<p>Till tomorrow,<br />
+Keith</p>
+
+</article>
+
+    </main>
+  </body>
+</html>
