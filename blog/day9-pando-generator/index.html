@@ -1,0 +1,191 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=false">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    
+    <title>02Credits 
+
+Keith&#x27;s Blog
+</title>
+  </head>
+  <body>
+    <header>
+      <h3>
+
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;">02Credits</a>
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;">Keith&#x27;s Blog</a>
+
+</h3>
+    </header>
+    <main>
+      
+<article>
+  <h1>Day9 - Pando Generator</h1>
+  <summary>
+    
+      <h3>Generating DOT files</h3>
+    
+    
+      <p>2019-02-15</p>
+    
+  </summary>
+  <p><img src="./todo.svg" alt="Todo" /></p>
+<p>Todo I finished the generator code in Pando for the DOT files. Don't have a lot
+of time today, so I will just jump right into the changes.</p>
+<p>Code generation is much simpler than parsing, but in general a similar approach
+works well. I build up generators for the individual components of the file
+format and compose them into larger and larger parts.</p>
+<h2 id="node-definitions">Node Definitions</h2>
+<p>The smallest portion of the file DOT file format is the formatting information
+for each node in the graph. In our case I have 3 formats, one for each of the
+task statuses I support.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_task_formatting</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: &amp;Todo) -&gt; String {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> task.status {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">TaskStatus::Completed =&gt;</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">format!(&quot;</span><span style="color:#a3be8c;">&lt;&lt;font color=&#39;gray&#39;&gt;</span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;"> &lt;br/&gt; &lt;i&gt;Complete&lt;/i&gt;&lt;/font&gt;&gt;, color=</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">gray</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#c0c5ce;">&quot;, task.identifier),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">TaskStatus::InProgress =&gt;</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">format!(&quot;</span><span style="color:#a3be8c;">&lt;</span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;"> &lt;br/&gt; &lt;i&gt;In Progress&lt;/i&gt;&gt;</span><span style="color:#c0c5ce;">&quot;, task.identifier),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">TaskStatus::Waiting =&gt;</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">format!(&quot;</span><span style="color:#a3be8c;">&lt;</span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">&gt;</span><span style="color:#c0c5ce;">&quot;, task.identifier)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>I use the <code>format!</code> macro to provide the unchanging structure, and fill in the
+name for each of the status options. I then wrap the formatting into a full
+statement like so:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_task_definition</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">: &amp;Todo) -&gt; String {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">format!(&quot;</span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">[label=</span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">];</span><span style="color:#c0c5ce;">&quot;, </span><span style="color:#96b5b4;">generate_identifier_variable</span><span style="color:#c0c5ce;">(&amp;task.identifier), </span><span style="color:#96b5b4;">generate_task_formatting</span><span style="color:#c0c5ce;">(task))</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>Each node definition has an identifier and the formatting. I create the
+identifier by removing the spaces from the task name.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_identifier_variable</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">identifier</span><span style="color:#c0c5ce;">: &amp;String) -&gt; String {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">identifier.</span><span style="color:#96b5b4;">replace</span><span style="color:#c0c5ce;">(&quot; &quot;, &quot;&quot;)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>Note even though this is a very small method, I still pulled it out in case the
+identifier variable needed to change for whatever reason. By pulling this code
+into it's own section I am able to change all of the instances in one place.</p>
+<p>Finally we can build the entire definition list like so:</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_definitions</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">tasks</span><span style="color:#c0c5ce;">: &amp;Vec&lt;Todo&gt;) -&gt; String {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> definition_entries: Vec&lt;String&gt; = tasks</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">map</span><span style="color:#c0c5ce;">(generate_task_definition)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">collect</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">definition_entries.</span><span style="color:#96b5b4;">join</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#96b5b4;">\n  </span><span style="color:#c0c5ce;">&quot;)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>I needed to use an intermediate variable with a type declaration so that
+<code>collect</code> would know what type to collect into. Then the job becomes joining the
+lines together and adding some indentation for cleanliness.</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>Most of the hard work was finished yesterday with the abbreviation resolution.
+All that is left is to simply render the datastructure out. I start with a
+utility for rendering a list of dependencies with optional braces if there are
+more than one.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_dependency_list</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">deps</span><span style="color:#c0c5ce;">: Vec&lt;String&gt;) -&gt; Option&lt;String&gt; {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> dep_variables: Vec&lt;String&gt; = deps</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">map</span><span style="color:#c0c5ce;">(generate_identifier_variable)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">collect</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> dep_variables.</span><span style="color:#96b5b4;">len</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#d08770;">0 </span><span style="color:#c0c5ce;">=&gt; None,</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#d08770;">1 </span><span style="color:#c0c5ce;">=&gt; Some(dep_variables.</span><span style="color:#96b5b4;">first</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">unwrap</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">to_string</span><span style="color:#c0c5ce;">()),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">_ =&gt; Some(format!(&quot;</span><span style="color:#96b5b4;">{{ </span><span style="color:#d08770;">{} </span><span style="color:#96b5b4;">}}</span><span style="color:#c0c5ce;">&quot;, dep_variables.</span><span style="color:#96b5b4;">join</span><span style="color:#c0c5ce;">(&quot; &quot;)))</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>Again, I had to use an intermediate variable to help <code>collect</code> along. I also
+convert each of the identifier strings in the input list to variable formats. A
+simple match on the length of the input list does the trick and I use an option
+to communicate back up the call stack when to write the line or not.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_dependencies</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">tasks</span><span style="color:#c0c5ce;">: &amp;Vec&lt;Todo&gt;) -&gt; Option&lt;String&gt; {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> dependent_task_lookup = </span><span style="color:#96b5b4;">resolve_dependent_tasks</span><span style="color:#c0c5ce;">(&amp;tasks)?;</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> entries: Vec&lt;String&gt; = tasks.</span><span style="color:#96b5b4;">iter</span><span style="color:#c0c5ce;">().</span><span style="color:#96b5b4;">filter_map</span><span style="color:#c0c5ce;">(|</span><span style="color:#bf616a;">task</span><span style="color:#c0c5ce;">| {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> dependent_tasks = dependent_task_lookup[&amp;task.identifier].</span><span style="color:#96b5b4;">clone</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> task_variable = </span><span style="color:#96b5b4;">generate_identifier_variable</span><span style="color:#c0c5ce;">(&amp;task.identifier);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#96b5b4;">generate_dependency_list</span><span style="color:#c0c5ce;">(dependent_tasks)</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">map</span><span style="color:#c0c5ce;">(|</span><span style="color:#bf616a;">deps</span><span style="color:#c0c5ce;">| format!(&quot;</span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;"> -&gt; </span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">;</span><span style="color:#c0c5ce;">&quot;, task_variable, deps))</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}).</span><span style="color:#96b5b4;">collect</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">Some(entries.</span><span style="color:#96b5b4;">join</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#96b5b4;">\n  </span><span style="color:#c0c5ce;">&quot;))</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>To wrap up the dependencies I build the dependent task lookup from the
+abbreviation resolver, and use <code>filter_map</code> to only output the entries with have
+dependent tasks. Finally I join the lines similar to the definition generator.</p>
+<p>An option is still returned at this point in case the abbreviation resolver
+finds an error.</p>
+<h2 id="putting-it-all-together">Putting it All Together</h2>
+<p>Connecting each of the pieces is just a matter of writing the surrounding goo
+for the DOT format, and filling in the definitions and dependencies.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">generate_dot_file</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">tasks</span><span style="color:#c0c5ce;">: Vec&lt;Todo&gt;) -&gt; Option&lt;String&gt; {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> definitions = </span><span style="color:#96b5b4;">generate_definitions</span><span style="color:#c0c5ce;">(&amp;tasks);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> dependencies = </span><span style="color:#96b5b4;">generate_dependencies</span><span style="color:#c0c5ce;">(&amp;tasks)?;</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">Some(format!(</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">digraph </span><span style="color:#96b5b4;">{{</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">node [shape=record, splines=</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">curve</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">
+</span><span style="color:#96b5b4;">}}</span><span style="color:#c0c5ce;">&quot;, definitions, dependencies))</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>As shown by the test, the code works as expected and generate the DOT format
+outlined in <a href="../day4-pando/">day4</a>.</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">test</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">generator_dot_file_works</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> generated = </span><span style="color:#96b5b4;">generate_dot_file</span><span style="color:#c0c5ce;">(vec![</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Completed, &quot;</span><span style="color:#a3be8c;">Brainstorm</span><span style="color:#c0c5ce;">&quot;, vec![]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::InProgress, &quot;</span><span style="color:#a3be8c;">Specify Format</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">B</span><span style="color:#c0c5ce;">&quot;]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Waiting, &quot;</span><span style="color:#a3be8c;">Implement Parser</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">SF</span><span style="color:#c0c5ce;">&quot;]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Waiting, &quot;</span><span style="color:#a3be8c;">DOT Generator</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">B</span><span style="color:#c0c5ce;">&quot;]),</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Todo::new(TaskStatus::Waiting, &quot;</span><span style="color:#a3be8c;">Command Line</span><span style="color:#c0c5ce;">&quot;, vec![&quot;</span><span style="color:#a3be8c;">IP</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">DG</span><span style="color:#c0c5ce;">&quot;])</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">]);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> expected = Some(&quot;</span><span style="color:#a3be8c;">digraph {</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">node [shape=record, splines=</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">curve</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">Brainstorm[label=&lt;&lt;font color=&#39;gray&#39;&gt;Brainstorm &lt;br/&gt; &lt;i&gt;Complete&lt;/i&gt;&lt;/font&gt;&gt;, color=</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">gray</span><span style="color:#96b5b4;">\&quot;</span><span style="color:#a3be8c;">];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">SpecifyFormat[label=&lt;Specify Format &lt;br/&gt; &lt;i&gt;In Progress&lt;/i&gt;&gt;];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">ImplementParser[label=&lt;Implement Parser&gt;];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">DOTGenerator[label=&lt;DOT Generator&gt;];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">CommandLine[label=&lt;Command Line&gt;];</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">Brainstorm -&gt; { SpecifyFormat DOTGenerator };</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">SpecifyFormat -&gt; ImplementParser;</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">ImplementParser -&gt; CommandLine;</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">  </span><span style="color:#a3be8c;">DOTGenerator -&gt; CommandLine;</span><span style="color:#a3be8c;">
+</span><span style="color:#a3be8c;">}</span><span style="color:#c0c5ce;">&quot;.</span><span style="color:#96b5b4;">to_string</span><span style="color:#c0c5ce;">());</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">assert_eq!(generated, expected);</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
+</span></pre>
+<p>Using <code>format!</code> for code generation greatly simplifies things and makes the code
+structure very intuitive. I did find myself wishing for a more full featured
+string interpolation feature, but this worked in a pinch.</p>
+<p>All that's left for Pando V1 is to connect all of the pieces and build a
+commandline interface. Almost there!</p>
+<p>Till tomorrow,<br />
+Keith</p>
+
+</article>
+
+    </main>
+  </body>
+</html>
