@@ -299,7 +299,7 @@ good enough.</p>
 </span><span style="color:#c0c5ce;">window.draw = </span><span style="color:#bf616a;">draw</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
 </span></pre>
 <p>Refreshing the browser window presents us with:</p>
-<p><img src="./pixelated.PNG" alt="Pixelated" /></p>
+<p><img src="./Pixelated.PNG" alt="Pixelated" /></p>
 <h2 id="improvements">Improvements</h2>
 <p>This is awesome, but we can do better. The draw button doesn't work because the
 browser is too busy calculating everything to return control to the renderer.
@@ -333,7 +333,7 @@ Experimentally I found that 100 samples is a pretty good compromise. In
 practice, the majority of the time spent in our Mandelbrot renderer currently is
 taken up crossing the barrier between Rust and JavaScript, so doing more
 calculation on the Rust side doesn't actually make the render much slower.</p>
-<p><img src="./smooth.PNG" alt="Smooth" /></p>
+<p><img src="./Smooth.PNG" alt="Smooth" /></p>
 <p>MUCH better. Now for the other piece. It would be awesome if we could see the
 image draw as it goes. To handle this, I decided to use some modern JavaScript
 features and build an async version of sleep.</p>
