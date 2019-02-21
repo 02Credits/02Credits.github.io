@@ -4,6 +4,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
     <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
     
     <title>02Credits 
 
@@ -102,21 +103,21 @@ wiki or docs. In the case of SCRIPT-8 I found them at the bottom of the
 <p>Unfortunately after cloning, installing the correct dependencies, and running
 <code>yarn iframe-start</code> as per the instructions, I was greeted with this unhelpful
 error:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">yarn run v1.13.0</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">$ npm-run-all -p iframe-start-js iframe-watch-css</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">$ cd src/iframe; react-scripts start</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">$ cd src/iframe; stylus src/css/Iframe.styl -o src/css -w</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">The system cannot find the path specified.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">The system cannot find the path specified.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">error Command failed with exit code 1.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">error Command failed with exit code 1.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">ERROR: &quot;iframe-start-js&quot; exited with 1.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">error Command failed with exit code 1.</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-text">yarn run v1.13.0
+$ npm-run-all -p iframe-start-js iframe-watch-css
+$ cd src&#x2F;iframe; react-scripts start
+$ cd src&#x2F;iframe; stylus src&#x2F;css&#x2F;Iframe.styl -o src&#x2F;css -w
+The system cannot find the path specified.
+The system cannot find the path specified.
+error Command failed with exit code 1.
+info Visit https:&#x2F;&#x2F;yarnpkg.com&#x2F;en&#x2F;docs&#x2F;cli&#x2F;run for documentation about this command.
+error Command failed with exit code 1.
+info Visit https:&#x2F;&#x2F;yarnpkg.com&#x2F;en&#x2F;docs&#x2F;cli&#x2F;run for documentation about this command.
+ERROR: &quot;iframe-start-js&quot; exited with 1.
+error Command failed with exit code 1.
+info Visit https:&#x2F;&#x2F;yarnpkg.com&#x2F;en&#x2F;docs&#x2F;cli&#x2F;run for documentation about this command.</code>
+</pre>
 <p>Pretty cryptic... So I did some initial googling. After nothing obvious turned
 up I then did the important next step of searching the project for similar
 keywords.</p>
@@ -204,42 +205,36 @@ to make the change and emulated the pattern in that part of the code to add my
 own functions to the API. After testing (and fixing my stupid bugs) I then
 decided to build a demo to show off the changes and make sure everything was
 working.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">20</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">vx </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">vy </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#bf616a;">clear</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#8fa1b3;">draw </span><span style="color:#c0c5ce;">= () </span><span style="color:#b48ead;">=&gt; </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">setPixel</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">getPixel</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">) + </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+ </span><span style="color:#bf616a;">vx</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+ </span><span style="color:#bf616a;">vy</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">&gt;= </span><span style="color:#d08770;">127</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vx </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">-1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">&gt;= </span><span style="color:#d08770;">127</span><span style="color:#c0c5ce;">)  {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vy </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">-1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">&lt;= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vx </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">&lt;= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">vy </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">) &lt; </span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">) &lt; </span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">-= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">) &lt; </span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">) &lt; </span><span style="color:#d08770;">5</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">-= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">let x = 20;
+let y = 0;
+let vx = 1;
+let vy = 1;
+clear()
+draw = () =&gt; {
+  for (let i = 0; i &lt; 100; i++) {
+    setPixel(x, y, getPixel(x, y) + 1)
+    x = x + vx
+    y = y + vy
+    if (x &gt;= 127) {
+      vx = -1
+    }
+    if (y &gt;= 127)  {
+      vy = -1
+    }
+    if (x &lt;= 0) {
+      vx = 1
+    }
+    if (y &lt;= 0) {
+      vy = 1
+    }
+    if (random(0, 100) &lt; 5) x += 1
+    if (random(0, 100) &lt; 5) x -= 1
+    if (random(0, 100) &lt; 5) y += 1
+    if (random(0, 100) &lt; 5) y -= 1
+  }
+}</code>
+</pre>
 <p>After a short while running the above demo yields this image:</p>
 <p><img src="./demo.png" alt="Demo" /></p>
 <p>Lastly I looked up and updated the documentation to show the new API.</p>
@@ -265,7 +260,10 @@ timestamps.</p>
 Keith</p>
 
 </article>
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
 
     </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
   </body>
 </html>

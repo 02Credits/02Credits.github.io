@@ -4,6 +4,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
     <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
     
     <title>02Credits 
 
@@ -67,42 +68,41 @@ the corner values.</p>
 <p><img src="./Tiles.PNG" alt="Tiles" /></p>
 <p>As mentioned above, since the tiles are 8 by 8, I must scale the terrain data
 coordinates accordingly.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">const </span><span style="color:#bf616a;">tileWidth </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">8</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">tileHeight </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">8</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">drawTile</span><span style="color:#c0c5ce;">(tx, ty, topLeft, topRight, bottomRight, bottomLeft) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">topLeft</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">topRight</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">bottomRight</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">4</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">bottomLeft</span><span style="color:#c0c5ce;">) </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">8</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">sprite</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">tx </span><span style="color:#c0c5ce;">* </span><span style="color:#bf616a;">tileWidth</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">ty </span><span style="color:#c0c5ce;">* </span><span style="color:#bf616a;">tileHeight</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">s</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre><h2 id="terrain-data">Terrain Data</h2>
+<pre>
+  <code class="language-javascript">const tileWidth = 8;
+const tileHeight = 8;
+function drawTile(tx, ty, topLeft, topRight, bottomRight, bottomLeft) {
+  let s = 0;
+  if (topLeft) s += 1;
+  if (topRight) s += 2;
+  if (bottomRight) s += 4;
+  if (bottomLeft) s += 8;
+  sprite(tx * tileWidth, ty * tileHeight, s);
+}</code>
+</pre>
+<h2 id="terrain-data">Terrain Data</h2>
 <p>SCRIPT-8 tracks the current state of the game in order to enable it's rewind
 feature. To that end all state must be initialized into the <code>initialState</code>
 object when the game starts, and all modifications must happen on the associated
 state object that gets passed to <code>update</code> and <code>draw</code>. So I created an
 <code>initTerrain</code> function which creates the data grid for the terrain to get
 drawn from.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">initTerrain</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">result </span><span style="color:#c0c5ce;">= [];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#d08770;">17</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">row </span><span style="color:#c0c5ce;">= [];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">j </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">j </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#d08770;">17</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">j</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">row</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">push</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) == </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#bf616a;">result</span><span style="color:#c0c5ce;">.</span><span style="color:#96b5b4;">push</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">row</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">return </span><span style="color:#bf616a;">result</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#bf616a;">initialState </span><span style="color:#c0c5ce;">= {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">terrain: </span><span style="color:#bf616a;">initTerrain</span><span style="color:#c0c5ce;">()</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">};</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">function initTerrain() {
+  let result = [];
+  for (let i = 0; i &lt; 17; i++) {
+    let row = [];
+    for (let j = 0; j &lt; 17; j++) {
+      row.push(random(0, 1) == 1);
+    }
+    result.push(row);
+  }
+  return result;
+}
+initialState = {
+  terrain: initTerrain()
+};</code>
+</pre>
 <p>The grid goes from 0 to 17 for a total of 18 by 18 booleans. This makes sense
 because SCRIPT-8's screen is 128 by 128 which leaves room for 16 by 16 tiles.
 Each tile requires 2 data points to describe it, so we need 2 more indices on
@@ -112,20 +112,19 @@ either side of the tiles to have all of them be fully specified.</p>
 by simply looping over all of the data in the grid and drawing it with the
 <code>drawTile</code> function. I then call my <code>drawTerrain</code> function in the SCRIPT-8
 <code>draw</code> function to get it drawn to the screen.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">drawTerrain</span><span style="color:#c0c5ce;">(terrain) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">terrain</span><span style="color:#c0c5ce;">.length - </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">terrain</span><span style="color:#c0c5ce;">[</span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">].length - </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">drawTile</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">terrain</span><span style="color:#c0c5ce;">[</span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">][</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">], </span><span style="color:#bf616a;">terrain</span><span style="color:#c0c5ce;">[</span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">][</span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+ </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">], </span><span style="color:#bf616a;">terrain</span><span style="color:#c0c5ce;">[</span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+ </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">][</span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+ </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">], </span><span style="color:#bf616a;">terrain</span><span style="color:#c0c5ce;">[</span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+ </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">][</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">]);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#8fa1b3;">draw </span><span style="color:#c0c5ce;">= state </span><span style="color:#b48ead;">=&gt; </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">clear</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#bf616a;">drawTerrain</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">state</span><span style="color:#c0c5ce;">.terrain);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">function drawTerrain(terrain) {
+  for (let y = 0; y &lt; terrain.length - 1; y++) {
+    for (let x = 0; x &lt; terrain[y].length - 1; x++) {
+      drawTile(x, y, terrain[y][x], terrain[y][x + 1], terrain[y + 1][x + 1], terrain[y + 1][x]);
+    }
+  }
+}
+draw = state =&gt; {
+  clear();
+  drawTerrain(state.terrain);
+}</code>
+</pre>
 <p>This yields the satisfying randomly generated image below.</p>
 <p><img src="./Random.PNG" alt="Random" /></p>
 <p>An editable live version can be found
@@ -135,7 +134,10 @@ for this project is to build some collision detection using Verlet Integration!<
 Keith</p>
 
 </article>
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
 
     </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
   </body>
 </html>

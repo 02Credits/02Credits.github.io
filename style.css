@@ -3,7 +3,19 @@ h1, h2, h3, p, date, ul, ol {
     line-height: 160%;
 }
 
-h1, h2, h3, p, date, pre, ul, ol {
+h1, h2, h3, p, date, ul, ol, #commento {
+    max-width: 8.5in;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+pre {
+    display: flex;
+}
+
+pre code {
+    flex-grow: 100;
+    text-align: left;
     max-width: 8.5in;
     margin-left: auto;
     margin-right: auto;
@@ -20,10 +32,6 @@ summary > * {
 header {
     border-bottom: 1px solid #eee;
     padding: 10px;
-}
-
-pre {
-    padding: 25px;
 }
 
 a {

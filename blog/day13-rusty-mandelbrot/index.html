@@ -4,6 +4,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
     <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
     
     <title>02Credits 
 
@@ -68,35 +69,34 @@ Parcel runtime. I will describe the steps to get to this point.</p>
 </ol>
 <p>Once they are installed, I started a new project with parcel by creating a
 folder, and adding an index.rs file:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">no_mangle</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">mandle</span><span style="color:#c0c5ce;">() -&gt; </span><span style="color:#b48ead;">i32 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#d08770;">42</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-rust">#[no_mangle]
+pub fn mandle() -&gt; i32 {
+  42
+}</code>
+</pre>
 <p>Any function that you intend to expose to the outside world must
 have the <code>no_mangle</code> attribute in order to tell the Rust compiler not to
 optimize this function away.</p>
 <p>To access the file, I created a simple index.js file:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">{ </span><span style="color:#bf616a;">mandle </span><span style="color:#c0c5ce;">} </span><span style="color:#b48ead;">from </span><span style="color:#c0c5ce;">&#39;</span><span style="color:#a3be8c;">./index.rs</span><span style="color:#c0c5ce;">&#39;;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">console.</span><span style="color:#96b5b4;">log</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">mandle</span><span style="color:#c0c5ce;">());</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-rust">import { mandle } from &#x27;.&#x2F;index.rs&#x27;;
+console.log(mandle());</code>
+</pre>
 <p>And lastly a scaffold in an index.html file to actually see something:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">html</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">body</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">script </span><span style="color:#d08770;">src</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">./index.js</span><span style="color:#c0c5ce;">&quot;&gt;&lt;/</span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">body</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">html</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;script src=&quot;.&#x2F;index.js&quot;&gt;&lt;&#x2F;script&gt;
+  &lt;&#x2F;body&gt;
+&lt;&#x2F;html&gt;</code>
+</pre>
 <p>Then bundling and compiling is really as simple as running <code>parcel index.html</code>
 in your favorite shell.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">Server running at http://localhost:1234</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">√  Built in 722ms.</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-text">Server running at http:&#x2F;&#x2F;localhost:1234
+√  Built in 722ms.</code>
+</pre>
 <p>Going to the reported URL will open a blank page, but the dev console should
 show 42.</p>
 <h2 id="why-webassembly">Why WebAssembly</h2>
@@ -155,10 +155,12 @@ to get <code>(a + c)</code> as the <code>real</code> component and <code>(b + d)
 component.</p>
 <p>To multiply the above components, its similar but we must apply the &quot;foil&quot;
 multiplication of binomials:</p>
-<p><code>First: a * c +</code>
-<code>Outer: a * di +</code>
-<code>Inner: bi * c +</code>
-<code>Last: bi * di</code></p>
+<pre>
+  <code class="language-text">First: a * c +
+Outer: a * di +
+Inner: bi * c +
+Last: bi * di</code>
+</pre>
 <p>Notice that the first and last products simplify down to real numbers. Trivially
 with the first, and with last the i's multiply together to give us -1. So the
 <code>real</code> component of multiplying the two complex numbers together is equal to
@@ -167,41 +169,38 @@ and Inner parts, the <code>imaginary</code> component becomes <code>a * di + c *
 <p>Lets build this in Rust.</p>
 <h2 id="rust-operator-overloading">Rust Operator Overloading</h2>
 <p>The <code>Complex</code> struct is very simple, composed of two 64 bit floats.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">derive</span><span style="color:#c0c5ce;">(PartialEq, Copy, Clone)]</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">pub struct </span><span style="color:#c0c5ce;">Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">pub </span><span style="color:#bf616a;">real</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">f64</span><span style="color:#c0c5ce;">,</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">pub </span><span style="color:#bf616a;">imaginary</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">f64</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-rust">#[derive(PartialEq, Copy, Clone)]
+pub struct Complex {
+    pub real: f64,
+    pub imaginary: f64
+}</code>
+</pre>
 <p>Importantly I derive the implementations of Clone and Copy to give the final
 objects copy semantics. This means that any time the variable is passed around,
 the struct is copied instead of borrowed.</p>
 <p>In rust operators are overloaded for a given struct by implementing the traits
 found in <code>std::ops</code>. In our case we only need <code>Add</code> and <code>Mul</code>.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">Add </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">type </span><span style="color:#c0c5ce;">Output = Complex;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">add</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">rhs</span><span style="color:#c0c5ce;">: Complex) -&gt; Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">real: </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.real + rhs.real,</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">imaginary: </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.imaginary + rhs.imaginary</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">Mul </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">type </span><span style="color:#c0c5ce;">Output = Complex;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">mul</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">rhs</span><span style="color:#c0c5ce;">: Complex) -&gt; Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">real: </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.real * rhs.real - </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.imaginary * rhs.imaginary,</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">imaginary: </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.real * rhs.imaginary + </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.imaginary * rhs.real</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-rust">impl Add for Complex {
+    type Output = Complex;
+    fn add(self, rhs: Complex) -&gt; Complex {
+        Complex {
+            real: self.real + rhs.real,
+            imaginary: self.imaginary + rhs.imaginary
+        }
+    }
+}
+impl Mul for Complex {
+    type Output = Complex;
+    fn mul(self, rhs: Complex) -&gt; Complex {
+        Complex {
+            real: self.real * rhs.real - self.imaginary * rhs.imaginary,
+            imaginary: self.real * rhs.imaginary + self.imaginary * rhs.real
+        }
+    }
+}</code>
+</pre>
 <p>These mirror the above calculations exactly. Note the type parameter <code>Output</code>
 which tells the Rust compiler that these operators should return <code>Complex</code>
 instances.</p>
@@ -211,13 +210,14 @@ distance from the origin of the complex plane. Simply put, it is the square root
 of the real component squared plus the imaginary component squared. For our
 purposes, a simple optimization can be made by not actually taking the square
 root in the length calculation.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">length_squared</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; </span><span style="color:#b48ead;">f64 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.real * </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.real + </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.imaginary * </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.imaginary</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre><h2 id="using-the-dsl">Using the DSL</h2>
+<pre>
+  <code class="language-rust">impl Complex {
+    pub fn length_squared(self) -&gt; f64 {
+        self.real * self.real + self.imaginary * self.imaginary
+    }
+}</code>
+</pre>
+<h2 id="using-the-dsl">Using the DSL</h2>
 <p>To draw something to the screen, we will split the calculation into two parts:
 the complex arithmetic in Rust and interpreting the results in JavaScript. Since
 we don't want the JavaScript side to have to worry about the complex numbers at
@@ -226,78 +226,72 @@ function would take an x and y coordinate which moves from the top left corner
 to the bottom right row by row, and a width and height value. Then the Rust code
 transforms those values to fit a roughly 3 by 3 unit square centered slightly
 left of the origin. This gives a satisfying full view of the Mandelbrot fractal.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">#[</span><span style="color:#bf616a;">no_mangle</span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">mandle</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">f64</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">f64</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">usize</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">usize</span><span style="color:#c0c5ce;">) -&gt; </span><span style="color:#b48ead;">i32 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> c = Complex {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">real: x * </span><span style="color:#d08770;">3.0 </span><span style="color:#c0c5ce;">/ (width as </span><span style="color:#b48ead;">f64</span><span style="color:#c0c5ce;">) - </span><span style="color:#d08770;">2.25</span><span style="color:#c0c5ce;">,</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">imaginary: y * </span><span style="color:#d08770;">3.0 </span><span style="color:#c0c5ce;">/ (height as </span><span style="color:#b48ead;">f64</span><span style="color:#c0c5ce;">) - </span><span style="color:#d08770;">1.5</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">};</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#96b5b4;">iterate</span><span style="color:#c0c5ce;">(c, c, </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-rust">#[no_mangle]
+pub fn mandle(x: f64, y: f64, width: usize, height: usize) -&gt; i32 {
+    let c = Complex {
+        real: x * 3.0 &#x2F; (width as f64) - 2.25,
+        imaginary: y * 3.0 &#x2F; (height as f64) - 1.5
+    };
+    iterate(c, c, 0)
+}</code>
+</pre>
 <p>Finally iterate is defined as a recursive function that repeatedly applies the
 function <code>Z = Z * Z + C</code> to the initial state of <code>C</code> transformed from the
 JavaScript side's coordinates. The function stops and reports how many loops it
 made if either the length of <code>Z</code> becomes greeted than 4 (16 in our case since we
 don't square root the length) or we do n iterations without escaping.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">iterate</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">z</span><span style="color:#c0c5ce;">: Complex, </span><span style="color:#bf616a;">c</span><span style="color:#c0c5ce;">: Complex, </span><span style="color:#bf616a;">n</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">i32</span><span style="color:#c0c5ce;">) -&gt; </span><span style="color:#b48ead;">i32 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> n &gt;= </span><span style="color:#d08770;">100 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">return</span><span style="color:#c0c5ce;"> n;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">if</span><span style="color:#c0c5ce;"> z.</span><span style="color:#96b5b4;">length_squared</span><span style="color:#c0c5ce;">() &gt; </span><span style="color:#d08770;">16.0 </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">return</span><span style="color:#c0c5ce;"> n;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#96b5b4;">iterate</span><span style="color:#c0c5ce;">(z * z + c, c, n + </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-rust">fn iterate(z: Complex, c: Complex, n: i32) -&gt; i32 {
+    if n &gt;= 100 {
+        return n;
+    }
+    if z.length_squared() &gt; 16.0 {
+        return n;
+    }
+    iterate(z * z + c, c, n + 1)
+}</code>
+</pre>
 <p>And thats it for the math. You made it.</p>
 <h2 id="draw-something-already">Draw Something Already</h2>
 <p>Now to see something on the screen. First we need something to draw on, so I
 added a canvas to the html page and initialized a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">2d drawing
 context</a>.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">const </span><span style="color:#bf616a;">canvas </span><span style="color:#c0c5ce;">= document.</span><span style="color:#96b5b4;">getElementById</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">canvas</span><span style="color:#c0c5ce;">&#39;);</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">ctx </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">canvas</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">getContext</span><span style="color:#c0c5ce;">(&#39;</span><span style="color:#a3be8c;">2d</span><span style="color:#c0c5ce;">&#39;);</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">const canvas = document.getElementById(&#x27;canvas&#x27;);
+const ctx = canvas.getContext(&#x27;2d&#x27;);</code>
+</pre>
 <p>I also define a button for future use to redraw the Mandelbrot.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">html</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">body</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">script </span><span style="color:#d08770;">src</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">./index.js</span><span style="color:#c0c5ce;">&quot;&gt;&lt;/</span><span style="color:#bf616a;">script</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">canvas </span><span style="color:#8fa1b3;">id</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">canvas</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#d08770;">width</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">400</span><span style="color:#c0c5ce;">&quot; </span><span style="color:#d08770;">height</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#a3be8c;">400</span><span style="color:#c0c5ce;">&quot;&gt;&lt;/</span><span style="color:#bf616a;">canvas</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">button </span><span style="color:#d08770;">onclick</span><span style="color:#c0c5ce;">=&quot;</span><span style="color:#bf616a;">draw</span><span style="color:#c0c5ce;">()&quot;&gt;Redraw&lt;/</span><span style="color:#bf616a;">button</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">body</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">&lt;/</span><span style="color:#bf616a;">html</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-html">&lt;html&gt;
+  &lt;body&gt;
+    &lt;script src=&quot;.&#x2F;index.js&quot;&gt;&lt;&#x2F;script&gt;
+    &lt;canvas id=&quot;canvas&quot; width=&quot;400&quot; height=&quot;400&quot;&gt;&lt;&#x2F;canvas&gt;
+    &lt;button onclick=&quot;draw()&quot;&gt;Redraw&lt;&#x2F;button&gt;
+  &lt;&#x2F;body&gt;
+&lt;&#x2F;html&gt;</code>
+</pre>
 <p>Then I define a draw function which calls mandle for each pixel and draws a
 single pixel wide and tall rectangle with the results. For color I simply use
 whether the result is even or odd. This is a quick way to get an interesting
 image, but there is much more that could be done to add color. For now this is
 good enough.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">const </span><span style="color:#bf616a;">width </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">400</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">const </span><span style="color:#bf616a;">height </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">400</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">draw</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">n </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">mandle</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">color </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">n </span><span style="color:#c0c5ce;">% </span><span style="color:#d08770;">2 </span><span style="color:#c0c5ce;">== </span><span style="color:#d08770;">0 </span><span style="color:#c0c5ce;">? &quot;</span><span style="color:#a3be8c;">black</span><span style="color:#c0c5ce;">&quot; : &quot;</span><span style="color:#a3be8c;">white</span><span style="color:#c0c5ce;">&quot;;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">ctx</span><span style="color:#c0c5ce;">.fillStyle = </span><span style="color:#bf616a;">color</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">ctx</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">fillRect</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#bf616a;">draw</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">window.draw = </span><span style="color:#bf616a;">draw</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">const width = 400;
+const height = 400;
+function draw() {
+  for (let y = 0; y &lt; height; y += 1) {
+    for (let x = 0; x &lt; width; x += 1) {
+      let n = mandle(x, y, width, height);
+      let color = n % 2 == 0 ? &quot;black&quot; : &quot;white&quot;;
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+}
+draw();
+window.draw = draw;</code>
+</pre>
 <p>Refreshing the browser window presents us with:</p>
 <p><img src="./Pixelated.PNG" alt="Pixelated" /></p>
 <h2 id="improvements">Improvements</h2>
@@ -306,27 +300,24 @@ browser is too busy calculating everything to return control to the renderer.
 Similarly, things look pretty pixelated. The color choices don't help, but a
 little bit of anti aliasing goes a long way with Mandelbrot fractals. Lets fix
 that first.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">const </span><span style="color:#bf616a;">samplesPerPixel </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">100</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">draw</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">c </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">samplesPerPixel</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">s</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">n </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">mandle</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+ </span><span style="color:#ebcb8b;">Math</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(), </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+ </span><span style="color:#ebcb8b;">Math</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(), </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">c </span><span style="color:#c0c5ce;">+= </span><span style="color:#bf616a;">n </span><span style="color:#c0c5ce;">% </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">= </span><span style="color:#ebcb8b;">Math</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">floor</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">c </span><span style="color:#c0c5ce;">* </span><span style="color:#d08770;">255 </span><span style="color:#c0c5ce;">/ </span><span style="color:#bf616a;">samplesPerPixel</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">ctx</span><span style="color:#c0c5ce;">.fillStyle = &quot;</span><span style="color:#a3be8c;">rgb(</span><span style="color:#c0c5ce;">&quot; + </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">+ &quot;</span><span style="color:#a3be8c;">, </span><span style="color:#c0c5ce;">&quot; + </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">+ &quot;</span><span style="color:#a3be8c;">, </span><span style="color:#c0c5ce;">&quot; + </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">+ &quot;</span><span style="color:#a3be8c;">)</span><span style="color:#c0c5ce;">&quot;;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">ctx</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">fillRect</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">const samplesPerPixel = 100;
+function draw() {
+  let i = 0;
+  for (let y = 0; y &lt; height; y += 1) {
+    for (let x = 0; x &lt; width; x += 1) {
+      let c = 0;
+      for (let s = 0; s &lt; samplesPerPixel; s++) {
+        let n = mandle(x + Math.random(), y + Math.random(), width, height);
+        c += n % 2;
+      }
+      let gray = Math.floor(c * 255 &#x2F; samplesPerPixel);
+      ctx.fillStyle = &quot;rgb(&quot; + gray + &quot;, &quot; + gray + &quot;, &quot; + gray + &quot;)&quot;;
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }
+}</code>
+</pre>
 <p>The basic idea is instead of using one sample of the complex plane per pixel, we
 can randomly select a bunch of samples and average the results together.
 Experimentally I found that 100 samples is a pretty good compromise. In
@@ -337,73 +328,71 @@ calculation on the Rust side doesn't actually make the render much slower.</p>
 <p>MUCH better. Now for the other piece. It would be awesome if we could see the
 image draw as it goes. To handle this, I decided to use some modern JavaScript
 features and build an async version of sleep.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">function </span><span style="color:#8fa1b3;">sleep</span><span style="color:#c0c5ce;">()  {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">return </span><span style="color:#c0c5ce;">new </span><span style="color:#ebcb8b;">Promise</span><span style="color:#c0c5ce;">(resolve </span><span style="color:#b48ead;">=&gt; </span><span style="color:#96b5b4;">setTimeout</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">resolve</span><span style="color:#c0c5ce;">));</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">function sleep()  {
+  return new Promise(resolve =&gt; setTimeout(resolve));
+}</code>
+</pre>
 <p>And convert our draw function to be async, and every chunk of about 1000 pixels,
 yield to the browser so that it can draw to the screen.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">async function </span><span style="color:#8fa1b3;">draw</span><span style="color:#c0c5ce;">() {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+= </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">c </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">(</span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">s </span><span style="color:#c0c5ce;">&lt; </span><span style="color:#bf616a;">samplesPerPixel</span><span style="color:#c0c5ce;">; </span><span style="color:#bf616a;">s</span><span style="color:#c0c5ce;">++) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">n </span><span style="color:#c0c5ce;">= </span><span style="color:#bf616a;">mandle</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x </span><span style="color:#c0c5ce;">+ </span><span style="color:#ebcb8b;">Math</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(), </span><span style="color:#bf616a;">y </span><span style="color:#c0c5ce;">+ </span><span style="color:#ebcb8b;">Math</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">random</span><span style="color:#c0c5ce;">(), </span><span style="color:#bf616a;">width</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">height</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">c </span><span style="color:#c0c5ce;">+= </span><span style="color:#bf616a;">n </span><span style="color:#c0c5ce;">% </span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">let </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">= </span><span style="color:#ebcb8b;">Math</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">floor</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">c </span><span style="color:#c0c5ce;">* </span><span style="color:#d08770;">255 </span><span style="color:#c0c5ce;">/ </span><span style="color:#bf616a;">samplesPerPixel</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">ctx</span><span style="color:#c0c5ce;">.fillStyle = &quot;</span><span style="color:#a3be8c;">rgb(</span><span style="color:#c0c5ce;">&quot; + </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">+ &quot;</span><span style="color:#a3be8c;">, </span><span style="color:#c0c5ce;">&quot; + </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">+ &quot;</span><span style="color:#a3be8c;">, </span><span style="color:#c0c5ce;">&quot; + </span><span style="color:#bf616a;">gray </span><span style="color:#c0c5ce;">+ &quot;</span><span style="color:#a3be8c;">)</span><span style="color:#c0c5ce;">&quot;;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">ctx</span><span style="color:#c0c5ce;">.</span><span style="color:#bf616a;">fillRect</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">x</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">y</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">, </span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">);</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">++;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#b48ead;">if </span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">&gt; </span><span style="color:#bf616a;">chunkSize</span><span style="color:#c0c5ce;">) {</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#bf616a;">i </span><span style="color:#c0c5ce;">= </span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">;</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#b48ead;">await </span><span style="color:#bf616a;">sleep</span><span style="color:#c0c5ce;">();</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">      </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">async function draw() {
+  let i = 0;
+  for (let y = 0; y &lt; height; y += 1) {
+    for (let x = 0; x &lt; width; x += 1) {
+      let c = 0;
+      for (let s = 0; s &lt; samplesPerPixel; s++) {
+        let n = mandle(x + Math.random(), y + Math.random(), width, height);
+        c += n % 2;
+      }
+      let gray = Math.floor(c * 255 &#x2F; samplesPerPixel);
+      ctx.fillStyle = &quot;rgb(&quot; + gray + &quot;, &quot; + gray + &quot;, &quot; + gray + &quot;)&quot;;
+      ctx.fillRect(x, y, 1, 1);
+      i++;
+      if (i &gt; chunkSize) {
+        i = 0;
+        await sleep();
+      }
+    }
+  }
+}</code>
+</pre>
 <p>In a normal build system, this would work and everything would be roses.
 Unfortunately there is an outstanding bug in the Parcel Bundler which over
 utilizes the Babel transpiler. So instead of our beautiful Mandelbrot fractal we
 are presented with a blank page and this error in the log:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">index.js:15 Uncaught (in promise) ReferenceError: regeneratorRuntime is not defined</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">at _draw (index.js:15)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">at draw (index.js:15)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">at Object.parcelRequire.index.js../SkyLight.rs (index.js:39)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">at newRequire (SkyLight.e31bb0bc.js:49)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">at localRequire (SkyLight.e31bb0bc.js:55)</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">at index.js:41</span><span style="color:#c0c5ce;">
-</span></pre><h2 id="helping-parcel-along">Helping Parcel Along</h2>
+<pre>
+  <code class="language-text">index.js:15 Uncaught (in promise) ReferenceError: regeneratorRuntime is not defined
+    at _draw (index.js:15)
+    at draw (index.js:15)
+    at Object.parcelRequire.index.js..&#x2F;SkyLight.rs (index.js:39)
+    at newRequire (SkyLight.e31bb0bc.js:49)
+    at localRequire (SkyLight.e31bb0bc.js:55)
+    at index.js:41</code>
+</pre>
+<h2 id="helping-parcel-along">Helping Parcel Along</h2>
 <p>After some searching on the web I found that the quickest fix was to lean in,
 and provide the translator what it wants. I did this by installing some babel
 dependencies using:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">yarn add babel-plugin-transform-runtime babel-core -D</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-text">yarn add babel-plugin-transform-runtime babel-core -D</code>
+</pre>
 <p>As well as adding a .babelrc file with:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">plugins</span><span style="color:#c0c5ce;">&quot;: [</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">[&quot;</span><span style="color:#a3be8c;">transform-runtime</span><span style="color:#c0c5ce;">&quot;,</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">polyfill</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#d08770;">false</span><span style="color:#c0c5ce;">,</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">            </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">regenerator</span><span style="color:#c0c5ce;">&quot;: </span><span style="color:#d08770;">true</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">        </span><span style="color:#c0c5ce;">}]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">    </span><span style="color:#c0c5ce;">]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-json">{
+    &quot;plugins&quot;: [
+        [&quot;transform-runtime&quot;,
+        {
+            &quot;polyfill&quot;: false,
+            &quot;regenerator&quot;: true
+        }]
+    ]
+}</code>
+</pre>
 <p>And lastly adding this to the top of the JavaScript file to initialize it all:</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">import </span><span style="color:#c0c5ce;">&quot;</span><span style="color:#a3be8c;">babel-polyfill</span><span style="color:#c0c5ce;">&quot;;</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-javascript">import &quot;babel-polyfill&quot;;</code>
+</pre>
 <p>Unfortunately I have found errors such as these to be pretty common when pushing
 the edges of what Parcel supports. I am hopeful that these things will get
 simpler over time, but for now fixes like the above work well enough.</p>
@@ -422,7 +411,10 @@ using this framework and setup in future posts. More like this to come!</p>
 Keith</p>
 
 </article>
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
 
     </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
   </body>
 </html>

@@ -4,6 +4,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
     <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
     
     <title>02Credits 
 
@@ -89,22 +90,22 @@ above.</p>
 <p>For the initial version there are 3 states of a task: Waiting, In
 Progress, and Done. I plan on using different list bullets for each '-',
 '&gt;', and 'x' respectively.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">x Brainstorm</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">&gt; Specify Format</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- Implement Parser</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- DOT generator</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- Command Line</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-text">x Brainstorm
+&gt; Specify Format
+- Implement Parser
+- DOT generator
+- Command Line</code>
+</pre>
 <p>The dependencies should exist as a simple list of names. At least to start I
 will write them in a comma delimited array with square brackets surrounding.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">x Brainstorm</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">&gt; Specify Format [ Brainstorm ]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- Implement Parser [ Specify Format ]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- DOT Generator [ Brainstorm ]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- Command Line [ Implement Parser, DOT Generator ]</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-text">x Brainstorm
+&gt; Specify Format [ Brainstorm ]
+- Implement Parser [ Specify Format ]
+- DOT Generator [ Brainstorm ]
+- Command Line [ Implement Parser, DOT Generator ]</code>
+</pre>
 <p>Lastly a quality of life improvement. The dependency list involves rewriting the
 entire task name. The dependency should just contain enough information to
 differentiate which task is intended. We should be able to get away with
@@ -113,13 +114,13 @@ tasks we should allow the user to give CamelCase prefixes for each word. This is
 clearly less readable, but for most cases the dependencies will be written once
 and not modified after the fact. So being write only is fine since it cleans up
 the format.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#c0c5ce;">x Brainstorm</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">&gt; Specify Format [ B ]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- Implement Parser [ SF ]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- DOT Generator [ B ]</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">- Command Line [ IP, DG ]</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-text">x Brainstorm
+&gt; Specify Format [ B ]
+- Implement Parser [ SF ]
+- DOT Generator [ B ]
+- Command Line [ IP, DG ]</code>
+</pre>
 <p>There is an added complication here that DOT is all caps, but we use the
 capitalization as a hint for the abbreviation matcher. As a hack we will assume
 that for the abbreviations each word is in proper camel case. So to differentiate
@@ -129,21 +130,20 @@ the tasks <code>DOT Application</code> and <code>DOJ Appointment</code> we would
 <p>At the start of this post I embedded an image of the todo graph for Pando. I
 built this image by manually writing the DOT file I expected as output for the
 above pando file.</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">digraph </span><span style="color:#c0c5ce;">{</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#b48ead;">node </span><span style="color:#c0c5ce;">[shape=record, splines=&quot;</span><span style="color:#a3be8c;">curve</span><span style="color:#c0c5ce;">&quot;];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">a[label=</span><span style="color:#ab7967;">&lt;</span><span style="color:#c0c5ce;">&lt;</span><span style="color:#bf616a;">font </span><span style="color:#d08770;">color</span><span style="color:#c0c5ce;">=&#39;</span><span style="color:#a3be8c;">gray</span><span style="color:#c0c5ce;">&#39;&gt;Brainstorm &lt;</span><span style="color:#bf616a;">br</span><span style="color:#c0c5ce;">/&gt; &lt;</span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">&gt;Complete&lt;/</span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">&gt;&lt;/</span><span style="color:#bf616a;">font</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#ab7967;">&gt;</span><span style="color:#c0c5ce;">, color=&quot;</span><span style="color:#a3be8c;">gray</span><span style="color:#c0c5ce;">&quot;];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">b[label=</span><span style="color:#ab7967;">&lt;</span><span style="color:#c0c5ce;">Specify Format &lt;</span><span style="color:#bf616a;">br</span><span style="color:#c0c5ce;">/&gt; &lt;</span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">&gt;In Progress&lt;/</span><span style="color:#bf616a;">i</span><span style="color:#c0c5ce;">&gt;</span><span style="color:#ab7967;">&gt;</span><span style="color:#c0c5ce;">];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">c[label=</span><span style="color:#ab7967;">&lt;</span><span style="color:#c0c5ce;">DOT Generator&gt;];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">d[label=&lt;</span><span style="color:#bf616a;">Parser</span><span style="color:#c0c5ce;">&gt;];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">e[label=&lt;</span><span style="color:#bf616a;">Command </span><span style="color:#d08770;">Line</span><span style="color:#c0c5ce;">&gt;];</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">a -&gt; { b c };</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">b -&gt; { d };</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">d -&gt; { e };</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">  </span><span style="color:#c0c5ce;">c -&gt; { e };</span><span style="color:#c0c5ce;">
-</span><span style="color:#c0c5ce;">}</span><span style="color:#c0c5ce;">
-</span></pre>
+<pre>
+  <code class="language-DOT">digraph {
+  node [shape=record, splines=&quot;curve&quot;];
+  a[label=&lt;&lt;font color=&#x27;gray&#x27;&gt;Brainstorm &lt;br&#x2F;&gt; &lt;i&gt;Complete&lt;&#x2F;i&gt;&lt;&#x2F;font&gt;&gt;, color=&quot;gray&quot;];
+  b[label=&lt;Specify Format &lt;br&#x2F;&gt; &lt;i&gt;In Progress&lt;&#x2F;i&gt;&gt;];
+  c[label=&lt;DOT Generator&gt;];
+  d[label=&lt;Parser&gt;];
+  e[label=&lt;Command Line&gt;];
+  a -&gt; { b c };
+  b -&gt; { d };
+  d -&gt; { e };
+  c -&gt; { e };
+}</code>
+</pre>
 <p>I then rendered it to an svg using this command: <code>dot .\todo.dot -Tsvg &gt; output.svg</code>. The <code>-Tsvg</code> argument specifies the output format which I pipe to
 <code>output.svg</code>.</p>
 <p>There are two pieces of note. First, although our format stores the dependencies
@@ -161,7 +161,10 @@ representation.</p>
 Keith</p>
 
 </article>
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
 
     </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
   </body>
 </html>
