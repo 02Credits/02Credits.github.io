@@ -50,3 +50,14 @@ a {
 a:visited {
     color: #36e !important;
 }
+
+
+img {
+    max-width: 100vw;
+}
+
+@media (min-width: 8.5in) {
+    img {
+        max-width: 8.5in;
+    }
+}
