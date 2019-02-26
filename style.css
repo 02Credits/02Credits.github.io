@@ -3,7 +3,7 @@ h1, h2, h3, p, date, ul, ol {
     line-height: 160%;
 }
 
-h1, h2, h3, p, date, ul, ol, #commento {
+h1, h2, h3, p, date, ul, ol, #commento, #page-nav-links {
     max-width: 8.5in !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -60,4 +60,8 @@ img {
     img {
         max-width: 8.5in;
     }
+}
+
+#tomorrow {
+    float: right;
 }
