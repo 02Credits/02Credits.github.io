@@ -51,21 +51,28 @@ shell script of the user's choice. Mine is built in PowerShell:</p>
 <pre>
   <code class="language-powershell">function ok
 {
-  Param($command = $null)
-  if ($command -eq $null) {
-    okeydokey
+  if ($args.Count -eq 0) {
+    okeydokey | Write-Host -ForegroundColor &#x27;Blue&#x27;
   } else {
-    $script = okeydokey $command -p &quot;pushd {};&quot; -s &quot;; popd&quot;
+    if ($args.Count -gt 1) {
+      $script = okeydokey $args[0] -p &quot;pushd {};&quot; -s &quot;; popd&quot; -a ($args | select -skip 1)
+    } else {
+      $script = okeydokey $args[0] -p &quot;pushd {};&quot; -s &quot;; popd&quot;
+    }
     if ($script -ne $null) {
       iex $script
     }
   }
 }</code>
 </pre>
-<p>The <code>-p</code> argument stands for prefix, and the <code>-s</code> argument stands for sufix.
+<p>The <code>-p</code> argument stands for prefix and the <code>-s</code> argument stands for sufix
 They will added to the output command and the <code>{}</code> holes will be filled with the
 path to the directory containing the <code>.ok</code> file. If no <code>.ok</code> file is found, no
 output will be written.</p>
+<p>The <code>-a</code> argument stands for the arguments that get filled in for the main
+command. Each argument is either inserted in the associated <code>{n}</code> hole where n
+is the 0 based index of the argument, or appended to the end of the main command
+if no holes are found.</p>
 <p><code>.ok</code> files contain named scripts on each line with a colon separating the
 script name from the script itself. For example, this is the script I use for my
 static website:</p>
@@ -104,7 +111,8 @@ get to it as soon as I can or if you're feeling generous, a PR would be welcome.
 <p>Okeydokey is a part of <a href="http://02credits.com/projects/blog/">my push</a> to make
 tangible and documented progress on a project every day.</p>
 <p><a href="http://02credits.com/blog/day2-okeydokey">Day2</a><br />
-<a href="http://02credits.com/blog/day3-okeydokey-cont">Day3</a></p>
+<a href="http://02credits.com/blog/day3-okeydokey-cont">Day3</a><br />
+<a href="http://02credits.com/blog/day19-automating-blogging">Day19</a></p>
 
 </article>
 <div id="commento"></div>
