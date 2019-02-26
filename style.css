@@ -44,11 +44,11 @@ article {
 }
 
 a {
-    color: #36e !important;
+    color: #36e;
 }
 
 a:visited {
-    color: #36e !important;
+    color: #36e;
 }
 
 
@@ -62,6 +62,10 @@ img {
     }
 }
 
-#tomorrow {
+#tomorrow, #latest {
     float: right;
+}
+
+#first, #latest {
+    color: #777;
 }
