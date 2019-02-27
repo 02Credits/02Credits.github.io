@@ -79,10 +79,10 @@
 </g>
 <!-- GameEmbed -->
 <g id="node5" class="node"><title>GameEmbed</title>
-<polygon fill="none" stroke="gray" points="163.5,-73.5 163.5,-109.5 260.5,-109.5 260.5,-73.5 163.5,-73.5"/>
-<text text-anchor="start" x="171.5" y="-95.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Game Embed </text>
-<text text-anchor="start" x="182.5" y="-81.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="186.5" y="-81.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="black" points="163.5,-73.5 163.5,-109.5 260.5,-109.5 260.5,-73.5 163.5,-73.5"/>
+<text text-anchor="start" x="171.5" y="-95.3" font-family="Times New Roman,serif" font-size="14.00">Game Embed </text>
+<text text-anchor="start" x="176.5" y="-81.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+<text text-anchor="start" x="180.5" y="-81.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00">In Progress</text>
 </g>
 <!-- Publish -->
 <g id="node11" class="node"><title>Publish</title>

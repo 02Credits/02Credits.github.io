@@ -2,7 +2,7 @@ x Get Pixel
 x Collisions [ GP ]
 x Marching Squares Grid
 x Camera
-x Game Embed
+> Game Embed
 - Panels [ MSG, Ca ]
 - Character [ Co ]
 - Bombs [ Co, Pa ]
