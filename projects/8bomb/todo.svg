@@ -30,56 +30,56 @@
 </g>
 <!-- Character -->
 <g id="node7" class="node"><title>Character</title>
-<polygon fill="none" stroke="black" points="68,-219.5 68,-255.5 139,-255.5 139,-219.5 68,-219.5"/>
-<text text-anchor="middle" x="103.5" y="-233.8" font-family="Times New Roman,serif" font-size="14.00">Character</text>
+<polygon fill="none" stroke="black" points="71,-219.5 71,-255.5 142,-255.5 142,-219.5 71,-219.5"/>
+<text text-anchor="middle" x="106.5" y="-233.8" font-family="Times New Roman,serif" font-size="14.00">Character</text>
 </g>
 <!-- Collisions&#45;&gt;Character -->
 <g id="edge2" class="edge"><title>Collisions&#45;&gt;Character</title>
-<path fill="none" stroke="black" d="M111.079,-292.313C109.949,-284.289 108.577,-274.547 107.313,-265.569"/>
-<polygon fill="black" stroke="black" points="110.759,-264.943 105.898,-255.529 103.827,-265.919 110.759,-264.943"/>
+<path fill="none" stroke="black" d="M111.805,-292.313C111.014,-284.289 110.054,-274.547 109.169,-265.569"/>
+<polygon fill="black" stroke="black" points="112.643,-265.137 108.179,-255.529 105.677,-265.824 112.643,-265.137"/>
 </g>
 <!-- Bombs -->
 <g id="node8" class="node"><title>Bombs</title>
-<polygon fill="none" stroke="black" points="157,-219.5 157,-255.5 244,-255.5 244,-219.5 157,-219.5"/>
-<text text-anchor="start" x="178" y="-241.3" font-family="Times New Roman,serif" font-size="14.00">Bombs </text>
-<text text-anchor="start" x="165" y="-227.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
-<text text-anchor="start" x="169" y="-227.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00">In Progress</text>
+<polygon fill="none" stroke="gray" points="160,-219.5 160,-255.5 235,-255.5 235,-219.5 160,-219.5"/>
+<text text-anchor="start" x="175" y="-241.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Bombs </text>
+<text text-anchor="start" x="168" y="-227.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="172" y="-227.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- Collisions&#45;&gt;Bombs -->
 <g id="edge3" class="edge"><title>Collisions&#45;&gt;Bombs</title>
-<path fill="none" stroke="black" d="M134.56,-292.313C145.674,-283.243 159.479,-271.977 171.581,-262.1"/>
-<polygon fill="black" stroke="black" points="174.099,-264.563 179.634,-255.529 169.673,-259.14 174.099,-264.563"/>
+<path fill="none" stroke="black" d="M133.834,-292.313C144.565,-283.243 157.894,-271.977 169.578,-262.1"/>
+<polygon fill="black" stroke="black" points="171.975,-264.657 177.353,-255.529 167.456,-259.311 171.975,-264.657"/>
 </g>
 <!-- MarchingSquaresGrid -->
 <g id="node3" class="node"><title>MarchingSquaresGrid</title>
-<polygon fill="none" stroke="gray" points="178,-365.5 178,-401.5 329,-401.5 329,-365.5 178,-365.5"/>
-<text text-anchor="start" x="186" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Marching Squares Grid </text>
-<text text-anchor="start" x="224" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="228" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="gray" points="175,-365.5 175,-401.5 326,-401.5 326,-365.5 175,-365.5"/>
+<text text-anchor="start" x="183" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Marching Squares Grid </text>
+<text text-anchor="start" x="221" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="225" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- Panels -->
 <g id="node6" class="node"><title>Panels</title>
-<polygon fill="none" stroke="black" points="229,-292.5 229,-328.5 316,-328.5 316,-292.5 229,-292.5"/>
-<text text-anchor="start" x="252.5" y="-314.3" font-family="Times New Roman,serif" font-size="14.00">Panels </text>
-<text text-anchor="start" x="237" y="-300.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
-<text text-anchor="start" x="241" y="-300.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00">In Progress</text>
+<polygon fill="none" stroke="gray" points="226,-292.5 226,-328.5 301,-328.5 301,-292.5 226,-292.5"/>
+<text text-anchor="start" x="243.5" y="-314.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Panels </text>
+<text text-anchor="start" x="234" y="-300.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="238" y="-300.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- MarchingSquaresGrid&#45;&gt;Panels -->
 <g id="edge4" class="edge"><title>MarchingSquaresGrid&#45;&gt;Panels</title>
-<path fill="none" stroke="black" d="M258.099,-365.313C260.27,-357.202 262.91,-347.336 265.334,-338.277"/>
-<polygon fill="black" stroke="black" points="268.739,-339.094 267.943,-328.529 261.977,-337.284 268.739,-339.094"/>
+<path fill="none" stroke="black" d="M253.647,-365.313C255.116,-357.289 256.9,-347.547 258.544,-338.569"/>
+<polygon fill="black" stroke="black" points="262.024,-338.996 260.382,-328.529 255.138,-337.735 262.024,-338.996"/>
 </g>
 <!-- Camera -->
 <g id="node4" class="node"><title>Camera</title>
-<polygon fill="none" stroke="gray" points="347,-365.5 347,-401.5 422,-401.5 422,-365.5 347,-365.5"/>
-<text text-anchor="start" x="361" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Camera </text>
-<text text-anchor="start" x="355" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="359" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="gray" points="344,-365.5 344,-401.5 419,-401.5 419,-365.5 344,-365.5"/>
+<text text-anchor="start" x="358" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Camera </text>
+<text text-anchor="start" x="352" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="356" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- Camera&#45;&gt;Panels -->
 <g id="edge5" class="edge"><title>Camera&#45;&gt;Panels</title>
-<path fill="none" stroke="black" d="M357.673,-365.494C342.821,-356.079 324.171,-344.255 308.111,-334.075"/>
-<polygon fill="black" stroke="black" points="309.816,-331.012 299.496,-328.614 306.068,-336.924 309.816,-331.012"/>
+<path fill="none" stroke="black" d="M353.236,-365.494C337.443,-355.991 317.574,-344.036 300.549,-333.792"/>
+<polygon fill="black" stroke="black" points="302.315,-330.77 291.942,-328.614 298.706,-336.768 302.315,-330.77"/>
 </g>
 <!-- GameEmbed -->
 <g id="node5" class="node"><title>GameEmbed</title>
@@ -100,40 +100,42 @@
 </g>
 <!-- Panels&#45;&gt;Bombs -->
 <g id="edge7" class="edge"><title>Panels&#45;&gt;Bombs</title>
-<path fill="none" stroke="black" d="M255.071,-292.313C246.05,-283.417 234.887,-272.409 225.012,-262.672"/>
-<polygon fill="black" stroke="black" points="227.347,-260.058 217.769,-255.529 222.432,-265.042 227.347,-260.058"/>
+<path fill="none" stroke="black" d="M247.523,-292.313C239.335,-283.505 229.222,-272.625 220.236,-262.958"/>
+<polygon fill="black" stroke="black" points="222.702,-260.47 213.33,-255.529 217.575,-265.236 222.702,-260.47"/>
 </g>
 <!-- Score -->
 <g id="node9" class="node"><title>Score</title>
-<polygon fill="none" stroke="black" points="108,-146.5 108,-182.5 195,-182.5 195,-146.5 108,-146.5"/>
-<text text-anchor="start" x="133" y="-168.3" font-family="Times New Roman,serif" font-size="14.00">Score </text>
-<text text-anchor="start" x="116" y="-154.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
-<text text-anchor="start" x="120" y="-154.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00">In Progress</text>
+<polygon fill="none" stroke="gray" points="114,-146.5 114,-182.5 189,-182.5 189,-146.5 114,-146.5"/>
+<text text-anchor="start" x="133" y="-168.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Score </text>
+<text text-anchor="start" x="122" y="-154.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="126" y="-154.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- Panels&#45;&gt;Score -->
 <g id="edge8" class="edge"><title>Panels&#45;&gt;Score</title>
-<path fill="none" stroke="black" d="M272.839,-292.396C272.369,-272.764 268.872,-240.511 252.5,-219 240.322,-203 221.959,-191.283 204.216,-182.967"/>
-<polygon fill="black" stroke="black" points="205.593,-179.749 195.03,-178.923 202.772,-186.156 205.593,-179.749"/>
+<path fill="none" stroke="black" d="M263.675,-292.159C263.031,-272.601 259.348,-240.701 243.5,-219 232.191,-203.515 214.931,-191.792 198.404,-183.327"/>
+<polygon fill="black" stroke="black" points="199.868,-180.147 189.341,-178.956 196.827,-186.452 199.868,-180.147"/>
 </g>
 <!-- TerrainVariation -->
 <g id="node11" class="node"><title>TerrainVariation</title>
-<polygon fill="none" stroke="black" points="325.5,-146.5 325.5,-182.5 435.5,-182.5 435.5,-146.5 325.5,-146.5"/>
-<text text-anchor="start" x="333.5" y="-160.8" font-family="Times New Roman,serif" font-size="14.00">Terrain Variation</text>
+<polygon fill="none" stroke="gray" points="322.5,-146.5 322.5,-182.5 436.5,-182.5 436.5,-146.5 322.5,-146.5"/>
+<text text-anchor="start" x="330.5" y="-168.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Terrain Variation </text>
+<text text-anchor="start" x="350" y="-154.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="354" y="-154.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- Panels&#45;&gt;TerrainVariation -->
 <g id="edge9" class="edge"><title>Panels&#45;&gt;TerrainVariation</title>
-<path fill="none" stroke="black" d="M285.313,-292.416C304.231,-267.192 339.754,-219.828 361.648,-190.637"/>
-<polygon fill="black" stroke="black" points="364.504,-192.662 367.704,-182.562 358.904,-188.462 364.504,-192.662"/>
+<path fill="none" stroke="black" d="M277.262,-292.416C297.582,-267.192 335.736,-219.828 359.251,-190.637"/>
+<polygon fill="black" stroke="black" points="362.208,-192.545 365.756,-182.562 356.757,-188.154 362.208,-192.545"/>
 </g>
 <!-- Character&#45;&gt;Score -->
 <g id="edge10" class="edge"><title>Character&#45;&gt;Score</title>
-<path fill="none" stroke="black" d="M115.119,-219.313C120.897,-210.766 127.994,-200.269 134.38,-190.823"/>
-<polygon fill="black" stroke="black" points="137.286,-192.774 139.988,-182.529 131.487,-188.853 137.286,-192.774"/>
+<path fill="none" stroke="black" d="M117.393,-219.313C122.755,-210.853 129.327,-200.484 135.267,-191.112"/>
+<polygon fill="black" stroke="black" points="138.31,-192.849 140.707,-182.529 132.397,-189.102 138.31,-192.849"/>
 </g>
 <!-- Bombs&#45;&gt;Score -->
 <g id="edge11" class="edge"><title>Bombs&#45;&gt;Score</title>
-<path fill="none" stroke="black" d="M188.638,-219.313C182.74,-210.766 175.496,-200.269 168.976,-190.823"/>
-<polygon fill="black" stroke="black" points="171.813,-188.771 163.252,-182.529 166.052,-192.747 171.813,-188.771"/>
+<path fill="none" stroke="black" d="M186.365,-219.313C180.884,-210.853 174.165,-200.484 168.094,-191.112"/>
+<polygon fill="black" stroke="black" points="170.908,-189.018 162.533,-182.529 165.033,-192.824 170.908,-189.018"/>
 </g>
 <!-- GameOverScreen -->
 <g id="node13" class="node"><title>GameOverScreen</title>
@@ -162,8 +164,8 @@
 </g>
 <!-- TerrainVariation&#45;&gt;Publish -->
 <g id="edge15" class="edge"><title>TerrainVariation&#45;&gt;Publish</title>
-<path fill="none" stroke="black" d="M391.503,-146.159C402.189,-126.888 414.862,-95.5213 400.5,-73 383.86,-46.9061 350.829,-33.3383 324.42,-26.4077"/>
-<polygon fill="black" stroke="black" points="325.212,-22.9984 314.671,-24.0642 323.576,-29.8046 325.212,-22.9984"/>
+<path fill="none" stroke="black" d="M391.11,-146.191C402.423,-126.948 415.969,-95.6073 401.5,-73 384.645,-46.6643 351.171,-33.1096 324.496,-26.2458"/>
+<polygon fill="black" stroke="black" points="325.19,-22.8136 314.654,-23.9301 323.587,-29.6275 325.19,-22.8136"/>
 </g>
 <!-- ParalaxBackground -->
 <g id="node12" class="node"><title>ParalaxBackground</title>
