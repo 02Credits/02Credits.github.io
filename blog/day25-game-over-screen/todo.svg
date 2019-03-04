@@ -139,10 +139,10 @@
 </g>
 <!-- GameOverScreen -->
 <g id="node13" class="node"><title>GameOverScreen</title>
-<polygon fill="none" stroke="gray" points="0,-73.5 0,-109.5 127,-109.5 127,-73.5 0,-73.5"/>
-<text text-anchor="start" x="8" y="-95.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Game Over Screen </text>
-<text text-anchor="start" x="34" y="-81.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="38" y="-81.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="black" points="0,-73.5 0,-109.5 127,-109.5 127,-73.5 0,-73.5"/>
+<text text-anchor="start" x="8" y="-95.3" font-family="Times New Roman,serif" font-size="14.00">Game Over Screen </text>
+<text text-anchor="start" x="28" y="-81.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+<text text-anchor="start" x="32" y="-81.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00">In Progress</text>
 </g>
 <!-- Score&#45;&gt;GameOverScreen -->
 <g id="edge12" class="edge"><title>Score&#45;&gt;GameOverScreen</title>
