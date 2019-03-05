@@ -161,11 +161,12 @@ time, I can trigger a reset and the entire game will restart from scratch.</p>
       player.jumpReady = false;
     }
   }
-});
-As an example of a Reset subscription, I declare the variables outside of
-the subscription, but do any initialization inside of the Reset callback.
-{% code(lang=&quot;javascript&quot;) %}
-let previousCameraPosition, cameraPosition, shake;
+});</code>
+</pre>
+<p>As an example of a Reset subscription, I declare the variables outside of
+the subscription, but do any initialization inside of the Reset callback.</p>
+<pre>
+  <code class="language-javascript">let previousCameraPosition, cameraPosition, shake;
 export let cameraX, cameraY;
 Reset.Subscribe(() =&gt; {
   previousCameraPosition = 0;
@@ -193,7 +194,7 @@ Keith</p>
     
 
     
-    <a id="latest">Latest Post!</a>
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day26-script-8-performance-improvements&#x2F;" id="tomorrow">Tomorrow</a>
     
   </h3>
 </div>
