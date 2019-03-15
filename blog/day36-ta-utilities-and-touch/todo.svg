@@ -18,27 +18,25 @@
 </g>
 <!-- Grid -->
 <g id="node2" class="node"><title>Grid</title>
-<polygon fill="none" stroke="gray" points="274.254,-365.5 274.254,-401.5 349.254,-401.5 349.254,-365.5 274.254,-365.5"/>
-<text text-anchor="start" x="296.754" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Grid </text>
-<text text-anchor="start" x="282.254" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="286.254" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="gray" points="269.254,-365.5 269.254,-401.5 344.254,-401.5 344.254,-365.5 269.254,-365.5"/>
+<text text-anchor="start" x="291.754" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Grid </text>
+<text text-anchor="start" x="277.254" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
+<text text-anchor="start" x="281.254" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
 </g>
 <!-- Renderer&#45;&gt;Grid -->
 <g id="edge1" class="edge"><title>Renderer&#45;&gt;Grid</title>
-<path fill="none" stroke="black" d="M276.131,-438.313C281.731,-429.853 288.596,-419.484 294.799,-410.112"/>
-<polygon fill="black" stroke="black" points="297.88,-411.799 300.481,-401.529 292.043,-407.935 297.88,-411.799"/>
+<path fill="none" stroke="black" d="M274.921,-438.313C279.873,-429.941 285.933,-419.697 291.431,-410.403"/>
+<polygon fill="black" stroke="black" points="294.601,-411.918 296.68,-401.529 288.576,-408.354 294.601,-411.918"/>
 </g>
 <!-- Touch -->
 <g id="node3" class="node"><title>Touch</title>
-<polygon fill="none" stroke="gray" points="181.254,-365.5 181.254,-401.5 256.254,-401.5 256.254,-365.5 181.254,-365.5"/>
-<text text-anchor="start" x="198.254" y="-387.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Touch </text>
-<text text-anchor="start" x="189.254" y="-373.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="193.254" y="-373.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="black" points="196.754,-365.5 196.754,-401.5 250.754,-401.5 250.754,-365.5 196.754,-365.5"/>
+<text text-anchor="middle" x="223.754" y="-379.8" font-family="Times New Roman,serif" font-size="14.00">Touch</text>
 </g>
 <!-- Renderer&#45;&gt;Touch -->
 <g id="edge2" class="edge"><title>Renderer&#45;&gt;Touch</title>
-<path fill="none" stroke="black" d="M253.618,-438.313C248.138,-429.853 241.419,-419.484 235.348,-410.112"/>
-<polygon fill="black" stroke="black" points="238.161,-408.018 229.786,-401.529 232.286,-411.824 238.161,-408.018"/>
+<path fill="none" stroke="black" d="M254.829,-438.313C249.994,-429.941 244.079,-419.697 238.711,-410.403"/>
+<polygon fill="black" stroke="black" points="241.619,-408.438 233.587,-401.529 235.557,-411.939 241.619,-408.438"/>
 </g>
 <!-- Advancing -->
 <g id="node4" class="node"><title>Advancing</title>
@@ -47,8 +45,8 @@
 </g>
 <!-- Grid&#45;&gt;Advancing -->
 <g id="edge3" class="edge"><title>Grid&#45;&gt;Advancing</title>
-<path fill="none" stroke="black" d="M318.29,-365.313C321.407,-357.115 325.207,-347.123 328.682,-337.985"/>
-<polygon fill="black" stroke="black" points="331.995,-339.12 332.278,-328.529 325.452,-336.632 331.995,-339.12"/>
+<path fill="none" stroke="black" d="M314.5,-365.313C318.234,-357.028 322.794,-346.91 326.948,-337.693"/>
+<polygon fill="black" stroke="black" points="330.16,-339.084 331.079,-328.529 323.779,-336.207 330.16,-339.084"/>
 </g>
 <!-- BlockDragging -->
 <g id="node6" class="node"><title>BlockDragging</title>
@@ -57,13 +55,13 @@
 </g>
 <!-- Grid&#45;&gt;BlockDragging -->
 <g id="edge4" class="edge"><title>Grid&#45;&gt;BlockDragging</title>
-<path fill="none" stroke="black" d="M283.011,-365.494C266.95,-355.991 246.745,-344.036 229.431,-333.792"/>
-<polygon fill="black" stroke="black" points="231.067,-330.694 220.678,-328.614 227.502,-336.718 231.067,-330.694"/>
+<path fill="none" stroke="black" d="M279.208,-365.494C263.958,-356.079 244.808,-344.255 228.318,-334.075"/>
+<polygon fill="black" stroke="black" points="229.82,-330.889 219.473,-328.614 226.143,-336.845 229.82,-330.889"/>
 </g>
 <!-- Touch&#45;&gt;BlockDragging -->
 <g id="edge5" class="edge"><title>Touch&#45;&gt;BlockDragging</title>
-<path fill="none" stroke="black" d="M212.218,-365.313C209.1,-357.115 205.3,-347.123 201.825,-337.985"/>
-<polygon fill="black" stroke="black" points="205.055,-336.632 198.229,-328.529 198.512,-339.12 205.055,-336.632"/>
+<path fill="none" stroke="black" d="M216.007,-365.313C212.273,-357.028 207.713,-346.91 203.559,-337.693"/>
+<polygon fill="black" stroke="black" points="206.729,-336.207 199.429,-328.529 200.347,-339.084 206.729,-336.207"/>
 </g>
 <!-- IntentionalAdvance -->
 <g id="node9" class="node"><title>IntentionalAdvance</title>
@@ -72,8 +70,8 @@
 </g>
 <!-- Touch&#45;&gt;IntentionalAdvance -->
 <g id="edge6" class="edge"><title>Touch&#45;&gt;IntentionalAdvance</title>
-<path fill="none" stroke="black" d="M229.939,-365.252C236.649,-354.817 245.301,-341.212 252.754,-329 265.92,-307.427 280.39,-282.642 290.879,-264.471"/>
-<polygon fill="black" stroke="black" points="294.016,-266.036 295.973,-255.623 287.95,-262.543 294.016,-266.036"/>
+<path fill="none" stroke="black" d="M233.482,-365.416C247.723,-340.408 274.355,-293.64 291.009,-264.392"/>
+<polygon fill="black" stroke="black" points="294.131,-265.984 296.038,-255.562 288.048,-262.52 294.131,-265.984"/>
 </g>
 <!-- NewRows -->
 <g id="node5" class="node"><title>NewRows</title>

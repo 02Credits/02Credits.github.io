@@ -1,6 +1,6 @@
 x Renderer
 x Grid [ R ]
-x Touch [ R ]
+- Touch [ R ]
 - Advancing [ G ]
 - New Rows [ A ]
 - Block Dragging [ G, T ]
