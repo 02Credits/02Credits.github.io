@@ -1,0 +1,313 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=false">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
+    
+    <title>02Credits 
+
+Blog
+</title>
+  </head>
+  <body>
+    <header>
+      <h3>
+
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;">02Credits</a>
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;">Blog</a>
+
+</h3>
+    </header>
+    <main>
+      
+<article>
+  <h1>Day38 - Block Manipulation</h1>
+  <summary>
+    
+      <h3>Implemented block dragging, falling, and intentional grid advancement in a big spaghetti mess</h3>
+    
+    
+      <p>2019-03-16</p>
+    
+  </summary>
+  <p><a href="../../projects/ta/">Project Page</a></p>
+<p><img src="./todo.svg" alt="Todo" /></p>
+<p>Today I did a bunch of shoot-from-the-hip hacking to knock out a number of block
+manipulation gameplay features. I did them very fast and dirty in a giant update
+method, but I will do my best to describe what happened and I will definitely
+clean it up later. In particular, I implemented block dragging and swapping,
+block falling, matches, and the ability to intentionally advance the grid.</p>
+<p>Although the code is a big mess, the exercise of moving quickly and cleanup
+later helped me wrap my head around all of the moving parts. Now that I have a
+better grasp on things I am more able to cleanup my spaghetti mess in the coming
+dailies.</p>
+<h2 id="block-state-overview">Block State Overview</h2>
+<p>To manage a little bit of all the complexity, I added another &quot;enum&quot; similar to
+the one I created for the block type to specify all of the possible block
+states.</p>
+<pre>
+  <code class="language-javascript">export const state = {
+  WAITING: &quot;Waiting&quot;,
+  SPAWNING: &quot;Spawning&quot;,
+  DRAGGING: &quot;Dragging&quot;,
+  FALLING: &quot;Falling&quot;,
+  MATCHED: &quot;Matched&quot;,
+  CLEARING: &quot;Clearing&quot;
+};</code>
+</pre>
+<p>I haven't implemented all of the different states yet, but these roughly match
+my expectations for a given block. When a block is in the spawn row and has not
+quite been activated, it will take on the <code>Spawning</code> state. After passing the
+bottom of the grid, it will transition into the <code>Waiting</code> state which means it
+is ready to be acted upon. From there if the player were to tap and drag the
+block, it will move to the <code>Dragging</code> state and will move with the mouse cursor.
+Finally if the block finds itself over an empty gap, it will move to the
+<code>Falling</code> state and slide down the grid until it finds a block to rest upon.</p>
+<h2 id="dragging">Dragging</h2>
+<p>Dragging a block has 3 main parts. First, it has to be visibly obvious that the
+block has been picked up. Second, the block must return to a valid state when
+dropped. And third, the other blocks must swap out of the way as the dragged
+block is moved over them.</p>
+<p>I solved the first requirement by adding a simple grow and shrink animation. If
+the block is in the <code>Dragging</code> state, I linearly animate the current scale
+toward a particular larger constant. When not in the dragging state, I linearly
+animate the scale back to 1. Since the animation is linear, I don't need to know
+how long it has been since it started and the animation can be started and
+stopped at any point.</p>
+<pre>
+  <code class="language-javascript">animateBlockSize() {
+  if (this.state === state.DRAGGING) {
+    if (this.scale &lt; pickedUpScale) {
+      this.scale += scaleVelocity;
+    } else {
+      this.scale = pickedUpScale;
+    }
+  } else {
+    if (this.scale &gt; 1) {
+      this.scale -= scaleVelocity;
+    } else {
+      this.scale = 1;
+    }
+  }
+}</code>
+</pre>
+<p>Then to actually do something, I modified the render function to utilize the
+scale. At the same time I also modified the <code>z</code> value of the image position to
+draw the block above the other blocks when grabbed.</p>
+<pre>
+  <code class="language-javascript">render() {
+  let { center, dimensions } = this.calculateLocation();
+  let opacity = this.calculateOpacity(center.y);
+  let tint = new Color(1, 1, 1, opacity);
+  if (this.state === state.DRAGGING) {
+    center = center.withZ(10);
+  }
+  dimensions = dimensions.multiply(this.scale);
+  image(blockImages[this.type], center, dimensions, 0, tint, Vector.center);
+}</code>
+</pre>
+<p><img src="http://02credits.com/blog/day38-block-manipulation/GrabAnimation.gif" alt="Grab Animation" /></p>
+<p>Before actually implementing the drag code, I wrote the logic that causes blocks
+to return to their correct location after moving off axis. To do this I split
+the block position into <code>gridPosition</code> and <code>gridSlot</code> variables where the
+<code>gridPosition</code> would contain the current block animation position and the
+<code>gridSlot</code> would contain the current integer grid location in block coordinates.
+Animating back into the correct <code>gridSlot</code> was as simple as applying difference
+fraction trick I outlined
+<a href="http://02credits.com/blog/day25-game-over-screen/">here</a>. The basic idea is to
+modify the current position by the difference between the desired position and
+the current position times some fraction. This results in a smooth jump to the
+correct location which slows down as it gets close.</p>
+<pre>
+  <code class="language-javascript">if (this.state !== state.DRAGGING) {
+  &#x2F;&#x2F; Bounced Back to Grid
+  this.gridPosition.x += (this.gridSlot.x - this.gridPosition.x) * settleVelocity;
+}</code>
+</pre>
+<p>The third and most complicated requirement was solved in a big nested if
+statement. I'm not super proud of the code at the moment and will likely try to
+clean it up soon, but I will attempt to describe the current state of things.
+The dragging functionality depends on the state of these variables:
+<code>touchDown/touchStarted</code>, <code>heldBlock</code> and <code>this.state</code>. The touch status is used
+to decide when to start or stop dragging, <code>heldBlock</code> is used to keep track of
+which block to move around, and the block state is used to start and stop the
+drag animations.</p>
+<p>To initiate a drag, no block must be currently held, the block being touched
+must be in the <code>Waiting</code> state, and the touch must have started on the current
+frame.</p>
+<pre>
+  <code class="language-javascript">if (touchDown) {
+  if (heldBlock == null) {
+    &#x2F;&#x2F; Start Dragging
+    if (this.state === state.WAITING &amp;&amp; touchPosition.within(center, dimensions) &amp;&amp; touchStarted) {
+      this.state = state.DRAGGING;
+      this.dragOffset = touchPosition.subtract(center);
+      heldBlock = this;
+    }</code>
+</pre>
+<p>Upon starting a drag, the state is updated to <code>Dragging</code>, the <code>heldBlock</code> is
+set, and the touch offset is recorded so that the block doesn't jump to the
+touch location.</p>
+<p>After a block is being dragged, the x position must be updated to follow the
+touch location. Crucially though, the block must only move one block position at
+a time. At 60fps a block is very capable of being dragged across multiple
+locations in one frame allowing the player to skip over a location. Although
+potentially interesting as a way to add input difficulty, I don't want this
+feature for now, so I impose a 0.9 block length speed limit.</p>
+<p>The block <code>gridSlot.x</code> is set to the rounded <code>gridPosition.x</code> value. If the
+<code>gridSlot.x</code> is updated, then any block in the new position is swapped to the
+previous grid position. Since the bounce animation is already setup above, this
+doesn't require anymore managing.</p>
+<p>Lastly the x position is locked between 0 and 5 in order to prevent blocks from
+moving off of the grid.</p>
+<pre>
+  <code class="language-javascript">} else if (heldBlock === this) {
+  &#x2F;&#x2F; Handle Dragged Block
+  let previousSlotX = this.gridSlot.x;
+  &#x2F;&#x2F; correctedTouchX accounts for the initial touch offset
+  let correctedTouchX = touchPosition.x - this.dragOffset.x - blockWidth &#x2F; 2;
+  let gridLeft = gridCenter.x - gridDimensions.width &#x2F; 2;
+  let newGridXTarget = (correctedTouchX - gridLeft) * gridBlockDimensions.width &#x2F; gridDimensions.width;
+  let diff = newGridXTarget - this.gridPosition.x;
+  if (diff &gt; maxDragVelocity) diff = maxDragVelocity;
+  if (diff &lt; -maxDragVelocity) diff = -maxDragVelocity;
+  this.gridPosition.x += diff;
+  if (this.gridPosition.x &lt; 0) this.gridPosition.x = 0;
+  if (this.gridPosition.x &gt; 5) this.gridPosition.x = 5;
+  this.gridSlot.x = Math.round(this.gridPosition.x);
+  if (previousSlotX !== this.gridSlot.x) {
+    let blockInTheWay = blocks[this.gridSlot.y][this.gridSlot.x];
+    blocks[this.gridSlot.y][this.gridSlot.x] = this;
+    blocks[this.gridSlot.y][previousSlotX] = blockInTheWay;
+    if (blockInTheWay) {
+      blockInTheWay.gridSlot.x = previousSlotX;
+    }
+  }
+}</code>
+</pre>
+<p>To wrap up the dragging animation, the block state is set to <code>Waiting</code> if the
+touch is no longer active. This will cause the block to stop being managed by
+the touch location and bounce back into the current grid slot.</p>
+<pre>
+  <code class="language-javascript">} else if (this.state === state.DRAGGING) {
+  &#x2F;&#x2F; Stop Dragging
+  this.state = state.WAITING;
+  heldBlock = null;
+}</code>
+</pre>
+<p>The combination of the above results in this satisfying animation:</p>
+<p><img src="http://02credits.com/blog/day38-block-manipulation/Dragging.gif" alt="Dragging" /></p>
+<h2 id="falling">Falling</h2>
+<p>Falling blocks was somewhat frustrating to get right. My initial implementation
+did not manage the block state properly and allowed blocks to get caught in a
+half way state between grid locations. I think at this point I have ironed out
+the kinks, but it was frustrating to say the least.</p>
+<p>To start out I detect if a block should be falling by looking up grid slot below
+the block.</p>
+<pre>
+  <code class="language-javascript">handleFalling(center, dimensions) {
+  if (this.state !== state.SPAWNING &amp;&amp; !blocks[this.gridSlot.y + 1][this.gridSlot.x]) {
+    this.state = state.FALLING;
+    if (heldBlock === this) heldBlock = null;
+  }</code>
+</pre>
+<p>Then each frame a block is falling, the position is updated by the falling
+speed, the new grid position is checked to see if the falling can stop, and if
+not, the grid structure is updated to reflect the new block position.</p>
+<pre>
+  <code class="language-javascript">if (this.state === state.FALLING) {
+  this.gridPosition.y += fallSpeed;
+  if (this.gridPosition.y &gt; this.gridSlot.y &amp;&amp; blocks[this.gridSlot.y + 1][this.gridSlot.x]) {
+    this.gridPosition.y = this.gridSlot.y;
+    this.state = state.WAITING;
+  } else {
+    let previousSlot = this.gridSlot.clone();
+    this.gridSlot.y = Math.ceil(this.gridPosition.y);
+    if (!previousSlot.equals(this.gridSlot)) {
+      blocks[previousSlot.y][previousSlot.x] = null;
+      blocks[this.gridSlot.y][this.gridSlot.x] = this;
+    }
+  }
+}</code>
+</pre>
+<p>Combined, these result in this animation:</p>
+<p><img src="http://02credits.com/blog/day38-block-manipulation/Falling.gif" alt="Falling" /></p>
+<h2 id="intentional-grid-advancement">Intentional Grid Advancement</h2>
+<p>Finally to speed things along when the grid is moving too slowly, I added a
+feature where the user can click on a spawning block to force it to spawn
+immediately jumping the grid up. The action must be initiated on the block
+itself, but the position modification must happen in the grid module, so I
+created a simple function in <code>grid.js</code> which increments the blockAdvancement by
+1,</p>
+<pre>
+  <code class="language-javascript">export function intentionalAdvance() {
+  blockAdvancement = Math.floor(blockAdvancement) + 1;
+}</code>
+</pre>
+<p>And then added a check in <code>block.update</code> to call the function when tapped and
+spawning.</p>
+<pre>
+  <code class="language-javascript">if (this.state === state.SPAWNING &amp;&amp; touchPosition.within(center, dimensions) &amp;&amp; touchStarted) {
+  intentionalAdvance();
+}</code>
+</pre>
+<p>And with that, the update function is all caught up and documented:</p>
+<pre>
+  <code class="language-javascript">update() {
+  let { center, dimensions } = this.calculateLocation();
+  this.handleDragging(center, dimensions);
+  this.handleFalling(center, dimensions);
+  this.animateBlockSize();
+  if (this.state === state.SPAWNING &amp;&amp; touchPosition.within(center, dimensions) &amp;&amp; touchStarted) {
+    intentionalAdvance();
+  }
+}</code>
+</pre>
+<p>As it turns out, the act of documenting the code forced me to explain it and
+rewrite portions to be more understandable. I'm still not super pleased with the
+overall structure as it feels somewhat unprincipled, but its way better than it
+was. Yay <a href="https://en.wikipedia.org/wiki/Rubber_duck_debugging">rubber ducky
+programming</a>!</p>
+<h2 id="playable">Playable!</h2>
+<p>I also spent some time working on getting a basic match recognition routine
+running. I haven't built the clear animations yet though, so I will save the
+details for a future post; this one is long enough as is. As a teaser though,
+here is a gif of me playing the current version of the game. Its so satisfying
+to reach the playable stage of a game. It motivates me to push it further!</p>
+<p><img src="http://02credits.com/blog/day38-block-manipulation/Playable.gif" alt="Playable" /></p>
+<p>As always, the current version of the game as it exist in real time (not post
+time) can be found <a href="https://kethku.github.io/TetrisAttackClone/">here</a>.</p>
+<p>Till tomorrow!<br />
+Keith</p>
+
+  
+<div id="page-nav-links">
+  <h3>
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day37-advancing-rows-and-minor-cleanup&#x2F;" id="yesterday">Yesterday</a>
+    
+
+    
+    <a id="latest">Latest Post!</a>
+    
+  </h3>
+</div>
+
+</article>
+
+
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
+
+
+
+    </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
+  </body>
+</html>
