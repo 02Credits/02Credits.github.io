@@ -331,17 +331,16 @@ gpu memory, make the draw call, and clear the <code>imagesToDraw</code> list for
 frame.</p>
 <pre>
   <code class="language-javascript">for (let id in spriteArrays) {
-    if (id != &quot;indices&quot;) {
-      twgl.setAttribInfoBufferFromArray(gl, bufferInfo.attribs[id], spriteArrays[id]);
-    } else {
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferInfo.indices);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, spriteArrays[id].data, spriteArrays[id].drawType);
-    }
+  if (id != &quot;indices&quot;) {
+    twgl.setAttribInfoBufferFromArray(gl, bufferInfo.attribs[id], spriteArrays[id]);
+  } else {
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufferInfo.indices);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, spriteArrays[id].data, spriteArrays[id].drawType);
   }
-  twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
-  twgl.drawBufferInfo(gl, bufferInfo, gl.TRIANGLES, imagesToDraw.length * 6);
-  imagesToDraw = [];
-}</code>
+}
+twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
+twgl.drawBufferInfo(gl, bufferInfo, gl.TRIANGLES, imagesToDraw.length * 6);
+imagesToDraw = [];</code>
 </pre>
 <p>And thats it! I've found this method of drawing textures to the screen to be
 incredibly flexible and fast. I've used this same basic structure in a number of
@@ -365,7 +364,7 @@ Keith</p>
     
 
     
-    <a id="latest">Latest Post!</a>
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day41-stop-clock-and-combo-struggles&#x2F;" id="tomorrow">Tomorrow</a>
     
   </h3>
 </div>
