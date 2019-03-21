@@ -158,35 +158,35 @@
 </g>
 <!-- Combo -->
 <g id="node12" class="node"><title>Combo</title>
-<polygon fill="none" stroke="gray" points="137,-73.5 137,-109.5 212,-109.5 212,-73.5 137,-73.5"/>
-<text text-anchor="start" x="151" y="-95.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray">Combo </text>
-<text text-anchor="start" x="145" y="-81.3" font-family="Times New Roman,serif" font-size="14.00" fill="gray"> </text>
-<text text-anchor="start" x="149" y="-81.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00" fill="gray">Complete</text>
+<polygon fill="none" stroke="black" points="128,-73.5 128,-109.5 215,-109.5 215,-73.5 128,-73.5"/>
+<text text-anchor="start" x="148" y="-95.3" font-family="Times New Roman,serif" font-size="14.00">Combo </text>
+<text text-anchor="start" x="136" y="-81.3" font-family="Times New Roman,serif" font-size="14.00"> </text>
+<text text-anchor="start" x="140" y="-81.3" font-family="Times New Roman,serif" font-style="italic" font-size="14.00">In Progress</text>
 </g>
 <!-- Falling&#45;&gt;Combo -->
 <g id="edge14" class="edge"><title>Falling&#45;&gt;Combo</title>
-<path fill="none" stroke="black" d="M70.3149,-146.494C88.9869,-136.817 112.567,-124.597 132.57,-114.23"/>
-<polygon fill="black" stroke="black" points="134.21,-117.322 141.478,-109.614 130.989,-111.107 134.21,-117.322"/>
+<path fill="none" stroke="black" d="M69.5963,-146.494C87.7772,-136.861 110.715,-124.707 130.223,-114.37"/>
+<polygon fill="black" stroke="black" points="132.004,-117.388 139.201,-109.614 128.726,-111.203 132.004,-117.388"/>
 </g>
 <!-- StopClock&#45;&gt;Combo -->
 <g id="edge15" class="edge"><title>StopClock&#45;&gt;Combo</title>
-<path fill="none" stroke="black" d="M144.941,-146.313C149.54,-137.941 155.166,-127.697 160.272,-118.403"/>
-<polygon fill="black" stroke="black" points="163.399,-119.979 165.146,-109.529 157.264,-116.609 163.399,-119.979"/>
+<path fill="none" stroke="black" d="M144.215,-146.313C148.415,-138.028 153.545,-127.91 158.219,-118.693"/>
+<polygon fill="black" stroke="black" points="161.465,-120.031 162.866,-109.529 155.222,-116.865 161.465,-120.031"/>
 </g>
 <!-- ClearAnimation&#45;&gt;Combo -->
 <g id="edge16" class="edge"><title>ClearAnimation&#45;&gt;Combo</title>
-<path fill="none" stroke="black" d="M232.86,-146.313C223.119,-137.33 211.041,-126.193 200.404,-116.386"/>
-<polygon fill="black" stroke="black" points="202.692,-113.735 192.968,-109.529 197.947,-118.881 202.692,-113.735"/>
+<path fill="none" stroke="black" d="M232.134,-146.313C222.013,-137.33 209.464,-126.193 198.413,-116.386"/>
+<polygon fill="black" stroke="black" points="200.49,-113.549 190.687,-109.529 195.843,-118.784 200.49,-113.549"/>
 </g>
 <!-- Garbage -->
 <g id="node20" class="node"><title>Garbage</title>
-<polygon fill="none" stroke="black" points="319.5,-0.5 319.5,-36.5 383.5,-36.5 383.5,-0.5 319.5,-0.5"/>
-<text text-anchor="middle" x="351.5" y="-14.8" font-family="Times New Roman,serif" font-size="14.00">Garbage</text>
+<polygon fill="none" stroke="black" points="316.5,-0.5 316.5,-36.5 380.5,-36.5 380.5,-0.5 316.5,-0.5"/>
+<text text-anchor="middle" x="348.5" y="-14.8" font-family="Times New Roman,serif" font-size="14.00">Garbage</text>
 </g>
 <!-- Combo&#45;&gt;Garbage -->
 <g id="edge17" class="edge"><title>Combo&#45;&gt;Garbage</title>
-<path fill="none" stroke="black" d="M212.037,-75.4427C240.665,-63.9592 280.086,-48.1465 309.714,-36.2616"/>
-<polygon fill="black" stroke="black" points="311.379,-39.365 319.357,-32.3936 308.773,-32.8682 311.379,-39.365"/>
+<path fill="none" stroke="black" d="M213.896,-73.4937C242.074,-62.1907 278.903,-47.4175 306.913,-36.1818"/>
+<polygon fill="black" stroke="black" points="308.446,-39.338 316.424,-32.3666 305.84,-32.8412 308.446,-39.338"/>
 </g>
 <!-- DangerAnimation -->
 <g id="node14" class="node"><title>DangerAnimation</title>
@@ -260,8 +260,8 @@
 </g>
 <!-- ShareState&#45;&gt;Garbage -->
 <g id="edge25" class="edge"><title>ShareState&#45;&gt;Garbage</title>
-<path fill="none" stroke="black" d="M486.501,-219.347C492.92,-187.352 501.84,-117.767 470.5,-73 452.76,-47.6606 420.087,-34.1316 393.458,-27.0231"/>
-<polygon fill="black" stroke="black" points="394.139,-23.5863 383.593,-24.6019 392.47,-30.3845 394.139,-23.5863"/>
+<path fill="none" stroke="black" d="M486.54,-219.32C493.023,-187.279 502.046,-117.621 470.5,-73 452.01,-46.8461 417.82,-33.3324 390.329,-26.4368"/>
+<polygon fill="black" stroke="black" points="391.076,-23.0172 380.545,-24.1847 389.505,-29.8388 391.076,-23.0172"/>
 </g>
 <!-- Win -->
 <g id="node21" class="node"><title>Win</title>
