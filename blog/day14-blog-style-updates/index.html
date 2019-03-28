@@ -37,6 +37,10 @@ Blog
     
   </summary>
   
+  <p>
+    <a href="../../projects/blog/">Project Page</a>
+  </p>
+  
   <p><img src="./todo.svg" alt="Todo" /></p>
 <p>Today was another random website improvements day, so its going to be a bit
 light on actual blog content. I have had on my list for a while now, to rework
@@ -57,7 +61,10 @@ inside. This doesn't give me sufficient control over the styling and in general
 leaves a bunch to be desired. So I decided to replace the default highlighting
 with
 <a href="https://prismjs.com/download.html#themes=prism&amp;languages=markup+css+clike+javascript">Prism</a>.
-This was pretty simple, and just required configuring the language list on the download page (I checked all the things), picking a theme, and downloading both the style sheet and the JavaScript file and referencing them in the base template.</p>
+This was pretty simple, and just required configuring the language list on the
+download page (I checked all the things), picking a theme, and downloading both
+the style sheet and the JavaScript file and referencing them in the base
+template.</p>
 <pre>
   <code class="language-html">&lt;head&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, user-scalable=false&quot;&gt;
@@ -69,7 +76,8 @@ This was pretty simple, and just required configuring the language list on the d
   &lt;title&gt;02Credits {% block title %}{% endblock title %}&lt;&#x2F;title&gt;
 &lt;&#x2F;head&gt;</code>
 </pre>
-<p>Unfortunately I also needed to change the method of adding code tags. Instead of using the normal markdown strategy:</p>
+<p>Unfortunately I also needed to change the method of adding code tags. Instead of
+using the normal markdown strategy:</p>
 <pre>
   <code class="language-markdown">&#96;&#96;&#96; Language
 &#96;&#96;&#96;</code>
