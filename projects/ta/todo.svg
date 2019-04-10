@@ -337,22 +337,24 @@
 <!-- CameraShake -->
 <g id="node23" class="node">
 <title>CameraShake</title>
-<polygon fill="none" stroke="#000000" points="185.3783,-219.5 185.3783,-255.5 282.6217,-255.5 282.6217,-219.5 185.3783,-219.5"/>
-<text text-anchor="start" x="193.3783" y="-233.3" font-family="Times,serif" font-size="14.00" fill="#000000">Camera Shake</text>
+<polygon fill="none" stroke="#c0c0c0" points="181.6283,-219.5 181.6283,-255.5 282.3717,-255.5 282.3717,-219.5 181.6283,-219.5"/>
+<text text-anchor="start" x="189.6283" y="-239.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0">Camera Shake </text>
+<text text-anchor="start" x="203.0312" y="-225.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0"> </text>
+<text text-anchor="start" x="206.5312" y="-225.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#c0c0c0">Complete</text>
 </g>
 <!-- GarbagePhysics -->
 <g id="node24" class="node">
 <title>GarbagePhysics</title>
-<polygon fill="none" stroke="#c0c0c0" points="177.406,-292.5 177.406,-328.5 290.594,-328.5 290.594,-292.5 177.406,-292.5"/>
-<text text-anchor="start" x="185.406" y="-312.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0">Garbage Physics </text>
-<text text-anchor="start" x="205.0312" y="-298.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0"> </text>
-<text text-anchor="start" x="208.5312" y="-298.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#c0c0c0">Complete</text>
+<polygon fill="none" stroke="#c0c0c0" points="175.406,-292.5 175.406,-328.5 288.594,-328.5 288.594,-292.5 175.406,-292.5"/>
+<text text-anchor="start" x="183.406" y="-312.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0">Garbage Physics </text>
+<text text-anchor="start" x="203.0312" y="-298.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0"> </text>
+<text text-anchor="start" x="206.5312" y="-298.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#c0c0c0">Complete</text>
 </g>
 <!-- GarbagePhysics&#45;&gt;CameraShake -->
 <g id="edge29" class="edge">
 <title>GarbagePhysics-&gt;CameraShake</title>
-<path fill="none" stroke="#000000" d="M234,-292.4551C234,-284.3828 234,-274.6764 234,-265.6817"/>
-<polygon fill="#000000" stroke="#000000" points="237.5001,-265.5903 234,-255.5904 230.5001,-265.5904 237.5001,-265.5903"/>
+<path fill="none" stroke="#000000" d="M232,-292.4551C232,-284.3828 232,-274.6764 232,-265.6817"/>
+<polygon fill="#000000" stroke="#000000" points="235.5001,-265.5903 232,-255.5904 228.5001,-265.5904 235.5001,-265.5903"/>
 </g>
 <!-- GarbageClearing -->
 <g id="node28" class="node">
@@ -365,14 +367,14 @@
 <!-- GarbagePhysics&#45;&gt;GarbageClearing -->
 <g id="edge30" class="edge">
 <title>GarbagePhysics-&gt;GarbageClearing</title>
-<path fill="none" stroke="#000000" d="M206.3383,-292.3856C194.6533,-283.0632 182.3084,-270.5841 176,-256 169.4715,-240.907 170.6092,-234.5357 176,-219 179.5929,-208.6457 186.0592,-198.7705 192.9041,-190.3406"/>
-<polygon fill="#000000" stroke="#000000" points="195.5941,-192.5809 199.5012,-182.7328 190.3055,-187.9949 195.5941,-192.5809"/>
+<path fill="none" stroke="#000000" d="M203.8723,-292.4828C191.9881,-283.1809 179.429,-270.6909 173,-256 166.4072,-240.935 167.3533,-234.4446 173,-219 176.8018,-208.6013 183.5603,-198.8176 190.746,-190.4878"/>
+<polygon fill="#000000" stroke="#000000" points="193.471,-192.6959 197.6837,-182.9746 188.3282,-187.947 193.471,-192.6959"/>
 </g>
 <!-- GarbageLineRendering&#45;&gt;GarbagePhysics -->
 <g id="edge31" class="edge">
 <title>GarbageLineRendering-&gt;GarbagePhysics</title>
-<path fill="none" stroke="#000000" d="M258.0899,-365.4551C254.436,-357.1196 250.0182,-347.0416 245.969,-337.8042"/>
-<polygon fill="#000000" stroke="#000000" points="249.1504,-336.3439 241.93,-328.5904 242.7393,-339.1542 249.1504,-336.3439"/>
+<path fill="none" stroke="#000000" d="M257.5955,-365.4551C253.7132,-357.1196 249.0194,-347.0416 244.717,-337.8042"/>
+<polygon fill="#000000" stroke="#000000" points="247.8205,-336.1776 240.4256,-328.5904 241.475,-339.1331 247.8205,-336.1776"/>
 </g>
 <!-- GarbageImages -->
 <g id="node26" class="node">
@@ -391,10 +393,10 @@
 <!-- GarbageComboExtension -->
 <g id="node27" class="node">
 <title>GarbageComboExtension</title>
-<polygon fill="none" stroke="#c0c0c0" points="147.4344,-73.5 147.4344,-109.5 318.5656,-109.5 318.5656,-73.5 147.4344,-73.5"/>
-<text text-anchor="start" x="155.4344" y="-93.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0">Garbage Combo Extension </text>
-<text text-anchor="start" x="204.0312" y="-79.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0"> </text>
-<text text-anchor="start" x="207.5312" y="-79.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#c0c0c0">Complete</text>
+<polygon fill="none" stroke="#000000" points="147.4344,-73.5 147.4344,-109.5 318.5656,-109.5 318.5656,-73.5 147.4344,-73.5"/>
+<text text-anchor="start" x="155.4344" y="-93.9" font-family="Times,serif" font-size="14.00" fill="#000000">Garbage Combo Extension </text>
+<text text-anchor="start" x="199.5659" y="-79.9" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="start" x="203.0659" y="-79.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#000000">In Progress</text>
 </g>
 <!-- GarbageComboExtension&#45;&gt;Multiplayer -->
 <g id="edge33" class="edge">
