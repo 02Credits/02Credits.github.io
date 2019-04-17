@@ -423,12 +423,19 @@
         <url>
             <loc>http://02credits.com/blog/day64-spacemacs-chrome-debugging/</loc>
             
-                <lastmod>2019-04-15</lastmod>
+                <lastmod>2019-04-14</lastmod>
             
         </url>
     
         <url>
             <loc>http://02credits.com/blog/day65-multi-line-garbage-clearing/</loc>
+            
+                <lastmod>2019-04-15</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>http://02credits.com/blog/day66-porting-tetris-attack-to-typescript/</loc>
             
                 <lastmod>2019-04-16</lastmod>
             
