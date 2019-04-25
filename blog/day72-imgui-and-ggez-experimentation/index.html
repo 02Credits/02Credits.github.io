@@ -62,14 +62,13 @@ can prompt the user for some extra information, store the location you are
 coming from, currently clipboard, etc. You specify all of this configuration
 information in a fairly succinct variable like so:</p>
 <pre>
-  <code class="language-lisp">org-capture-templates &#96;(
-    (&quot;d&quot; &quot;Daily Info&quot; entry (file &quot;c:&#x2F;dev&#x2F;Notes&#x2F;daily.org&quot;)
-     &quot;* %?\n%i&quot;)
-    (&quot;c&quot; &quot;Daily Code&quot; entry (file &quot;c:&#x2F;dev&#x2F;Notes&#x2F;daily.org&quot;)
-     &quot;* %?\n{% code(lang=\&quot;lisp\&quot;) %}\n%i</code>
+<code class="language-lisp">org-capture-templates `(
+    ("d" "Daily Info" entry (file "c:/dev/Notes/daily.org")
+     "* %?\n%i")
+    ("c" "Daily Code" entry (file "c:/dev/Notes/daily.org")
+     "* %?\n{% code(lang=\"lisp\") %}\n%i{% end %}")))
+</code>
 </pre>
-")))
-{% end %}
 <p>Here I have defined two commands: d for daily info which will store whatever
 region is around, and c for daily code which will store the region and wrap it
 in a code block. The format is a bit weird, but it has the key binding followed
