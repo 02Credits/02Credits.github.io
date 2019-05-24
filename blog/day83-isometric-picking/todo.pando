@@ -17,5 +17,5 @@ x Objects [ Camera ]
 - Routine Editor [ Routine Ticker ]
 - Action Insertion [ Action Search, Routine Ticker ]
 - Pick and Place [ Action Insertion ]
-x Input Picking [ Camera, Custom Sprite Renderer ]
-x Custom Sprite Renderer
+> Input Picking [ Camera, Custom Sprite Renderer ]
+> Custom Sprite Renderer

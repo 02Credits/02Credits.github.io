@@ -93,10 +93,10 @@
 <!-- InputPicking -->
 <g id="node20" class="node">
 <title>InputPicking</title>
-<polygon fill="none" stroke="#c0c0c0" points="489.0824,-219.5 489.0824,-255.5 584.412,-255.5 584.412,-219.5 489.0824,-219.5"/>
-<text text-anchor="start" x="497.0824" y="-239.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0">Input Picking </text>
-<text text-anchor="start" x="507.7784" y="-225.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0"> </text>
-<text text-anchor="start" x="511.2784" y="-225.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#c0c0c0">Complete</text>
+<polygon fill="none" stroke="#000000" points="489.0824,-219.5 489.0824,-255.5 584.412,-255.5 584.412,-219.5 489.0824,-219.5"/>
+<text text-anchor="start" x="497.0824" y="-239.9" font-family="Times,serif" font-size="14.00" fill="#000000">Input Picking </text>
+<text text-anchor="start" x="503.3131" y="-225.9" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="start" x="506.8131" y="-225.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#000000">In Progress</text>
 </g>
 <!-- Camera&#45;&gt;InputPicking -->
 <g id="edge7" class="edge">
@@ -299,10 +299,10 @@
 <!-- CustomSpriteRenderer -->
 <g id="node21" class="node">
 <title>CustomSpriteRenderer</title>
-<polygon fill="none" stroke="#c0c0c0" points="551.3457,-292.5 551.3457,-328.5 706.1487,-328.5 706.1487,-292.5 551.3457,-292.5"/>
-<text text-anchor="start" x="559.3457" y="-312.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0">Custom Sprite Renderer </text>
-<text text-anchor="start" x="599.7784" y="-298.9" font-family="Times,serif" font-size="14.00" fill="#c0c0c0"> </text>
-<text text-anchor="start" x="603.2784" y="-298.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#c0c0c0">Complete</text>
+<polygon fill="none" stroke="#000000" points="551.3457,-292.5 551.3457,-328.5 706.1487,-328.5 706.1487,-292.5 551.3457,-292.5"/>
+<text text-anchor="start" x="559.3457" y="-312.9" font-family="Times,serif" font-size="14.00" fill="#000000">Custom Sprite Renderer </text>
+<text text-anchor="start" x="595.3131" y="-298.9" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="start" x="598.8131" y="-298.9" font-family="Times,serif" font-style="italic" font-size="14.00" fill="#000000">In Progress</text>
 </g>
 <!-- CustomSpriteRenderer&#45;&gt;InputPicking -->
 <g id="edge28" class="edge">
