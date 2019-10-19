@@ -1,0 +1,221 @@
+<html>
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139157194-1"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+
+     gtag('config', 'UA-139157194-1');
+    </script>
+
+    <meta name="viewport" content="width=device-width, user-scalable=false">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
+    
+    <title>02Credits 
+
+Blog
+</title>
+  </head>
+  <body>
+    <header>
+      <h3>
+
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;">02Credits</a>
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;">Blog</a>
+
+</h3>
+    </header>
+    <main>
+      
+<article>
+  <h1>Day72 - Imgui and GGEZ Experimentation</h1>
+  <summary>
+    
+      <h3>Testing out ggez and imgui libraries in rust</h3>
+    
+    
+      <p>2019-04-24</p>
+    
+  </summary>
+  
+  <p>Yesterday I didn't get anything posted because I was doing some experimentation
+with GGEZ, imgui, and my data collection process. I bit off more than I could
+chew and it got too late by the time I got to a good stopping place to write
+everything up.</p>
+<h2 id="org-capture">Org Capture</h2>
+<p>Recently I've been putting some thought into how I can streamline my writing
+process a bit more and potentially integrate my coding and writing process a bit
+more. I eventually landed on using <a href="https://orgmode.org/">org-mode</a> and the
+org-capture feature to record code snippets and various data without breaking my
+programming flow.</p>
+<p>As I have mentioned in a
+<a href="http://02credits.com/blog/day64-spacemacs-chrome-debugging/">previous</a> post, I
+<em>currently</em> use emacs as my primary editor. One huge benefit to this is that I
+can take advantage of the wonderful org-mode plain text organization system.
+Giving an overview of all of the crazy things org-mode can do would take an
+entire blog. <a href="https://sachachua.com/blog/">There are those who</a> have written
+such blogs, so I won't try to repeat that here. Suffice it to say that org-mode
+is pretty great.</p>
+<p>org-capture is the canonical way for pulling things into the org-mode system.
+The core idea is to build easy key bindings which will use contextual
+information to add an org-mode entry. The process is highly configurable, so you
+can prompt the user for some extra information, store the location you are
+coming from, currently clipboard, etc. You specify all of this configuration
+information in a fairly succinct variable like so:</p>
+<pre>
+<code class="language-lisp">org-capture-templates `(
+    ("d" "Daily Info" entry (file "c:/dev/Notes/daily.org")
+     "* %?\n%i")
+    ("c" "Daily Code" entry (file "c:/dev/Notes/daily.org")
+     "* %?\n{% code(lang=\"lisp\") %}\n%i{% end %}")))
+</code>
+</pre>
+<p>Here I have defined two commands: d for daily info which will store whatever
+region is around, and c for daily code which will store the region and wrap it
+in a code block. The format is a bit weird, but it has the key binding followed
+by the name, the file to store in, and the format of text to insert. The format
+has a number <code>%</code> tokens which get replaced by various data related to the
+particular captured content. More details about the exact formats can be found
+<a href="https://orgmode.org/manual/Template-expansion.html#Template-expansion">here</a>.</p>
+<p>This small change lets me code along and any time I find some piece of code or
+information that would be worth pointing out in the blog post, I can tag it and
+save it for later.</p>
+<h2 id="ggez">GGEZ</h2>
+<p>With the blog stuff out of the way I moved on to building the GGEZ and ImGui
+demo. The idea for this pairing as a UI framework came from
+<a href="https://iolivia.me/posts/imgui-ggez/">this</a> which goes into detail how to
+integrate the two projects. Unfortunately the blog post was written a while ago
+and is missing some crucial details about how to use the new version of GGEZ.</p>
+<p>The strategy is still sound though so I soldiered on. The first step was to get
+a building version of GGEZ with a simple graphics demo. The particular demo
+recommended in the blog post was to have a simple circle slide across the
+screen, so I just went with that.</p>
+<pre>
+  <code class="language-rust">use ggez::*;
+struct State {
+    pos_x: f32,
+}
+impl ggez::event::EventHandler for State {
+    fn update(&amp;mut self, _ctx: &amp;mut Context) -&gt; GameResult&lt;()&gt; {
+        self.pos_x = self.pos_x % 800.0 + 1.0;
+        Ok(())
+    }
+    fn draw(&amp;mut self, ctx: &amp;mut Context) -&gt; GameResult&lt;()&gt; {
+        graphics::clear(ctx, graphics::BLACK);
+        let circle = graphics::Mesh::new_circle(
+            ctx,
+            graphics::DrawMode::fill(),
+            mint::Point2{x: self.pos_x, y: 330.0},
+            100.0,
+            1.0,
+            graphics::WHITE)?;
+        graphics::draw(ctx, &amp;circle, graphics::DrawParam::default())?;
+        graphics::present(ctx)
+    }
+}
+pub fn main() {
+    let state = &amp;mut State { pos_x: 0.0 };
+    let c = conf::Conf::new();
+    let(ref mut ctx, ref mut event_loop) = ContextBuilder::new(&quot;ggez_imgui_test&quot;, &quot;Keith Simmons&quot;)
+        .conf(c)
+        .build()
+        .unwrap();
+    event::run(ctx, event_loop, state).unwrap();
+}</code>
+</pre>
+<p>The only real difficulty was getting SDL to install properly. Some minor
+fiddling and updating to the newest version of GGEZ and that was working too.</p>
+<p><img src="http://02credits.com/blog/day72-imgui-and-ggez-experimentation/GGEZDemo.gif" alt="GGEZ Demo" /></p>
+<p>Integrating the ImGui library required following (copying) the guide in the blog
+post, and clicking build until things starting running. The main issues I ran
+into was finding the correct version. After updating to GGEZ 0.5 which switched
+off of SDL for window creation, things built just fine.</p>
+<h2 id="imgui">ImGui</h2>
+<p>As a bit of background, ImGui is a UI toolkit in an immediate mode style which
+simply means that it doesn't keep an entire tree around between frames. Every
+frame renders the whole UI from scratch. Recently there has been a similar
+pattern in Javascript with virtual dom libraries which try to emulate immediate
+mode interfaces by diffing trees between frames.</p>
+<p>ImGui has an added benefit that the interface is pretty simple. If you have a
+way to render textures to the screen, mouse and keyboard input and a window,
+then its not too hard to integrate ImGui. The imgui-rs libraries handles most of
+this for you, so I just needed to hook up the correct shader and input bindings.</p>
+<p>As mentioned above, most of the code for doing this was lifted straight from
+<a href="https://iolivia.me/posts/imgui-ggez/">this blog</a>. So I won't repeat all of it
+here. The changes I made had to do with updated interfaces. GGEZ used
+<code>get_property</code> naming scheme in the earlier versions, but updated to having
+direct property names instead. So the vast majority of the changes were just
+deleting <code>get_</code> from the beginning of property names.</p>
+<p>The code in question can be found
+<a href="https://github.com/Kethku/GGEZ_ImGui_Test/blob/401d1360f0b53d3dd8b880b00d4cf3e2766800b4/src/imgui_wrapper.rs">here</a>.</p>
+<p>Unfortunately at this point (at 1 am in the morning no less) I ran into an issue
+I have yet to figure out. Weirdly when I tried running everything seemed to be
+working fine, but the text inside the gui was cut off.</p>
+<p><img src="http://02credits.com/blog/day72-imgui-and-ggez-experimentation/ImguiError.gif" alt="ImGui Error" /></p>
+<p>As shown in the above gif, when I move the window, more and more of the text is
+cut off. I've tried a number of things related to dpi scaling and the like but
+without a deeper understanding of all that is going on, I have decided to give
+up for now but will probably post an issue on the ImGui repo to see if they have
+any ideas.</p>
+<h2 id="thoughts">Thoughts</h2>
+<p>As far as UI goes, I actually think ImGui is pretty promising for demo purposes.
+The immediate mode pattern works really well in a game dev environment and the
+amount of code for the interface is pretty tiny.</p>
+<p>I do have some concerns with how flexible they toolkit is. If I am very
+particular about the look of the controls, I don't know how much leeway ImGui
+gives for styling. I didn't get far enough along to really tell either way.</p>
+<p>Similarly I didn't get far enough along to tell one way or the other if the
+performance was good enough. I didn't notice any issues with the super tiny demo
+I built, but I suspect the immediate mode style will not perform as well as a
+retained mode toolkit. Hard to tell though.</p>
+<p>Overall I think its promising. Its a good tool to keep in my pocket for when I
+want a simple UI in a game or other Rust project.</p>
+<h2 id="house-keeping">House Keeping</h2>
+<p>Some notes on the state of the Blog: I mentioned in an earlier post that I will
+allow myself some wiggle room on blog posts. More recently I have realized that
+that didn't really happen. I still feel pretty guilty when I miss a day even if
+I did get work done that day (like yesterday). To that end I'm going to be more
+explicit. My goal is to have a post at least every other day. This should let me
+to take on more exploratory projects some days with the understanding that
+failing to learn or finish anything is an acceptable result.</p>
+<p>So from here on out I will try to make a post each day but I won't feel too bad
+if I miss a day for whatever reason so long as I get one every other day at
+minimum.</p>
+<p>Till tomorrow (or the day after),<br />
+Keith</p>
+
+  
+  
+<div id="page-nav-links">
+  <h3>
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day71-azul-experimentation&#x2F;" id="yesterday">Yesterday</a>
+    
+
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day73-visual-studio-ios-debug-debugging&#x2F;" id="tomorrow">Tomorrow</a>
+    
+  </h3>
+</div>
+
+</article>
+
+
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
+
+
+
+    </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
+  </body>
+</html>
