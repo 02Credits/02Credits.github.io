@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139157194-1"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+
+     gtag('config', 'UA-139157194-1');
+    </script>
+
+    <meta name="viewport" content="width=device-width, user-scalable=false">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
+    
+    <title>02Credits 
+
+Blog
+</title>
+  </head>
+  <body>
+    <header>
+      <h3>
+
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;">02Credits</a>
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;">Blog</a>
+
+</h3>
+    </header>
+    <main>
+      
+<article>
+  <h1>Day89 - More Script-8 Perf</h1>
+  <summary>
+    
+      <h3>Worked on a perf pr today</h3>
+    
+    
+      <p>2019-10-22</p>
+    
+  </summary>
+  
+  <p>Today I got off work late and decided to work on a perf PR to help out the SCRIPT-8 project. Turns out the map API was
+having performance problems and needed some TLC. After some investigation and fiddling around, I noticed that the map
+drawer was still using the old canvas API instead of my faster FrameBufferCanvasAPI. So the fix was to swap it over and
+add a single draw call to batch all of the rendering up.</p>
+<p>Took a good long while to get it all working, but I think its in a good state now. The PR can be seen
+<a href="https://github.com/script-8/script-8.github.io/pull/302">here</a>.</p>
+<p>Its pretty late at this point though, so this post is mostly just to mark that I got something done rather than any
+actual content. I am looking into building some cool stuff with SCRIPT-8 though so this was a good warm up to page back
+in how everything works.</p>
+<p>These kinds of exercises in reading someone else's code and fixing some simple problem are super valuable. Its about as
+close as one can get to working in industry. Plus you get to help out a local Open Source project in need!</p>
+<p>Hopefully my PR goes in and helps fix the problem.</p>
+<p>Till tomorrow,<br />
+Keith</p>
+
+  
+  
+<div id="page-nav-links">
+  <h3>
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day88-neovim-plugin-in-typescript&#x2F;" id="yesterday">Yesterday</a>
+    
+
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day90-typed-event-manager&#x2F;" id="tomorrow">Tomorrow</a>
+    
+  </h3>
+</div>
+
+</article>
+
+
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
+
+
+
+    </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
+  </body>
+</html>
