@@ -1,0 +1,222 @@
+<html>
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139157194-1"></script>
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+
+     gtag('config', 'UA-139157194-1');
+    </script>
+
+    <meta name="viewport" content="width=device-width, user-scalable=false">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;style.css">
+    <link rel="stylesheet" href="https://unpkg.com/basic-css-typography-reset@1.0.0/typography.min.css">
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;02credits.com&#x2F;prism.css">
+    
+    <title>02Credits 
+
+Blog
+</title>
+  </head>
+  <body>
+    <header>
+      <h3>
+
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;">02Credits</a>
+
+
+<a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;">Blog</a>
+
+</h3>
+    </header>
+    <main>
+      
+<article>
+  <h1>Day88 - Neovim Plugin in Typescript</h1>
+  <summary>
+    
+      <h3>Writing a plugin for Neovim in Typescript</h3>
+    
+    
+      <p>2019-10-21</p>
+    
+  </summary>
+  
+  <p>Recently I switched editors from Spacemacs (a vim mode distribution of emacs) to Neovim. I made the change due to
+frustration with how complicated my editor was in emacs, and honestly the experience has been wonderful. That discussion
+is for another time however.</p>
+<p>Having made the switch, I have been interested in playing around with Neovim's headline feature: the remote plugin API.
+The jist is that Neovim provides a general purpose API in the form of a MessagePack protocol. Messagepack is a binary
+format which allows remote process communication in an efficient and language agnostic way. To make life easier, the
+maintainers of Neovim have created a set of language integrations which set things up for you. I've decided to develop a
+plugin using the nodejs integration. I will capture here the basic template for how to get things working and some tips
+and tricks I learned along the way.</p>
+<h2 id="plugin-format">Plugin Format</h2>
+<p>Neovim's language client integrations are very particular about how and where you layout your plugin file structure. If
+the structure is not just so, Neovim won't know where your remote plugin is located. Further, so called remote plugins
+must be registered before you can use them which adds another layer of complexity.</p>
+<p>I found it useful to use a plugin manager, and add my local plugin to it to ensure that vim knows that my plugin exists.
+I use <a href="https://github.com/Shougo/dein.vim">Dein</a>, but any vim plugin manager should work.</p>
+<pre>
+  <code class="language-vimscript">call dein#add(&#x27;c:&#x2F;dev&#x2F;Projects&#x2F;vim-balsamic&#x27;)</code>
+</pre>
+<p>With my custom plugin folder added, I created a folder structure matching this pattern:</p>
+<pre>
+  <code class="language-text">Project Root &gt; rplugin &gt; node &gt; Plugin Name &gt; Javascript Project</code>
+</pre>
+<ul>
+<li>Project Root represents the name of the plugin we added to the plugin manager.</li>
+<li>rplugin indicates that this plugin has a remote script to run in the background.</li>
+<li>node indicates that the remote script is a nodejs project and that Neovim should use the Neovim client.</li>
+<li>Javascript Project represents the same name as above, but allows for multiple remote node scripts per project.</li>
+</ul>
+<p>In the inner Javascript Project folder (in my case vim-balsamic), I made a simple nodejs project. In particular I use
+typescript to make life easier</p>
+<pre>
+  <code class="language-text">qcK7y:dist\
+0Oubx:lib\
+Tyhqo:node_modules\
+aSW1g:.gitignore
+5IzLv:package.json
+T7EH2:tsconfig.json
+itiAC:yarn.lock</code>
+</pre>
+<p>(Note: the weird characters before file/folder names are related to my plugin. I will discuss them soon.)</p>
+<p>The package.json file must contain the path to the entry point script so that Neovim knows which file to run with
+node.js. It is also important that the package depend on the <code>neovim</code> package to enable the MessagePack communication.</p>
+<pre>
+  <code class="language-json">{
+  &quot;name&quot;: &quot;vim-balsamic&quot;,
+  &quot;version&quot;: &quot;0.0.1&quot;,
+  &quot;description&quot;: &quot;Super powered acetic file exploration in vim&quot;,
+  &quot;main&quot;: &quot;dist&#x2F;index.js&quot;,
+  &quot;author&quot;: &quot;Keith Simmons&quot;,
+  &quot;devDependencies&quot;: {
+    &quot;@types&#x2F;node&quot;: &quot;^12.7.7&quot;,
+    &quot;neovim&quot;: &quot;^4.5.0&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@types&#x2F;fs-extra&quot;: &quot;^8.0.0&quot;,
+    &quot;fs-extra&quot;: &quot;^8.1.0&quot;
+  }
+}</code>
+</pre>
+<h2 id="plugin-writing">Plugin Writing</h2>
+<p>The documentation for the Neovim node client can be found <a href="https://github.com/neovim/node-client">here</a>. However I found
+it somewhat confusing. The cleanest method I found was to define a class and use attributes to hook everything up.</p>
+<pre>
+  <code class="language-typescript">@Plugin({ dev: false })
+export default class BalsamicPlugin {
+  constructor(public nvim: Neovim) {  }
+  @Command(&quot;Balsamic&quot;)
+  async openParent() {
+    const fullFilePath = (await this.nvim.commandOutput(&quot;echo expand(&#x27;%:p&#x27;)&quot;)) + &quot;&#x2F;&quot; &#x2F;&#x2F; Query the current file directory path
+    if (directoryLookup.has(fullFilePath)) {
+      let directory = directoryLookup.get(fullFilePath);
+      createDirectoryBuffer(this.nvim, directory.parent);
+    } else {
+      const fullDirectoryPath = path.resolve(path.join(fullFilePath, &#x27;..&#x27;));
+      createDirectoryBuffer(this.nvim, fullDirectoryPath);
+    }
+  }
+  @Command(&quot;BalsamicOpen&quot;)
+  async openCurrentLine() {
+    let line = await this.nvim.getLine();
+    let parsedLine = parseLine(line);
+    if (parsedLine) {
+      let { id, name } = parsedLine;
+      let fullDirectoryPath = await this.nvim.commandOutput(&quot;echo expand(&#x27;%:p&#x27;)&quot;);
+      if (itemIsDirectory(name)) {
+        createDirectoryBuffer(this.nvim, path.join(fullDirectoryPath, name));
+      } else {
+        if (initialState.has(id)) {
+          let file = initialState.get(id);
+          await this.nvim.command(&#96;e ${file}&#96;);
+        } else {
+          await this.nvim.outWriteLine(&quot;File does not exits.&quot;);
+        }
+      }
+    }
+  }
+  @Command(&quot;BalsamicCommit&quot;)
+  balsamicCommit() {
+    commitChanges(this.nvim);
+  }
+  @Command(&quot;BalsamicExecute&quot;)
+  balsamicExecute() {
+    executeOperations(this.nvim)
+  }
+}</code>
+</pre>
+<p>The plugin attribute indicates that this class should be used as a Neovim plugin and the <code>dev: false</code> flag is passed to
+prevent Neovim from reloading the script on every command.</p>
+<p>Similarly the command attribute defines a method on the plugin class as representing a command with the named passed in.
+This exposes that function in Neovim for use. Lastly the constructor for the plugin class takes a Neovim argument which
+I store as a public property. This object contains all of the API methods and properties needed for interacting with the
+Neovim app.</p>
+<pre>
+  <code class="language-typescript">async function tempBuffer(nvim: Neovim, name: string, lines: string[] = [], fileType = &quot;balsamic&quot;) {
+  nvim.callAtomic([
+    await nvim.command(&quot;enew&quot;),
+    await nvim.buffer.setOption(&quot;buftype&quot;, &quot;nofile&quot;), &#x2F;&#x2F; Ensure the buffer won&#x27;t be written to disk
+    await nvim.buffer.setOption(&quot;bufhidden&quot;, &quot;wipe&quot;), &#x2F;&#x2F; Close the buffer when done
+    await nvim.buffer.setOption(&quot;ft&quot;, fileType), &#x2F;&#x2F; Set file type to balsamic or filetype
+    await nvim.command(&quot;setlocal noswapfile&quot;),
+    await nvim.command(&quot;0f&quot;),
+    await nvim.command(&#96;file ${name.replace(&#x2F;\\&#x2F;g, &quot;&#x2F;&quot;)}&#96;), &#x2F;&#x2F; Change buffer name to match the current file
+    await nvim.buffer.setLines(lines, { start: 0, end: -1, strictIndexing: false })
+  ]);
+  return nvim.buffer;
+}</code>
+</pre>
+<p>This object can be passed to methods like the one above, and called using async await to do operations one after another
+efficiently.</p>
+<p>Once the plugin is written or at least compiles, running the <code>UpdateRemotePlugins</code> command in Neovim will run your
+plugin and inspect it to figure out what commands are defined. This way the plugin can be run lazily instead of on
+startup slowing down vim.</p>
+<h2 id="debugging">Debugging</h2>
+<p>Crucially it is difficult to really debug or understand what is going on in a remote plugin without some debugger
+support. To make this happen, two steps are necessary. First a chrome browser with the Node.js V8 -- inspector Manager
+must be running. This can be setup
+<a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">here</a>. Second, an
+environment variable must be set to tell Neovim to enable nodejs debugging. This can be done with this vim command:
+<code>:let $NVIM_NODE_HOST_DEBUG = 1</code> which will set the NVIM_NODE_HOST_DEBUG environment variable. Then when any command is
+run which triggers the nodejs plugin, the chrome window will pop the debugger window and attach to the running process.</p>
+<p>This makes life significantly easier and removes a lot of the print debugging which would otherwise be necessary.</p>
+<h2 id="my-plugins">My Plugins</h2>
+<p>I have been working on a file explorer plugin for Neovim using the above techniques. Its not quite ready yet, but I plan
+on writing about it soon. Its changed the way I interact with files :)</p>
+<p>Till tomorrow,<br />
+Keith</p>
+
+  
+  
+<div id="page-nav-links">
+  <h3>
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day87-desktop-updater&#x2F;" id="yesterday">Yesterday</a>
+    
+
+    
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day89-more-script-8-perf&#x2F;" id="tomorrow">Tomorrow</a>
+    
+  </h3>
+</div>
+
+</article>
+
+
+<div id="commento"></div>
+<script src="https://cdn.commento.io/js/commento.js"></script>
+
+
+
+    </main>
+    <script src="http:&#x2F;&#x2F;02credits.com&#x2F;prism.js"></script>
+  </body>
+</html>
