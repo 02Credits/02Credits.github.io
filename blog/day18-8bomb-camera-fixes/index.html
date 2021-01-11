@@ -108,18 +108,23 @@ across the screen in a simple smooth animation.</p>
   <code class="language-javascript">let x = 0;
 let targetX = 0;
 let t = 0;
+
 let frequency = 150;
+
 draw = () =&gt; {
   clear();
   camera();
   print(0, 0, &quot;x: &quot; + x);
   print(0, 8, &quot;t: &quot; + t);
+  
   if (t % frequency == 0) {
     targetX = ((t &#x2F; frequency) + 1) % 2 * 100;
   }
+  
   x += (targetX - x) * 0.1;
   camera(-x, 1);
   sprite(0, 50, 0);
+  
   t += 1;
 }</code>
 </pre>

@@ -59,7 +59,7 @@ the process.</p>
 <a href="https://gist.github.com/Kethku/ee982b01ef4ef022da3522b28e3997ad">source</a> we got
 from yesterday gave us the basic structure of the original version. The tool has
 two main executable paths. Either it is run without any arguments, or it is
-passed the prefix of a command to run.</p>
+passed the prefix of a command to run. </p>
 <p>In the first case, it searches for the <code>.ok</code> profile and lists the command names
 to the console.</p>
 <pre>
@@ -116,6 +116,7 @@ args:
 <pre>
   <code class="language-rust">let yaml = load_yaml!(&quot;cli.yml&quot;);
 let matches = App::from_yaml(yaml).get_matches();
+
 println!(&quot;{}&quot;, matches.value_of(&quot;COMMAND&quot;));</code>
 </pre>
 <h2 id="walking-up-the-directory-tree">Walking Up the Directory Tree</h2>
@@ -138,7 +139,7 @@ yelling at you. Given my C# background, I'm still a little fuzzy about the
 idiomatic way to use these types, but in practice I have found that using the
 PathBuf and String versions of the types is maybe not the most efficient method,
 but gets the job done, allows you the most flexibility, and keeps our friend the
-compiler happy.</p>
+compiler happy. </p>
 <p>Frustratingly, there is a fair amount of syntactic overhead for ensuring that
 you are using the correct type. The previously mentioned <code>parent</code> function does
 not return a <code>PathBuf</code> but instead the more frustrating <code>Path</code>, so whenever I
@@ -156,19 +157,23 @@ easy things harder.</p>
         Some(find_profile(current_path.parent()?.to_path_buf())?)
     }
 }
+
 fn read_profile(profile_path: PathBuf) -&gt; Option&lt;Profile&gt; {
     match File::open(profile_path.clone()) {
         Ok(ref mut file) =&gt; {
             let mut commands = HashMap::new();
+
             for line in BufReader::new(file).lines() {
                 let (name, command) = split_on_colon(line.unwrap())?;
                 commands.insert(name, command);
             }
+
             Some(Profile { commands, path: profile_path })
         },
         Err(_) =&gt; None
     }
 }
+
 fn split_on_colon(line: String) -&gt; Option&lt;(String, String)&gt; {
     let mut splitter = line.splitn(2, &#x27;:&#x27;);
     let name = splitter.next()?;
@@ -196,29 +201,35 @@ on a call to <code>fold</code> passing in <code>String</code> accumulator but it
         });
     println!(&quot;{}&quot;, list.trim());
 }
+
 fn query(profile: Profile, command: &amp;str, prefix: Option&lt;&amp;str&gt;, suffix: Option&lt;&amp;str&gt;) {
     let best_option = profile
         .commands
         .keys()
         .filter_map(|possible_command| shared_prefix(possible_command, command))
         .max_by_key(|&amp;(shared_chars, _)| shared_chars);
+
     match best_option {
         Some((_, actual_command)) =&gt; print_decorated_command(profile, actual_command, prefix, suffix),
         None =&gt; ()
     }
 }
+
 fn shared_prefix(possible_command: &amp;str, command: &amp;str) -&gt; Option&lt;(usize, String)&gt; {
     match possible_command.starts_with(command) {
         true =&gt; Some((command.len(), possible_command.to_string())),
         false =&gt; None
     }
 }
+
 fn print_decorated_command(profile: Profile, command_name: String, prefix: Option&lt;&amp;str&gt;, suffix: Option&lt;&amp;str&gt;) {
     let prefix = fill_in_profile_directory(&amp;profile, prefix);
     let suffix = fill_in_profile_directory(&amp;profile, suffix);
     let command = profile.commands.get(&amp;command_name).unwrap();
+
     println!(&quot;{}&quot;, vec![prefix, command.to_string(), suffix].concat())
 }
+
 fn fill_in_profile_directory(profile: &amp;Profile, pattern: Option&lt;&amp;str&gt;) -&gt; String {
     let profile_directory = profile.path.parent().unwrap().to_str().unwrap();
     pattern.unwrap_or_default().replace(&quot;{}&quot;, profile_directory)

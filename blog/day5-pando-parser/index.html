@@ -85,6 +85,7 @@ enum TaskStatus {
     InProgress,
     Waiting
 }
+
 named!(parse_status&lt;CompleteStr, TaskStatus&gt;,
     alt!(map!(tag!(&quot;x&quot;), |_| TaskStatus::Completed) |
          map!(tag!(&quot;&gt;&quot;), |_| TaskStatus::InProgress) |
@@ -136,7 +137,7 @@ function.</p>
                ^^^^^^^^^^</code>
 </pre>
 <p>The dependencies list is used to describe what tasks must finish before this
-one.</p>
+one. </p>
 <pre>
   <code class="language-rust">named!(parse_dependencies&lt;CompleteStr, Vec&lt;&amp;str&gt; &gt;,
     map!(opt!(complete!(delimited!(
@@ -168,7 +169,7 @@ separated_list!(char!(&#x27;,&#x27;), map!(is_not!(&quot;,]&quot;), |dep| dep.tr
 </pre>
 <p><code>delimited!</code> takes 3 arguments, a leading delimiter parser, a body parser, and a
 trailing delimiter parser. Conveniently the only result is the body so we don't
-have to do a further map here.</p>
+have to do a further map here. </p>
 <pre>
   <code class="language-rust">&#x2F;&#x2F; fn dependency_list(input: CompleteStr) -&gt; Vec&lt;&amp;str&gt;
 delimited!(

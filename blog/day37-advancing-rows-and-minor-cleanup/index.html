@@ -67,17 +67,22 @@ export let gridCenter = Vector.zero;
 export let gridDimensions = Vector.one;
 export let blockWidth = 0;
 export let blockPixelAdvancement = 0;
+
 function calculateGridSizes() {
   gridCenter = screenSize.divide(2);
+
   let margin = Math.max(screenSize.width * startingMargin, screenSize.height * startingMargin);
   let maxWidth = screenSize.width - margin;
   let maxHeight = screenSize.height - margin;
+
   &#x2F;&#x2F; Try Horizontal
   gridDimensions = new Vector(maxWidth, maxWidth * 2);
+
   if (gridDimensions.y &gt; maxHeight) {
     &#x2F;&#x2F; Fallback to vertical
     gridDimensions = new Vector(maxHeight &#x2F; 2, maxHeight);
   }
+
   blockWidth = gridDimensions.x &#x2F; gridBlockDimensions.x;
 }
 Resized.Subscribe(calculateGridSizes);
@@ -125,6 +130,7 @@ advancement is far enough along to warrant a new row of blocks.</p>
       blocks.push(new Block(new Vector(x, previousFilledY)));
     }
   }
+
   blockPixelAdvancement = blockAdvancement * blockWidth;
 });</code>
 </pre>
@@ -135,6 +141,7 @@ flag when the block is fully opaque.</p>
   <code class="language-javascript">calculateOpacity(blockTop) {
   let gridBottom = gridCenter.y - gridDimensions.height &#x2F; 2;
   let amountBelow = (blockTop - blockWidth) - gridBottom;
+
   if (amountBelow &gt;= 0) {
     this.enabled = true;
     return 1;
@@ -153,6 +160,7 @@ bottom, the block becomes fully opaque and I set the enabled flag to true.</p>
 &#x2F;&#x2F; up the screen.
 render() {
   let { topLeft, dimensions } = this.calculateLocation();
+
   let opacity = this.calculateOpacity(topLeft.y);
   let tint = new Color(1, 1, 1, opacity);
   image(blockImages[this.type], topLeft, dimensions, 0, tint, Vector.topLeft);

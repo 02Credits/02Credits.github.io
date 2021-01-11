@@ -68,12 +68,15 @@ and subscribed to a new MatchCompleted event to add to the stop clock after each
 Match.</p>
 <pre>
   <code class="language-javascript">export let stopClock = 0;
+
 const framesPerBlock = 10;
+
 Update.Subscribe(() =&gt; {
   if (stopClock &gt; 0) {
     stopClock--;
   }
 });
+
 MatchCompleted.Subscribe(blocks =&gt; {
   stopClock += blocks.length * framesPerBlock;
 });</code>
@@ -84,6 +87,7 @@ decide when to advance the grid:</p>
   <code class="language-javascript">if (matches.size == 0 &amp;&amp; stopClock == 0) {
   blockAdvancement += advanceSpeed;
   advanceSpeed += advanceAcceleration;
+
   fillNewRows();
 }</code>
 </pre>
@@ -105,6 +109,7 @@ export function getBlock(gridSlot) {
   }
   return undefined;
 }
+
 export function setBlock(arg) {
   if (arg.type) {
     addBlock(arg);

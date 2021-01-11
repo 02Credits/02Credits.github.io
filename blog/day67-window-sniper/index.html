@@ -54,7 +54,7 @@ impatient, the finished tool can be found
 <h2 id="the-culprit">The Culprit</h2>
 <p>After coming home from work and logging into my machine I found a mysterious
 window floating on top of my desktop without a name, and not responding to any
-clicks of the close button.</p>
+clicks of the close button. </p>
 <p><img src="http://02credits.com/blog/day67-window-sniper/WeirdZombieWindow.PNG" alt="Weird Zombie Window" /></p>
 <p>This cannot be. Processes do what I want them to do, not what they decide seems
 reasonable to them. Punishment for such crimes will not be an instantaneous
@@ -85,9 +85,11 @@ slightly higher level wrapper around the functions I needed.</p>
         GetKeyState(button) &amp; 0x100 != 0
     }
 }
+
 pub fn mouse_left_down() -&gt; bool {
     mouse_down(VK_LBUTTON)
 }
+
 pub fn mouse_right_down() -&gt; bool {
     mouse_down(VK_RBUTTON)
 }</code>
@@ -99,11 +101,13 @@ is currently held down. I then wrap <code>mouse_down</code> in <code>mouse_left_
 right mouse buttons respectively.</p>
 <pre>
   <code class="language-rust">use winapi_wrappers::{mouse_left_down, mouse_right_down};
+
 fn main() -&gt; () {
     loop {
         if mouse_right_down() {
             break;
         }
+
         if mouse_left_down() {
             println!(&quot;Sniper Shot!&quot;);
             break;
@@ -120,11 +124,14 @@ needed to get the mouse position.</p>
     pub x: i32,
     pub y: i32
 }
+
 pub fn mouse_position() -&gt; Position {
     let mut cursor_position = POINT { x: 0, y: 0 };
+
     unsafe {
         GetCursorPos(&amp;mut cursor_position);
     }
+
     Position {
         x: cursor_position.x,
         y: cursor_position.y
@@ -144,10 +151,12 @@ handle from a position, and retrieving the calling PID from the handle.</p>
 <pre>
   <code class="language-rust">pub fn pid_from_position(pos: Position) -&gt; u32 {
     let mut pid: u32 = 0;
+
     unsafe {
         let handle = WindowFromPoint(POINT { x: pos.x, y: pos.y });
         GetWindowThreadProcessId(handle, &amp;mut pid);
     }
+
     pid
 }</code>
 </pre>
@@ -172,6 +181,7 @@ kill the process.</p>
         if mouse_right_down() {
             break;
         }
+
         if mouse_left_down() {
             let cursor_pos = mouse_position();
             let pid = pid_from_position(cursor_pos);
@@ -223,12 +233,15 @@ the process terminated.</p>
   <code class="language-rust">fn main() -&gt; () {
     let cocking = load_sound(&quot;cocking.wav&quot;);
     let shoot = load_sound(&quot;shoot.wav&quot;);
+
     let device = rodio::default_output_device().unwrap();
+
     rodio::play_raw(&amp;device, cocking.convert_samples());
     loop {
         if mouse_right_down() {
             break;
         }
+
         if mouse_left_down() {
             let cursor_pos = mouse_position();
             let pid = pid_from_position(cursor_pos);

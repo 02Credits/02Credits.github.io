@@ -61,7 +61,7 @@ dependency name. To make the problem tractable, I defined the abbreviation as a
 camel case concatenation of one or more prefixes of words in an identifier. Read
 further in the <a href="../day4-pando/">specification</a> post.</p>
 <p>Implementing the abbreviation resolution was an interesting tour of Rust's
-string and iterator functions.</p>
+string and iterator functions. </p>
 <h2 id="splitting">Splitting</h2>
 <p>Since each of the identifiers and abbreviations are compared pairwise, we need
 functions to split both of them. Identifiers are split on spaces. Easy enough.</p>
@@ -69,6 +69,7 @@ functions to split both of them. Identifiers are split on spaces. Easy enough.</
   <code class="language-rust">pub fn split_identifier(identifier: &amp;str) -&gt; Vec&lt;String&gt; {
     identifier.split(&quot; &quot;).map(|part| part.to_lowercase()).collect()
 }
+
 #[test]
 fn identifier_split_works() {
     assert_eq!(split_identifier(&quot;Specify Format&quot;), vec![&quot;specify&quot;, &quot;format&quot;]);
@@ -84,6 +85,7 @@ identifiers, I also lowercase the resulting components for easier matching.</p>
 <pre>
   <code class="language-rust">pub fn split_abbreviation(abbreviation: &amp;str) -&gt; Vec&lt;String&gt; {
     let mut parts = Vec::new();
+
     let remainder = abbreviation.chars()
         .fold(String::new(), |mut current, character| {
             if character.is_uppercase() &amp;&amp; current.len() != 0 {
@@ -94,11 +96,14 @@ identifiers, I also lowercase the resulting components for easier matching.</p>
                 current
             }
         });
+
     if !remainder.is_empty() {
         parts.push(remainder);
     }
+
     parts.iter().map(|part| part.to_lowercase()).collect()
 }
+
 #[test]
 fn abbreviation_split_works() {
     assert_eq!(split_abbreviation(&quot;DotA&quot;), vec![&quot;dot&quot;, &quot;a&quot;]);
@@ -117,12 +122,15 @@ if a given abbreviation is a match for an identifier is fairly simple.</p>
   <code class="language-rust">pub fn abbreviation_matches(identifier: &amp;str, abbreviation: &amp;str) -&gt; bool {
     let identifier_words = split_identifier(identifier);
     let abbreviation_parts = split_abbreviation(abbreviation);
+
     if identifier_words.len() != abbreviation_parts.len() {
         return false
     }
+
     let mut pairs = abbreviation_parts.iter().zip(identifier_words.iter());
     pairs.all(|(abbreviation_part, identifier_word)| identifier_word.starts_with(abbreviation_part))
 }
+
 #[test]
 fn abbreviation_matches_works() {
     assert!(abbreviation_matches(&quot;Implement Parser&quot;, &quot;IP&quot;));
@@ -143,9 +151,11 @@ the direction we want the arrows to point.</p>
 <pre>
   <code class="language-rust">pub fn resolve_dependent_tasks(tasks: Vec&lt;Todo&gt;) -&gt; Option&lt;HashMap&lt;String, Vec&lt;String&gt;&gt;&gt; {
     let mut dependent_tasks = HashMap::new();
+
     for task in tasks.iter() {
         dependent_tasks.insert(task.identifier.clone(), Vec::new());
     }
+
     for task in tasks.iter() {
         for dependency_abbreviation in task.dependencies.clone() {
             match tasks.iter().find(|task| abbreviation_matches(&amp;task.identifier, &amp;dependency_abbreviation)) {
@@ -156,8 +166,10 @@ the direction we want the arrows to point.</p>
             };
         }
     }
+
     Some(dependent_tasks)
 }
+
 #[test]
 fn abbreviation_resolution_works() {
     let resolved_abbreviations = resolve_dependent_tasks(vec![
@@ -167,6 +179,7 @@ fn abbreviation_resolution_works() {
         Todo::new(TaskStatus::Waiting, &quot;DOT Generator&quot;, vec![&quot;B&quot;]),
         Todo::new(TaskStatus::Waiting, &quot;Command Line&quot;, vec![&quot;IP&quot;, &quot;DG&quot;])
     ]).unwrap();
+
     assert_eq!(resolved_abbreviations[&quot;Brainstorm&quot;], vec![&quot;Specify Format&quot;, &quot;DOT Generator&quot;]);
     assert_eq!(resolved_abbreviations[&quot;Specify Format&quot;], vec![&quot;Implement Parser&quot;]);
     assert_eq!(resolved_abbreviations[&quot;Implement Parser&quot;], vec![&quot;Command Line&quot;]);

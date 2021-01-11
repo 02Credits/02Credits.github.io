@@ -69,6 +69,7 @@ which could do it simpler and more understandably than Javascript with npm packa
 const http = require(&#x27;http&#x27;);
 const fs = require(&#x27;fs&#x27;);
 const wallpaper = require(&#x27;wallpaper&#x27;);
+
 const argv = require(&#x27;yargs&#x27;)
   .option(&#x27;url&#x27;, {
     alias: &#x27;u&#x27;,
@@ -82,8 +83,11 @@ const argv = require(&#x27;yargs&#x27;)
   })
   .demandOption([&#x27;url&#x27;, &#x27;frequency&#x27;])
   .argv;
+
 let duration = juration.parse(argv.frequency) * 1000;
+
 console.log(&quot;Updating every &quot; + duration &#x2F; 1000 + &quot; seconds&quot;);
+
 function downloadAndUpdate() {
   const file = fs.createWriteStream(&quot;file.jpg&quot;);
   http.get(argv.url, function(response) {
@@ -95,7 +99,9 @@ function downloadAndUpdate() {
     })
   });
 }
+
 downloadAndUpdate();
+
 setInterval(downloadAndUpdate, duration);</code>
 </pre>
 <p>The entire script is above. I use 3 external packages and 2 node modules.</p>

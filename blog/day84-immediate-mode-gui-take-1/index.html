@@ -76,7 +76,9 @@ indicating whether the button has just been clicked.</p>
   <code class="language-c#">public bool Button(Rectangle destination, Texture2D unpressed, Texture2D pressed) {
     Texture2D buttonTexture = unpressed;
     bool result = false;
+
     Vector2? possiblePointerPosition = inputManager.PointerLocation;
+
     &#x2F;&#x2F; If mouse position exists, is within the current cut location, and within the bounds of the button
     if (possiblePointerPosition.HasValue &amp;&amp; graphicsDevice.ScissorRectangle.Contains(possiblePointerPosition.Value) &amp;&amp; 
         destination.Contains(possiblePointerPosition.Value - inputOffset))  {
@@ -88,6 +90,7 @@ indicating whether the button has just been clicked.</p>
             result = true;
         }
     }
+
     &#x2F;&#x2F; Each button must be rendered with it&#x27;s own draw call so that scissor and graphics settings apply properly
     spriteBatch.Begin(samplerState: SamplerState.PointClamp, rasterizerState: new RasterizerState() { ScissorTestEnable = true });
     spriteBatch.Draw(buttonTexture, destination, Color.White);
@@ -121,9 +124,11 @@ when disposed does some arbitrary cleanup code.</p>
 <pre>
   <code class="language-c#">public class AnonymousDisposable : IDisposable {
     private Action onDisposed;
+
     public AnonymousDisposable(Action onDisposed) {
         this.onDisposed = onDisposed;
     }
+
     public void Dispose() {
         onDisposed?.Invoke();
         onDisposed = null;
@@ -141,19 +146,23 @@ after the scroll view is finished.</p>
     } else {
         velocity = velocity * 0.9f;
     }
+
     &#x2F;&#x2F; Keep the scroll position bounded
     float scrollTop = state.scrollTop - velocity;
     if (scrollTop &lt; 0) scrollTop = 0;
     if (scrollTop &gt;= scrollHeight - scrollArea.Height) scrollTop = scrollHeight - scrollArea.Height;
     state = (scrollTop, velocity);
+
     &#x2F;&#x2F; Store the old viewport and scissor rectangle
     Viewport oldViewport = graphicsDevice.Viewport;
     graphicsDevice.Viewport = new Viewport(new Rectangle(scrollArea.X, (int)(scrollArea.Y - state.scrollTop), scrollArea.Width, (int)scrollHeight));
     Rectangle oldScissor = graphicsDevice.ScissorRectangle;
     graphicsDevice.ScissorRectangle = scrollArea;
+
     &#x2F;&#x2F; Calculate the viewport offset to enable correct mouse picking
     Vector2 offset = new Vector2(graphicsDevice.Viewport.X, graphicsDevice.Viewport.Y);
     inputOffset += offset;
+
     &#x2F;&#x2F; Retore the old viewport and scissor rectangle back to the original settings
     return new AnonymousDisposable(() =&gt; {
         graphicsDevice.Viewport = oldViewport;
@@ -182,6 +191,7 @@ the clipping and translating for me.</p>
   <code class="language-c#">(float scrollTop, float scrollVelocity) scrollState = (0, 0);
 public void Draw(GameTime gameTime) {
     var scrollArea = new Rectangle((int)(game.PixelWidth * 0.25), (int)(game.PixelWidth * 0.25), (int)(game.PixelWidth * 0.5), (int)(game.PixelHeight - game.PixelWidth * 0.5));
+
     int buttonCount = 20;
     using (VerticalScrollView(scrollArea, 100 * buttonCount - 10, ref scrollState)) {
         for (int i = 0; i &lt; buttonCount; i++) {

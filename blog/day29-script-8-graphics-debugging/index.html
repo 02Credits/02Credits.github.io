@@ -72,6 +72,7 @@ standalone cassette for testing purposes.</p>
 const d = 1
 const rects = flatten(size.map(x =&gt; size.map(y =&gt; [x, y, d, d])))
 let counter = 0
+
 draw = () =&gt; {
   rects.forEach(rect =&gt; {
     rectFill(...rect, rect[0] + (rect[1] * counter) &#x2F; 100)

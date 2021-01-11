@@ -76,6 +76,7 @@ the json that gets output and create a datastructure which matches that output
 format so that I can have a deserialization target.</p>
 <pre>
   <code class="language-json">{&quot;frames&quot;: {
+
 &quot;Ball.png&quot;:
 {
 	&quot;frame&quot;: {&quot;x&quot;:1,&quot;y&quot;:182,&quot;w&quot;:32,&quot;h&quot;:24},
@@ -97,6 +98,7 @@ to create the spreadsheet.</p>
     public int Y { get; }
     public int Width { get; }
     public int Height { get; }
+
     public Frame(int x, int y, int width, int height) {
         X = x;
         Y = y;
@@ -104,17 +106,21 @@ to create the spreadsheet.</p>
         Height = height;
     }
 }
+
 public class Pivot {
     public float X { get; }
     public float Y { get; }
+
     public Pivot(float x, float y) {
         X = x;
         Y = y;
     }
 }
+
 public class SheetElement {
     public Frame Frame { get; }
     public Pivot Pivot { get; }
+
     public SheetElement(Frame frame, bool rotated, Pivot pivot) {
         Frame = frame;
         Pivot = pivot;
@@ -122,6 +128,7 @@ public class SheetElement {
 }
 public class SheetSpecification {
     public IReadOnlyDictionary&lt;string, SheetElement&gt; Frames { get; }
+
     public SheetSpecification(Dictionary&lt;string, SheetElement&gt; frames) {
         Frames = frames;
     }
@@ -136,6 +143,7 @@ type.</p>
   <code class="language-c#">public void LoadContent(ContentManager content) {
     string sheetSpecJson = File.ReadAllText(&quot;.&#x2F;Content&#x2F;TileSheet.json&quot;);
     SheetSpecification = JsonConvert.DeserializeObject&lt;SheetSpecification&gt;(sheetSpecJson);
+
     Sheet = content.Load&lt;Texture2D&gt;(&quot;TileSheet&quot;);
 }</code>
 </pre>

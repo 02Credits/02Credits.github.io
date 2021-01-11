@@ -168,6 +168,7 @@ let dot_path = matches.value_of(&quot;dot&quot;).map(resolve_path).unwrap_or_els
     temp_path.push(todo_path.with_extension(&quot;dot&quot;).file_name().expect(&quot;Could not get temp path file name&quot;));
     temp_path
 });
+
 let output_path = matches.value_of(&quot;output&quot;).map(resolve_path).unwrap_or_else(|| {
     todo_path.with_extension(&quot;svg&quot;)
 });</code>
@@ -190,6 +191,7 @@ the GraphViz command line tool to compile it to the final image.</p>
   <code class="language-rust">let mut todo_file = File::open(&amp;todo_path).expect(&quot;Could not open todo file&quot;);
 let mut todo_text = String::new();
 todo_file.read_to_string(&amp;mut todo_text).expect(&quot;Could not read todo file&quot;);
+
 let dot_text = compile(&amp;todo_text);
 let mut dot_file = File::create(&amp;dot_path).expect(&quot;Could not create dot file&quot;);
 dot_file.write_all(dot_text.as_bytes()).expect(&quot;Could not write dot file&quot;);</code>

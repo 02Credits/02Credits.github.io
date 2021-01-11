@@ -63,17 +63,21 @@ function looked like this:</p>
 <pre>
   <code class="language-javascript">export function gridToScreen(location) {
   let result = {};
+
   if (location.position) {
     let blocksTopLeft = new Vector(
       gridCenter.x - gridDimensions.width &#x2F; 2,
       gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
+
     result.position = blocksTopLeft.add(
       location.position.multiply(blockWidth)
         .multiplyParts(new Vector(1, -1)));
   }
+
   if (location.dimensions) {
     result.dimensions = location.dimensions.multiply(blockWidth);
   }
+
   return result;
 }</code>
 </pre>
@@ -90,30 +94,36 @@ be difficult to handle properly.</p>
   position?: Vector,
   dimensions?: Vector
 }
+
 export function gridToScreen(location: Location) {
   let result = {} as Location;
+
   if (location.position) {
     let blocksTopLeft = new Vector(
       gridCenter.x - gridDimensions.width &#x2F; 2,
       gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
+
     result.position = blocksTopLeft.add(
       location.position.multiply(blockWidth)
         .multiplyParts(new Vector(1, -1)));
   }
+
   if (location.dimensions) {
     result.dimensions = location.dimensions.multiply(blockWidth);
   }
+
   return result;
 }</code>
 </pre>
 <p>This compiles fine, but we run into problems if we want to use properties in the
-output of the function.</p>
+output of the function. </p>
 <pre>
   <code class="language-typescript">for (let coveredSlot of this.coveredSlots.values()) {
   let renderInfo = gridToScreen({
     position: coveredSlot,
     dimensions: Vector.one
   });
+
   image({
     imageUrl: garbageImages.Clear,
     center: Vector.topLeft,
@@ -187,17 +197,21 @@ on other types.</p>
 };
 export function gridToScreen&lt;T extends Partial&lt;Location&gt;&gt;(location: T) {
   let result = {} as Common&lt;T, Location&gt;;
+
   if (&quot;position&quot; in location) {
     let blocksTopLeft = new Vector(
       gridCenter.x - gridDimensions.width &#x2F; 2,
       gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
+
     result.position = blocksTopLeft.add(
       location.position.multiply(blockWidth)
         .multiplyParts(new Vector(1, -1)));
   }
+
   if (&quot;dimensions&quot; in location) {
     result.dimensions = location.dimensions.multiply(blockWidth);
   }
+
   return result;
 }</code>
 </pre>

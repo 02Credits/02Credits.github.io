@@ -69,14 +69,14 @@ iframe {
 min-width: 80vw;
 min-height: 80vw;
 }
-}</p>
-</style>
-  <iframe src="https://kethku.github.io/8Bomb/"></iframe>
+}
+</style></p>
+<iframe src="https://kethku.github.io/8Bomb/"></iframe>
 </div>
 <h2 id="rocks">Rocks</h2>
 <p>The basic idea here is to add visual rocks to the terrain panels. These won't
 effect gameplay in any, but give a sense of motion that can be missing if the
-terrain is all one color.</p>
+terrain is all one color. </p>
 <p>First step was to randomly place stones in each panel. I give each panel 10
 chances, each with 40% chance to spawn a stone. Then each stone is given a
 random x and y value within the panel and a random radius from 0 to 5. Lastly
@@ -92,6 +92,7 @@ they are each given a color which is random from 4 to 7;</p>
     }
     panel.push(row);
   }
+
   for (let i = 0; i &lt; 10; i++) {
     if (Math.random() * 100 &lt; 40) {
       stones.push({
@@ -118,15 +119,19 @@ expected ground color.</p>
   let panelNumber = Math.floor(y &#x2F; panelHeight);
   let panel = terrain[panelNumber];
   let panelY = y - (panelNumber * panelHeight);
+
   if (!panel) return 7;
+
   for (let stone of panel.stones) {
     let dx = stone.x - x;
     let dy = stone.y - panelY;
     let distance = Math.sqrt(dx * dx + dy * dy);
+
     if (distance &lt; stone.r) {
       return stone.c;
     }
   }
+
   let color = 1;
   if (!terrainAt(x, y - 1)) {
     color -= 1;
@@ -149,7 +154,9 @@ to a list managing the active explosions.</p>
 <pre>
   <code class="language-javascript">const startingRadius = 30;
 const animationSpeed = 3;
+
 let explosions = [];
+
 export function newExplosion(x, y) {
   explosions.push({
     x,
@@ -166,6 +173,7 @@ delay and increments the color.</p>
 <pre>
   <code class="language-javascript">export function updateExplosions() {
   let remainingExplosions = [];
+
   for (let explosion of explosions) {
     if (explosion.delay &gt; 0) {
       explosion.delay--;
@@ -178,6 +186,7 @@ delay and increments the color.</p>
       explosion.delay = animationSpeed;
     }
   }
+
   explosions = remainingExplosions;
 }</code>
 </pre>
@@ -193,6 +202,7 @@ within <code>r</code> distance from the explosion center to the color <code>c</c
         let dx = x - explosion.x;
         let dy = y - explosion.y;
         let dist = Math.sqrt(dx * dx + dy * dy);
+
         if (dist &lt;= explosion.r) {
           setPixel(x, y, explosion.c);
         }

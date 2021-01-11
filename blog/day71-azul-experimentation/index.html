@@ -75,7 +75,7 @@ what I understand.</p>
 Studio's setup scripts to get the environment right. Up until today I've done
 this by following the advice found
 <a href="https://stackoverflow.com/a/2124759/2103220">here</a> to get this working
-Powershell.</p>
+Powershell. </p>
 <pre>
   <code class="language-powershell">function vsVars
 {
@@ -87,7 +87,7 @@ Powershell.</p>
       }
     }
   popd
-  Write-Host &quot;&#96;nVisual Studio 2017 Command Prompt variables set.&quot; -ForegroundColor Yellow
+  Write-Host &quot;`nVisual Studio 2017 Command Prompt variables set.&quot; -ForegroundColor Yellow
 }</code>
 </pre>
 <p>This works great so long as you are just using MSBuild and such for
@@ -99,7 +99,7 @@ would fail for me complaining about an architecture mismatch.</p>
 <p>After a bunch of digging and installing of dependencies I eventually discovered
 that there used to be two scripts, one for x86 and one for amd64, but in VS 2017
 they got merged and hidden behind a script parameter. When I tried to add the
-parameter to my function I couldn't figure out how to get it working.</p>
+parameter to my function I couldn't figure out how to get it working. </p>
 <p>So I backed up and did some searching about installing vs vars in Powershell.
 This investigation brought me to the incredible <a href="https://github.com/Pscx/Pscx">Powershell Community
 Extensions</a> which contains a
@@ -126,18 +126,22 @@ decided to try the readme demo which implements a simple counter.</p>
     prelude::*,
     widgets::{button::Button, label::Label}
 };
+
 struct DataModel {
     counter: usize
 }
+
 impl Layout for DataModel {
     fn layout(&amp;self, _: LayoutInfo&lt;Self&gt;) -&gt; Dom&lt;Self&gt; {
         let label = Label::new(format!(&quot;{}&quot;, self.counter)).dom();
         let button = Button::with_label(&quot;Update Counter&quot;)
             .dom()
             .with_callback(On::MouseUp, Callback(update_counter));
+
         Dom::new(NodeType::Div).with_child(label).with_child(button)
     }
 }
+
 fn update_counter(
     app_state: &amp;mut AppState&lt;DataModel&gt;,
     _event: &amp;mut CallbackInfo&lt;DataModel&gt;
@@ -145,6 +149,7 @@ fn update_counter(
     app_state.data.modify(|state| state.counter += 1);
     Redraw
 }
+
 fn main() {
     let mut app = App::new(DataModel { counter: 0 }, AppConfig::default()).unwrap();
     let window = app.create_window(WindowCreateOptions::default(), css::native()).unwrap();

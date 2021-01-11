@@ -69,12 +69,15 @@ component is updated, or unmounted.</p>
   }, [])
   return &lt;canvas ref={canvasMounted} touch-action=&quot;none&quot; &#x2F;&gt;;
 }
+
 export const CanvasMounted = new EventManager&lt;[HTMLCanvasElement]&gt;();
 async function canvasMounted(newCanvas: HTMLCanvasElement) {
   await Promise.all(baseScreen.Setup.Publish());
+
   currentScreen = playScreen;
   baseScreen.Setup.Publish();
   playScreen.Setup.Publish();
+
   CanvasMounted.Publish(newCanvas);
   window.requestAnimationFrame(loop);
   running = true;
@@ -114,11 +117,14 @@ webgl specifics.</p>
   });
 });
 {% code %}
+
 So here instead of running the webgl setup code once, I run it every time a new canvas is mounted allowing the graphics
 to setup and restart for another game after the canvas no longer exists. To use the new component I simply mount it to 
 a known div and the rest is handled automatically.
+
 {% code(lang=&quot;typescript&quot;) %}
 import { GameComponent } from &quot;.&#x2F;game&quot;;
+
 ReactDOM.render(
   &lt;GameComponent &#x2F;&gt;,
   document.getElementById(&quot;app&quot;)

@@ -101,7 +101,7 @@ given task as done.</p>
 <p>I'm probably going to change this format as we go however I suspect this will
 be a good start. Simplicity is key here.</p>
 <p>Each task requires a status indicator, and a dependency list as established
-above.</p>
+above. </p>
 <p>For the initial version there are 3 states of a task: Waiting, In
 Progress, and Done. I plan on using different list bullets for each '-',
 '&gt;', and 'x' respectively.</p>
@@ -153,6 +153,7 @@ above pando file.</p>
   c[label=&lt;DOT Generator&gt;];
   d[label=&lt;Parser&gt;];
   e[label=&lt;Command Line&gt;];
+
   a -&gt; { b c };
   b -&gt; { d };
   d -&gt; { e };
@@ -160,7 +161,7 @@ above pando file.</p>
 }</code>
 </pre>
 <p>I then rendered it to an svg using this command: <code>dot .\todo.dot -Tsvg &gt; output.svg</code>. The <code>-Tsvg</code> argument specifies the output format which I pipe to
-<code>output.svg</code>.</p>
+<code>output.svg</code>. </p>
 <p>There are two pieces of note. First, although our format stores the dependencies
 of a task next to the task that needs them, the DOT version specifies the
 connections the other way around. This shouldn't be hard to write out with a

@@ -74,7 +74,9 @@ and loop until no more garbage blocks are broken.</p>
   for (let matchedBlock of matchedBlocks) {
     triggeringSlots.push(matchedBlock.gridSlot);
   }
+
   let garbageToBreak = new Set();
+
   let foundNewBrokenGarbage;
   do {
     foundNewBrokenGarbage = false;
@@ -91,6 +93,7 @@ and loop until no more garbage blocks are broken.</p>
       }
     }
   } while (foundNewBrokenGarbage)
+
   if (garbageToBreak.size != 0) {
     breakBlocks(garbageToBreak, matchedBlocks);
   }
@@ -105,6 +108,7 @@ multiple garbage blocks instead of just one.</p>
   this.triggeringBlocks = triggeringBlocks;
   this.garbageBlocks = garbageBlocks;
   this.spawnedBlocks = [];
+
   for (let garbage of garbageBlocks) {
     for (let slot of garbage.overlappingSlots()) {
       this.spawnedBlocks.push({
@@ -125,10 +129,11 @@ two reasons. First, it assumed that the combo already existed when the block was
 broken, and second, the garbage break event was raised before the combo could
 register to listen to it.</p>
 <p>I fixed the first issue by adding a concept of matched blocks to combos and
-moving combo creation to the start of a match instead of the end.</p>
+moving combo creation to the start of a match instead of the end. </p>
 <pre>
   <code class="language-javascript">MatchStarted.Subscribe(matchedBlocks =&gt; {
   let foundExistingCombo = false;
+
   for (let combo of combos) {
     if (matchedBlocks.some(matchedBlock =&gt; combo.trackedBlocks.has(matchedBlock))) {
       foundExistingCombo = true;
@@ -136,6 +141,7 @@ moving combo creation to the start of a match instead of the end.</p>
       ComboExtended.Publish(matchedBlocks, combo.cascades);
     }
   }
+
   if (!foundExistingCombo) {
     combos.add(new Combo(matchedBlocks));
   }
@@ -182,6 +188,7 @@ scaling and with a black and transparent tint.</p>
 <pre>
   <code class="language-javascript">let heldDimensions = dimensions.multiply(this.scale);
 let shadowOffset = (heldDimensions.width - dimensions.width);
+
 if (shadowOffset &gt;= 0.1) {
   image({
     imageUrl: texture || blockImages[this.type],

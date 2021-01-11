@@ -82,6 +82,7 @@ me to specialize in any way I want.</p>
   },
   externals: [nodeExternals()]
 };
+
 const clientConfig = {
   ...createConfigBase(),
   target: &#x27;web&#x27;,
@@ -89,6 +90,7 @@ const clientConfig = {
     &#x27;client&#x27;: &#x27;.&#x2F;src&#x2F;client.tsx&#x27; 
   },
 };
+
 module.exports = [ serverConfig, clientConfig ];</code>
 </pre>
 <p>Here you can see serverConfig and clientConfig objects are created and returned in an array of config objects. I use
@@ -154,24 +156,30 @@ this extensively with the image assets and with the index.html page.</p>
   &quot;Stick&quot;: require(&quot;..&#x2F;images&#x2F;Stick.png&quot;),
   &quot;Sun&quot;: require(&quot;..&#x2F;images&#x2F;Sun.png&quot;)
 };
+
 export const garbageImages = {
   &quot;ThreeWide&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;ThreeWideGarbage.png&quot;),
   &quot;FourWide&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;FourWideGarbage.png&quot;),
   &quot;FiveWide&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;FiveWideGarbage.png&quot;),
   &quot;SingleLine&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;SingleLineGarbage.png&quot;),
   &quot;TwoLine&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;TwoLineGarbage.png&quot;),
+
   &quot;TopLine&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;TopLineGarbage.png&quot;),
   &quot;MiddleLine&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;MiddleLineGarbage.png&quot;),
   &quot;EvenMiddleLine&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;EvenMiddleLineGarbage.png&quot;),
   &quot;MiddleLineNoExclamationPoint&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;MiddleLineGarbageNoExclamationPoint.png&quot;),
   &quot;BottomLine&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;BottomLineGarbage.png&quot;),
+
   &quot;Lock&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;Lock.png&quot;),
   &quot;Clear&quot;: require(&quot;..&#x2F;images&#x2F;garbage&#x2F;Clear.png&quot;)
 };
+
 export const Lose = require(&quot;..&#x2F;images&#x2F;Lose.png&quot;) as string;
 export const LoseWidthOverHeight = 65 &#x2F; 30;
+
 export const Win = require(&quot;..&#x2F;images&#x2F;Win.png&quot;) as string;
 export const WinWidthOverHeight = 51 &#x2F; 30;
+
 export const imageURLs = Object.values(blockImages).concat(Object.values(garbageImages)).concat([ Lose, Win ]);</code>
 </pre>
 <p>As discussed above, this allows webpack to tell me when I get the urls incorrect and lets me place all of the assets in

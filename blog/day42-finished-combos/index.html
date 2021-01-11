@@ -75,6 +75,7 @@ matches.</p>
     }
   }
 });
+
 MatchCompleted.Subscribe(clearedBlocks =&gt; {
   let foundExistingCombo = false;
   for (let combo of combos) {
@@ -83,6 +84,7 @@ MatchCompleted.Subscribe(clearedBlocks =&gt; {
       combo.processMatchedBlocks(clearedBlocks);
     }
   }
+
   if (!foundExistingCombo) {
     combos.add(new Combo(clearedBlocks));
   }
@@ -137,12 +139,14 @@ combo should be removed from the combo list.</p>
       this.trackedBlocks.delete(trackedBlock);
     }
   }
+
   if (this.trackedBlocks.size == 0) {
     if (this.cascades &gt; 0) {
       ComboFinished.Publish(this.cascades);
     }
     return true;
   }
+
   return false;
 }</code>
 </pre>

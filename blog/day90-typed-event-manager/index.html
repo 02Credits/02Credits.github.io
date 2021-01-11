@@ -54,18 +54,22 @@ point I'm very happy with it as its super succinct and yet gets the job done.</p
 <h1 id="the-code">The Code</h1>
 <pre>
   <code class="language-typescript">type Tuple = any[];
+
 export class EventManager&lt;TArgs extends Tuple = [], TResult = void&gt; {
   currentId = 0;
   subscriptions: Map&lt;number, (...args: TArgs) =&gt; TResult&gt; = new Map();
+
   Subscribe(callback: (...args: TArgs) =&gt; TResult) {
     let id = this.currentId;
     this.subscriptions.set(id, callback);
     this.currentId++;
     return id;
   }
+
   Unsubscribe(id: number) {
     return this.subscriptions.delete(id);
   }
+
   Publish(...args: TArgs) {
     let results: TResult[] = [];
     for (let id of this.subscriptions.keys()) {
@@ -80,8 +84,10 @@ arbitrary arguments and aggregated return values. I'll take it section by sectio
 usage.</p>
 <pre>
   <code class="language-typescript">let fizzbuzz = new EventManager&lt;[number], string&gt;();
+
 fizzbuzz.Subscribe(i =&gt; i % 3 == 0 ? &quot;Fizz&quot; : &quot;&quot;);
 fizzbuzz.Subscribe(i =&gt; i % 5 == 0 ? &quot;Buzz&quot; : &quot;&quot;);
+
 for (let i = 0; i &lt; 100; i++) {
   console.log(fizzbuzz.Publish(i).join());
 }</code>
@@ -92,6 +98,7 @@ returned from all of the subscribers. The code is strongly typed, and clean.</p>
 <h2 id="generics">Generics</h2>
 <pre>
   <code class="language-typescript">type Tuple = any[];
+
 export class EventManager&lt;TArgs extends Tuple = [], TResult = void&gt; {</code>
 </pre>
 <p>The contribution for this event manager is contained in these two lines. TArgs is a generic which must be any array.
@@ -126,6 +133,7 @@ event.</p>
   this.currentId++;
   return id;
 }
+
 Unsubscribe(id: number) {
   return this.subscriptions.delete(id);
 }</code>
@@ -149,7 +157,7 @@ though they were passed one by one. This keeps the typing sound and allows the p
 normal function with normal arguments.</p>
 <p>The result of each subscription call is then stored in an array and returned to the user.</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>This simple class has made a huge difference in my code and I use it constantly. The type system in Typescript is now flexible
+<p>This simple class has made a huge difference in my code and I use it constantly. The type system in Typescript is now flexible 
 enough in typescript to enable a class like this while still keeping the code safe and consistent. The more I use it,
 the more I appreciate the awesome work they are doing over on the Typescript team.</p>
 <p>Till tomorrow,<br />

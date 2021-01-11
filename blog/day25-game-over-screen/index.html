@@ -63,6 +63,7 @@ game.</p>
 <pre>
   <code class="language-javascript">function drawGameOverScreen() {
   let emptyPixels = drawCircles();
+
   if (player.dead) {
     growCircles();
     addAdditionalCircles(emptyPixels);
@@ -80,9 +81,11 @@ later use.</p>
 <pre>
   <code class="language-javascript">function drawCircles() {
   let emptyPixels = [];
+
   for (let x = 0; x &lt; 128; x++) {
     for (let y = 0; y &lt; 128; y++) {
       let pixel = new Vector(x, y);
+
       let pixelDrawn = false;
       for (let circle of clearCircles) {
         if (pixel.subtract(circle.center).length &lt; circle.radius) {
@@ -91,11 +94,13 @@ later use.</p>
           break;
         }
       }
+
       if (!pixelDrawn) {
         emptyPixels.push(pixel);
       }
     }
   }
+
   return emptyPixels;
 }</code>
 </pre>
@@ -167,9 +172,11 @@ time, I can trigger a reset and the entire game will restart from scratch.</p>
     if (input.right || input.d) {
       player.position.x += speed;
     }
+
     if (player.grounded) {
       player.jumpReady = true;
     }
+
     if ((input.upPressed || input.wPressed) &amp;&amp; player.jumpReady) {
       player.previous.y += jumpSpeed;
       player.jumpReady = false;
@@ -182,10 +189,12 @@ the subscription, but do any initialization inside of the Reset callback.</p>
 <pre>
   <code class="language-javascript">let previousCameraPosition, cameraPosition, shake;
 export let cameraX, cameraY;
+
 Reset.Subscribe(() =&gt; {
   previousCameraPosition = 0;
   cameraPosition = 0;
   shake = 0;
+
   cameraY = 0;
   cameraX = 0;
 });</code>

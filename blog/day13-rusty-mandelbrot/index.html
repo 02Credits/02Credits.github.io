@@ -96,6 +96,7 @@ optimize this function away.</p>
 <p>To access the file, I created a simple index.js file:</p>
 <pre>
   <code class="language-rust">import { mandle } from &#x27;.&#x2F;index.rs&#x27;;
+
 console.log(mandle());</code>
 </pre>
 <p>And lastly a scaffold in an index.html file to actually see something:</p>
@@ -140,16 +141,16 @@ directly. First lets define our algebra.</p>
 <p>Complex Numbers is a scary name for a relatively simple concept. The idea is to
 invent a new number defined as the square root of -1. Clearly no such number
 really exists, but if you can imagine it existing, some interesting features
-would arise.</p>
+would arise. </p>
 <ol>
 <li>
 <p>Since the square root of any number n multiplied by itself
 equals n, multiplying our imaginary number (hence forth i) by itself will get
-you -1.</p>
+you -1. </p>
 </li>
 <li>
 <p>Since we don't really know how to factor i, the smallest
-simplification we can do with a multiple of i is leave it alone.</p>
+simplification we can do with a multiple of i is leave it alone. </p>
 </li>
 </ol>
 <p>Hang in there, we are almost to the good part. A complex number is defined as a
@@ -199,6 +200,7 @@ found in <code>std::ops</code>. In our case we only need <code>Add</code> and <c
 <pre>
   <code class="language-rust">impl Add for Complex {
     type Output = Complex;
+
     fn add(self, rhs: Complex) -&gt; Complex {
         Complex {
             real: self.real + rhs.real,
@@ -206,8 +208,10 @@ found in <code>std::ops</code>. In our case we only need <code>Add</code> and <c
         }
     }
 }
+
 impl Mul for Complex {
     type Output = Complex;
+
     fn mul(self, rhs: Complex) -&gt; Complex {
         Complex {
             real: self.real * rhs.real - self.imaginary * rhs.imaginary,
@@ -248,6 +252,7 @@ pub fn mandle(x: f64, y: f64, width: usize, height: usize) -&gt; i32 {
         real: x * 3.0 &#x2F; (width as f64) - 2.25,
         imaginary: y * 3.0 &#x2F; (height as f64) - 1.5
     };
+
     iterate(c, c, 0)
 }</code>
 </pre>
@@ -261,9 +266,11 @@ don't square root the length) or we do n iterations without escaping.</p>
     if n &gt;= 100 {
         return n;
     }
+
     if z.length_squared() &gt; 16.0 {
         return n;
     }
+
     iterate(z * z + c, c, n + 1)
 }</code>
 </pre>
@@ -271,7 +278,7 @@ don't square root the length) or we do n iterations without escaping.</p>
 <h2 id="draw-something-already">Draw Something Already</h2>
 <p>Now to see something on the screen. First we need something to draw on, so I
 added a canvas to the html page and initialized a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">2d drawing
-context</a>.</p>
+context</a>. </p>
 <pre>
   <code class="language-javascript">const canvas = document.getElementById(&#x27;canvas&#x27;);
 const ctx = canvas.getContext(&#x27;2d&#x27;);</code>
@@ -294,6 +301,7 @@ good enough.</p>
 <pre>
   <code class="language-javascript">const width = 400;
 const height = 400;
+
 function draw() {
   for (let y = 0; y &lt; height; y += 1) {
     for (let x = 0; x &lt; width; x += 1) {
@@ -304,7 +312,9 @@ function draw() {
     }
   }
 }
+
 draw();
+
 window.draw = draw;</code>
 </pre>
 <p>Refreshing the browser window presents us with:</p>
@@ -317,15 +327,18 @@ little bit of anti aliasing goes a long way with Mandelbrot fractals. Lets fix
 that first.</p>
 <pre>
   <code class="language-javascript">const samplesPerPixel = 100;
+
 function draw() {
   let i = 0;
   for (let y = 0; y &lt; height; y += 1) {
     for (let x = 0; x &lt; width; x += 1) {
       let c = 0;
+
       for (let s = 0; s &lt; samplesPerPixel; s++) {
         let n = mandle(x + Math.random(), y + Math.random(), width, height);
         c += n % 2;
       }
+
       let gray = Math.floor(c * 255 &#x2F; samplesPerPixel);
       ctx.fillStyle = &quot;rgb(&quot; + gray + &quot;, &quot; + gray + &quot;, &quot; + gray + &quot;)&quot;;
       ctx.fillRect(x, y, 1, 1);
@@ -356,13 +369,16 @@ yield to the browser so that it can draw to the screen.</p>
   for (let y = 0; y &lt; height; y += 1) {
     for (let x = 0; x &lt; width; x += 1) {
       let c = 0;
+
       for (let s = 0; s &lt; samplesPerPixel; s++) {
         let n = mandle(x + Math.random(), y + Math.random(), width, height);
         c += n % 2;
       }
+
       let gray = Math.floor(c * 255 &#x2F; samplesPerPixel);
       ctx.fillStyle = &quot;rgb(&quot; + gray + &quot;, &quot; + gray + &quot;, &quot; + gray + &quot;)&quot;;
       ctx.fillRect(x, y, 1, 1);
+
       i++;
       if (i &gt; chunkSize) {
         i = 0;

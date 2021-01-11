@@ -76,6 +76,7 @@ reasonable and to be honest I'm too tired to do better.</p>
   <code class="language-javascript">&#x2F;&#x2F; Try Horizontal
   let gridWidth = maxWidth;
   let gridHeight = gridWidth * 2;
+
   if (gridHeight &gt; maxHeight) {
     &#x2F;&#x2F; Fallback to vertical
     gridHeight = maxHeight;
@@ -87,7 +88,9 @@ values and return them as an object.</p>
 <pre>
   <code class="language-javascript">let gridLeft = (width - gridWidth) &#x2F; 2;
   let gridTop = (height - gridHeight) &#x2F; 2 + gridHeight;
+
   let blockWidth = gridHeight &#x2F; gridBlockHeight;
+
   return { gridWidth, gridHeight, gridLeft, gridTop, blockWidth };
 }</code>
 </pre>
@@ -119,6 +122,7 @@ block.</p>
   HEART: &quot;Heart&quot;,
   BANG: &quot;Bang&quot;
 };
+
 function randomType() {
   let keys = Object.keys(types);
   return types[keys[Math.floor(Math.random() * keys.length)]];
@@ -137,6 +141,7 @@ without needing any updates.</p>
     this.blockLeft = gridX;
     this.blockTop = gridY;
   }
+
   render(gridLeft, blocksTop, gridWidth) {
     let blockWidth = gridWidth &#x2F; gridBlockWidth;
     let centerX = gridLeft + blockWidth * this.blockLeft + blockWidth &#x2F; 2;
@@ -151,6 +156,7 @@ start since no block lookups are needed yet, but I suspect I will store them in
 a two dimensional array or map in the future.</p>
 <pre>
   <code class="language-javascript">let blocks = [];
+
 let maxStackHeight = 5;
 for (let x = 0; x &lt; gridBlockWidth; x++) {
   let stackHeight = Math.floor(Math.random() * 4) + maxStackHeight - 3;
@@ -165,7 +171,9 @@ and render each block!</p>
   <code class="language-javascript">Draw.Subscribe(() =&gt; {
   let { gridWidth, gridHeight, gridLeft, gridTop, blockWidth } = calculateGridPosition();
   let blocksTop = gridTop - gridHeight + maxStackHeight * blockWidth;
+
   image(bang, gridLeft + gridWidth &#x2F; 2, gridTop - gridHeight &#x2F; 2, gridWidth, gridHeight);
+
   for (let block of blocks) {
     block.render(gridLeft, blocksTop, gridWidth);
   }

@@ -65,7 +65,7 @@ I use <a href="https://github.com/Shougo/dein.vim">Dein</a>, but any vim plugin 
 <pre>
   <code class="language-vimscript">call dein#add(&#x27;c:&#x2F;dev&#x2F;Projects&#x2F;vim-balsamic&#x27;)</code>
 </pre>
-<p>With my custom plugin folder added, I created a folder structure matching this pattern:</p>
+<p>With my custom plugin folder added, I created a folder structure matching this pattern: </p>
 <pre>
   <code class="language-text">Project Root &gt; rplugin &gt; node &gt; Plugin Name &gt; Javascript Project</code>
 </pre>
@@ -113,6 +113,7 @@ it somewhat confusing. The cleanest method I found was to define a class and use
   <code class="language-typescript">@Plugin({ dev: false })
 export default class BalsamicPlugin {
   constructor(public nvim: Neovim) {  }
+
   @Command(&quot;Balsamic&quot;)
   async openParent() {
     const fullFilePath = (await this.nvim.commandOutput(&quot;echo expand(&#x27;%:p&#x27;)&quot;)) + &quot;&#x2F;&quot; &#x2F;&#x2F; Query the current file directory path
@@ -124,6 +125,7 @@ export default class BalsamicPlugin {
       createDirectoryBuffer(this.nvim, fullDirectoryPath);
     }
   }
+
   @Command(&quot;BalsamicOpen&quot;)
   async openCurrentLine() {
     let line = await this.nvim.getLine();
@@ -131,22 +133,25 @@ export default class BalsamicPlugin {
     if (parsedLine) {
       let { id, name } = parsedLine;
       let fullDirectoryPath = await this.nvim.commandOutput(&quot;echo expand(&#x27;%:p&#x27;)&quot;);
+
       if (itemIsDirectory(name)) {
         createDirectoryBuffer(this.nvim, path.join(fullDirectoryPath, name));
       } else {
         if (initialState.has(id)) {
           let file = initialState.get(id);
-          await this.nvim.command(&#96;e ${file}&#96;);
+          await this.nvim.command(`e ${file}`);
         } else {
           await this.nvim.outWriteLine(&quot;File does not exits.&quot;);
         }
       }
     }
   }
+
   @Command(&quot;BalsamicCommit&quot;)
   balsamicCommit() {
     commitChanges(this.nvim);
   }
+
   @Command(&quot;BalsamicExecute&quot;)
   balsamicExecute() {
     executeOperations(this.nvim)
@@ -168,7 +173,7 @@ Neovim app.</p>
     await nvim.buffer.setOption(&quot;ft&quot;, fileType), &#x2F;&#x2F; Set file type to balsamic or filetype
     await nvim.command(&quot;setlocal noswapfile&quot;),
     await nvim.command(&quot;0f&quot;),
-    await nvim.command(&#96;file ${name.replace(&#x2F;\\&#x2F;g, &quot;&#x2F;&quot;)}&#96;), &#x2F;&#x2F; Change buffer name to match the current file
+    await nvim.command(`file ${name.replace(&#x2F;\\&#x2F;g, &quot;&#x2F;&quot;)}`), &#x2F;&#x2F; Change buffer name to match the current file
     await nvim.buffer.setLines(lines, { start: 0, end: -1, strictIndexing: false })
   ]);
   return nvim.buffer;
@@ -184,7 +189,7 @@ startup slowing down vim.</p>
 support. To make this happen, two steps are necessary. First a chrome browser with the Node.js V8 -- inspector Manager
 must be running. This can be setup
 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">here</a>. Second, an
-environment variable must be set to tell Neovim to enable nodejs debugging. This can be done with this vim command:
+environment variable must be set to tell Neovim to enable nodejs debugging. This can be done with this vim command: 
 <code>:let $NVIM_NODE_HOST_DEBUG = 1</code> which will set the NVIM_NODE_HOST_DEBUG environment variable. Then when any command is
 run which triggers the nodejs plugin, the chrome window will pop the debugger window and attach to the running process.</p>
 <p>This makes life significantly easier and removes a lot of the print debugging which would otherwise be necessary.</p>

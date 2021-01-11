@@ -69,12 +69,15 @@ state and property access.</p>
     this.type = type.GARBAGE;
     this.state = state.FALLING;
   }
+
   render() {
     let blocksTopLeft = new Vector(
       gridCenter.x - gridDimensions.width &#x2F; 2,
       gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
+
     let renderInfos = garbageRenderInfo(this.gridDimensions);
     let topLeft = blocksTopLeft.add(this.gridPosition.multiply(blockWidth).multiplyParts(new Vector(1, -1))).withZ(2);
+
     for (let renderInfo of renderInfos) {
       image(renderInfo.texture, topLeft, renderInfo.dimensions, 0, Color.White, Vector.topLeft);
       topLeft = topLeft.add(new Vector(0, -renderInfo.dimensions.height));
@@ -90,6 +93,7 @@ Unfortunately since the garbage blocks take up more than a single slot, I needed
 to modify the grid access functions accordingly.</p>
 <pre>
   <code class="language-javascript">let blocks = {};
+
 export function getBlock(gridSlot) {
   let row = blocks[gridSlot.y];
   if (row) {
@@ -97,8 +101,10 @@ export function getBlock(gridSlot) {
   }
   return undefined;
 }
+
 export function setBlock(block) {
   let topLeft = block.gridSlot;
+
   for (let overlappingSlot of block.overlappingSlots()) {
     if (!blocks[overlappingSlot.y]) {
       blocks[overlappingSlot.y] = [];
@@ -106,13 +112,16 @@ export function setBlock(block) {
     blocks[overlappingSlot.y][overlappingSlot.x] = block;
   }
 }
+
 export function clearSlot(position) {
   if (blocks[position.y]) {
     delete blocks[position.y][position.x];
   }
 }
+
 export function* allBlocks() {
   let seenBlocks = new Set();
+
   let rowYValues = Object.keys(blocks);
   let topRow = Math.min(...rowYValues);
   let bottomRow = Math.max(...rowYValues);
@@ -178,9 +187,11 @@ gap under the garbage block to move to.</p>
 <pre>
   <code class="language-javascript">handleFalling() {
   if (this.state === state.CLEARING) return;
+
   if (this.gapBelow()) {
     this.state = state.FALLING;
   }
+
   if (this.state === state.FALLING) {
     this.gridPosition.y += fallSpeed;
     if (this.gridPosition.y &gt; this.gridSlot.y &amp;&amp; !this.gapBelow()) {
@@ -199,6 +210,7 @@ gap under the garbage block to move to.</p>
     }
   }
 }
+
 update() {
   this.handleFalling();
 }</code>

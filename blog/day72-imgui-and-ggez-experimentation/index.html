@@ -101,14 +101,17 @@ recommended in the blog post was to have a simple circle slide across the
 screen, so I just went with that.</p>
 <pre>
   <code class="language-rust">use ggez::*;
+
 struct State {
     pos_x: f32,
 }
+
 impl ggez::event::EventHandler for State {
     fn update(&amp;mut self, _ctx: &amp;mut Context) -&gt; GameResult&lt;()&gt; {
         self.pos_x = self.pos_x % 800.0 + 1.0;
         Ok(())
     }
+
     fn draw(&amp;mut self, ctx: &amp;mut Context) -&gt; GameResult&lt;()&gt; {
         graphics::clear(ctx, graphics::BLACK);
         let circle = graphics::Mesh::new_circle(
@@ -122,13 +125,16 @@ impl ggez::event::EventHandler for State {
         graphics::present(ctx)
     }
 }
+
 pub fn main() {
     let state = &amp;mut State { pos_x: 0.0 };
     let c = conf::Conf::new();
+
     let(ref mut ctx, ref mut event_loop) = ContextBuilder::new(&quot;ggez_imgui_test&quot;, &quot;Keith Simmons&quot;)
         .conf(c)
         .build()
         .unwrap();
+
     event::run(ctx, event_loop, state).unwrap();
 }</code>
 </pre>
@@ -159,7 +165,7 @@ deleting <code>get_</code> from the beginning of property names.</p>
 <a href="https://github.com/Kethku/GGEZ_ImGui_Test/blob/401d1360f0b53d3dd8b880b00d4cf3e2766800b4/src/imgui_wrapper.rs">here</a>.</p>
 <p>Unfortunately at this point (at 1 am in the morning no less) I ran into an issue
 I have yet to figure out. Weirdly when I tried running everything seemed to be
-working fine, but the text inside the gui was cut off.</p>
+working fine, but the text inside the gui was cut off. </p>
 <p><img src="http://02credits.com/blog/day72-imgui-and-ggez-experimentation/ImguiError.gif" alt="ImGui Error" /></p>
 <p>As shown in the above gif, when I move the window, more and more of the text is
 cut off. I've tried a number of things related to dpi scaling and the like but
@@ -186,7 +192,7 @@ that didn't really happen. I still feel pretty guilty when I miss a day even if
 I did get work done that day (like yesterday). To that end I'm going to be more
 explicit. My goal is to have a post at least every other day. This should let me
 to take on more exploratory projects some days with the understanding that
-failing to learn or finish anything is an acceptable result.</p>
+failing to learn or finish anything is an acceptable result. </p>
 <p>So from here on out I will try to make a post each day but I won't feel too bad
 if I miss a day for whatever reason so long as I get one every other day at
 minimum.</p>

@@ -339,7 +339,7 @@ appropriate action for every file in the directory containing the csproj file
 automatically. The result is that all of the boilerplate goes away and you only
 need to list files that should have non default handling. This is a HUGE win.</p>
 <h2 id="targets">Targets</h2>
-<p>Old:</p>
+<p>Old: </p>
 <pre>
   <code class="language-xml">&lt;Import Project=&quot;$(MSBuildToolsPath)\Microsoft.CSharp.targets&quot; &#x2F;&gt;
   &lt;Import Project=&quot;..\packages\Fody.3.2.4\build\Fody.targets&quot; Condition=&quot;Exists(&#x27;..\packages\Fody.3.2.4\build\Fody.targets&#x27;)&quot; &#x2F;&gt;

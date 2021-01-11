@@ -117,12 +117,15 @@ draw the block above the other blocks when grabbed.</p>
 <pre>
   <code class="language-javascript">render() {
   let { center, dimensions } = this.calculateLocation();
+
   let opacity = this.calculateOpacity(center.y);
   let tint = new Color(1, 1, 1, opacity);
+
   if (this.state === state.DRAGGING) {
     center = center.withZ(10);
   }
   dimensions = dimensions.multiply(this.scale);
+
   image(blockImages[this.type], center, dimensions, 0, tint, Vector.center);
 }</code>
 </pre>
@@ -184,21 +187,27 @@ moving off of the grid.</p>
   <code class="language-javascript">} else if (heldBlock === this) {
   &#x2F;&#x2F; Handle Dragged Block
   let previousSlotX = this.gridSlot.x;
+
   &#x2F;&#x2F; correctedTouchX accounts for the initial touch offset
   let correctedTouchX = touchPosition.x - this.dragOffset.x - blockWidth &#x2F; 2;
   let gridLeft = gridCenter.x - gridDimensions.width &#x2F; 2;
   let newGridXTarget = (correctedTouchX - gridLeft) * gridBlockDimensions.width &#x2F; gridDimensions.width;
+
   let diff = newGridXTarget - this.gridPosition.x;
   if (diff &gt; maxDragVelocity) diff = maxDragVelocity;
   if (diff &lt; -maxDragVelocity) diff = -maxDragVelocity;
   this.gridPosition.x += diff;
+
   if (this.gridPosition.x &lt; 0) this.gridPosition.x = 0;
   if (this.gridPosition.x &gt; 5) this.gridPosition.x = 5;
+
   this.gridSlot.x = Math.round(this.gridPosition.x);
+
   if (previousSlotX !== this.gridSlot.x) {
     let blockInTheWay = blocks[this.gridSlot.y][this.gridSlot.x];
     blocks[this.gridSlot.y][this.gridSlot.x] = this;
     blocks[this.gridSlot.y][previousSlotX] = blockInTheWay;
+
     if (blockInTheWay) {
       blockInTheWay.gridSlot.x = previousSlotX;
     }
@@ -275,9 +284,11 @@ spawning.</p>
 <pre>
   <code class="language-javascript">update() {
   let { center, dimensions } = this.calculateLocation();
+
   this.handleDragging(center, dimensions);
   this.handleFalling(center, dimensions);
   this.animateBlockSize();
+
   if (this.state === state.SPAWNING &amp;&amp; touchPosition.within(center, dimensions) &amp;&amp; touchStarted) {
     intentionalAdvance();
   }

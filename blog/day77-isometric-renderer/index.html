@@ -98,11 +98,14 @@ containing the loaded textures indexed by an enum with values for each of them.<
     new [] { Tiles.SlopeRight, Tiles.SlopeUp, Tiles.Dirt, Tiles.Dirt },
     new [] { Tiles.Dirt, Tiles.Dirt, Tiles.Dirt, Tiles.Dirt }
 }.FlipHorizontally();
+
 public List&lt;(Tiles tile, Vector3 position)&gt; Entities = new List&lt;(Tiles tile, Vector3 position)&gt; {
     (Tiles.Tree, new Vector3(3, 0, 1)),
     (Tiles.Tree, new Vector3(1, 2, 0)),
     (Tiles.Tree, new Vector3(3, 3, 0))
 };
+
+
 public void LoadContent(ContentManager content) {
     tileTextures[Tiles.Dirt] = content.Load&lt;Texture2D&gt;(&quot;Tiles&#x2F;U0R0D0L0&quot;);
     tileTextures[Tiles.SlopeRight] = content.Load&lt;Texture2D&gt;(&quot;Tiles&#x2F;U1R1D0L0&quot;);
@@ -119,6 +122,7 @@ function for converting world coordinates to the screen coordinates:</p>
 <pre>
   <code class="language-c#">private Vector2 WorldToScreen(Vector3 worldPosition) {
     Vector3 relativePosition = worldPosition - new Vector3(CameraWorldPosition, 0);
+
     return (new Vector2(
         relativePosition.X * TileBaseWidth + relativePosition.Y * TileBaseWidth,
         -relativePosition.X * TileBaseHeight + relativePosition.Y * TileBaseHeight - relativePosition.Z * TileBaseHeight)
@@ -138,12 +142,15 @@ to correct for that offset.</p>
 <pre>
   <code class="language-c#">private void DrawTile(Tiles tileToDraw, Vector3 worldPosition, float layerOffset = 0) {
     Texture2D textureToDraw = tileTextures[tileToDraw];
+
     float tileWidth = TileBaseWidth;
     float tileHeight = TileBaseWidth * textureToDraw.Height &#x2F; textureToDraw.Width;
+
     Vector2 screenPosition = WorldToScreen(worldPosition);
     float positionX = screenPosition.X - tileWidth &#x2F; 2;
     float bottom = screenPosition.Y + TileBaseWidth * 18 &#x2F; (32 * 2);
     float positionY = bottom - tileHeight;
+
     spriteBatch.Draw(
         texture: textureToDraw, 
         destinationRectangle: new Rectangle((int)positionX, (int)positionY, (int)tileWidth, (int)tileHeight), 
@@ -162,12 +169,15 @@ public void Draw(GameTime gameTime) {
             DrawTile(column[y], new Vector3(x, y, 0));
         }
     }
+
     foreach ((Tiles tile, Vector3 position) in Entities) {
         DrawTile(tile, new Vector3(position.X, position.Y, position.Z));
     }
+
     DrawTile(Tiles.Ball, new Vector3(0, (float)animationManager.Interpolate(&quot;Test&quot;, progress, 0.0, 3.0), 0), 1);
     if (increasing) progress += 0.0025;
     else progress -= 0.0025;
+
     if (progress &gt; 1) increasing = false;
     if (progress &lt; 0) increasing = true;
 }</code>
@@ -175,10 +185,10 @@ public void Draw(GameTime gameTime) {
 <p>Since the draw order is defined by the draw layer, I only needed to loop over
 every index of the world map and draw them one by one. Same goes for the
 entities except the position is defined explicitly. Finally I created a simple
-animation test with a ball texture that bounces from <code>(x: 0, y: 0)</code> to <code>(x:0, y:</code> using an animation curve. The resulting animation looks like this:</p>
+animation test with a ball texture that bounces from <code>(x: 0, y: 0)</code> to <code>(x:0, y: 3)</code> using an animation curve. The resulting animation looks like this:</p>
 <p><img src="http://02credits.com/blog/day77-isometric-renderer/IsometricMovement.gif" alt="Isometric Movement" /></p>
 <p>Thats it for today. Next I would like to get some form of camera movement
-working and possibly entity movement and or path finding working.</p>
+working and possibly entity movement and or path finding working. </p>
 <p>Till tomorrow,<br />
 Keith</p>
 

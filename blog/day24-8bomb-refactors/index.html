@@ -87,6 +87,7 @@ that any of the modules can depend on it without worrying about who required who
 and such.</p>
 <pre>
   <code class="language-javascript">import { EventManager0, EventManager1 } from &quot;..&#x2F;eventManager&quot;;
+
 export const Update = new EventManager1();
 export const DrawWorld = new EventManager0();
 export const DrawUI = new EventManager0();</code>
@@ -96,6 +97,7 @@ export const DrawUI = new EventManager0();</code>
   <code class="language-javascript">export function update(state, input) {
   Update.Publish(input);
 }
+
 export function draw (state) {
   clear();
   camera(cameraX, cameraY);
@@ -121,32 +123,42 @@ standard library of base operators.</p>
     this.x = x;
     this.y = y;
   }
+
   get length() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
+
   distance(other) {
     return this.subtract(other).length;
   }
+
   add(other) {
     return new Vector(this.x + other.x, this.y + other.y);
   }
+
   subtract(other) {
     return new Vector(this.x - other.x, this.y - other.y);
   }
+
   multiply(scalar) {
     return new Vector(this.x * scalar, this.y * scalar);
   }
+
   divide(scalar) {
     return new Vector(this.x &#x2F; scalar, this.y &#x2F; scalar);
   }
+
   normalize() {
     return this.divide(this.length);
   }
+
   floor() {
     return new Vector(Math.floor(this.x), Math.floor(this.y));
   }
 }
+
 Vector.zero = new Vector(0, 0);
+
 Vector.InRectangle = function* (topLeft, bottomRight, xJump = 1, yJump = 1) {
   for (let y = topLeft.y; y &lt; bottomRight.y; y += yJump) {
     for (let x = topLeft.x; x &lt; bottomRight.x; x += xJump) {
@@ -163,7 +175,7 @@ lastly I created normalize for dividing a vector by its length (used for
 directions) and a floor function to coerse a <code>Vector</code> to integers.</p>
 <p>I also added a static <code>zero</code> property for a global zero only <code>Vector</code> and a
 helper function for enumerating all of the points in a rectangle defined by a
-<code>topLeft</code> and <code>bottomRight</code> <code>Vector</code>.</p>
+<code>topLeft</code> and <code>bottomRight</code> <code>Vector</code>. </p>
 <p>I spent a bunch of time porting much of the vector math to use the new <code>Vector</code>
 class, but I'm sure I missed some. I will proceed by porting any code I come
 across, but I won't worry too much about catching all of it for now. An example
@@ -178,6 +190,7 @@ more maintainable.</p>
   let radius = new Vector(r, r);
   let topLeft = center.subtract(radius).floor();
   let bottomRight = center.add(radius).floor();
+
   for (let pixel of Vector.InRectangle(topLeft, bottomRight)) {
     let offset = center.subtract(pixel);
     if (offset.length &gt; r) continue;
@@ -197,24 +210,31 @@ and <code>cameraY</code> variable which takes the shake into account.</p>
   <code class="language-javascript">let previousCameraPosition = 0;
 let cameraPosition = 0;
 let shake = 0;
+
 export let cameraY = 0;
 export let cameraX = 0;
+
 export function shakeCamera(amount) {
   shake = amount;
 }
+
 Update.Subscribe(() =&gt; {
   shake *= shakeFalloff;
+
   let vy = cameraPosition - previousCameraPosition;
   previousCameraPosition = cameraPosition;
   cameraPosition += vy * cameraMomentum;
+
   if (player.position.y &gt; cameraPosition + 96) {
     let cameraDiff = player.position.y - (cameraPosition + 96);
     cameraPosition += cameraDiff * cameraLag;
   }
+
   if (player.position.y &lt; cameraPosition + 32) {
     let cameraDiff = player.position.y - (cameraPosition + 32);
     cameraPosition += cameraDiff * 0.2;
   }
+
   cameraX = Math.random() * shake;
   cameraY = cameraPosition + Math.random() * shake;
 });</code>
@@ -230,6 +250,7 @@ Update.Subscribe(() =&gt; {
     c: 0,
     delay: animationSpeed
   });
+
   shakeCamera(shakeAmount);
 }</code>
 </pre>
@@ -283,6 +304,7 @@ the Vector class improvements.</p>
     let count = 0;
     for (let positionOffset of standardBorderPixels) {
       let testPosition = obj.position.add(positionOffset.floor()).floor();
+
       if (terrainAt(testPosition.x, testPosition.y)) {
         if (positionOffset.y &gt; 3) {
           obj.grounded = true;
@@ -294,6 +316,7 @@ the Vector class improvements.</p>
     if (count == 0) {
       continue;
     }
+
     let collisionPosition = total.divide(count);
     let collisionDistance =  collisionPosition.length;
     let collisionDirection = collisionPosition.divide(collisionDistance);

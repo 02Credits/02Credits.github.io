@@ -93,6 +93,7 @@ interest and gives an explanation for where the bombs went.</p>
     if (Math.random() &lt; 0.1) {
       newExplosion(state, Math.random() * 128, -20);
     }
+    
     if (input.left || input.right || input.up || input.down || input.a || input.b) {
       state.started = true;
       Started.Publish(state);
@@ -108,6 +109,7 @@ spawn bombs and how much to shake the screen.</p>
     bombs.push(createPhysicsObject(Math.random() * 112 + 8, player.position.y - 300, 2));
   }
 }
+
 function newExplosion(state, x, y) {
   state.explosions.push({
     x,
@@ -116,6 +118,7 @@ function newExplosion(state, x, y) {
     c: 0,
     delay: animationSpeed
   });
+
   let amount = shakeAmount;
   if (!state.started) amount = amount &#x2F; 2;
   shakeCamera(state, amount);

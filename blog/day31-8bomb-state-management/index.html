@@ -75,6 +75,7 @@ the vector method calls in favor of the more confusing syntax.</p>
   let radius = new Vector(r, r);
   let topLeft = center.subtract(radius).floor();
   let bottomRight = center.add(radius).floor();
+
   for (let pixel of Vector.InRectangle(topLeft, bottomRight)) {
     let offset = center.subtract(pixel);
     if (offset.length &gt; r) continue;
@@ -89,6 +90,7 @@ the vector method calls in favor of the more confusing syntax.</p>
   let radius = { x: r, y: r };
   let topLeft = floor(subtract(center, radius));
   let bottomRight = floor(add(center, radius));
+
   for (let pixel of InRectangle(topLeft, bottomRight)) {
     let offset = subtract(center, pixel);
     if (length(offset) &gt; r) continue;

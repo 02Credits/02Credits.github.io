@@ -62,17 +62,21 @@ so pulling it out was useful regardless.</p>
 <pre>
   <code class="language-javascript">export function gridToScreen({ position, dimensions }) {
   let result = {};
+
   if (position) {
     let blocksTopLeft = new Vector(
       gridCenter.x - gridDimensions.width &#x2F; 2,
       gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
+
     result.position = blocksTopLeft.add(
       position.multiply(blockWidth)
         .multiplyParts(new Vector(1, -1)));
   }
+
   if (dimensions) {
     result.dimensions = dimensions.multiply(blockWidth);
   }
+
   return result;
 }</code>
 </pre>
@@ -104,10 +108,12 @@ contained in the set.</p>
     this.garbageBlocks = garbageBlocks;
     this.coveredSlots = new Map();
     this.spawnedBlocks = [];
+
     for (let garbage of garbageBlocks) {
       for (let slot of garbage.overlappingSlots()) {
         this.coveredSlots.set(JSON.stringify(slot), slot);
       }
+
       createSpawnedBlocks(garbage);
     }
   }</code>
@@ -125,6 +131,7 @@ a spawned block.</p>
         anyUncovered = true;
         break;
       }
+
       if (!anyUncovered &amp;&amp; !this.breakTimeStarted) {
         this.breakTimeStarted = this.timer;
       }
@@ -138,11 +145,13 @@ slot texture on top.</p>
   for (let spawnedBlock of this.spawnedBlocks) {
     spawnedBlock.render();
   }
+
   for (let coveredSlot of this.coveredSlots.values()) {
     let renderInfo = gridToScreen({
       position: coveredSlot,
       dimensions: Vector.one
     });
+
     image({
       imageUrl: garbageImages.Clear,
       center: Vector.topLeft,
@@ -162,6 +171,7 @@ each garbage block is turned into a garbage block with one smaller height.</p>
     let slot = new Vector(x, garbage.gridSlot.y + garbage.gridDimensions.y - 1);
     this.spawnedBlocks.push(new Block(slot));
   }
+
   if (garbage.gridDimensions.y &gt; 1) {
     let dimensions = garbage.gridDimensions.withY(garbage.gridDimensions.height - 1);
     this.spawnedBlocks.push(new Garbage(garbage.gridSlot, dimensions));

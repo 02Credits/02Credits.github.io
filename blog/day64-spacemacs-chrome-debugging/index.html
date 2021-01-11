@@ -65,6 +65,7 @@ I added this lisp:</p>
 <pre>
   <code class="language-lisp">(defconst indium-packages
   &#x27;(indium))
+
 (defun indium&#x2F;init-indium ()
   (use-package indium
     :config
@@ -95,8 +96,9 @@ when paused, and accessing the repl.</p>
    dotspacemacs-enable-lazy-installation &#x27;unused
    dotspacemacs-ask-for-lazy-installation t
    dotspacemacs-configuration-layer-path &#x27;()
+
    dotspacemacs-configuration-layers
-   &#96;(indium
+   `(indium
      graphviz
      csharp
      vimscript
@@ -112,7 +114,7 @@ tends to be pretty slow unless some crazy hacks are used. One that might not
 immediately be obvious is that emacs runs a ton of configuration in the default
 which gets dumped into a memory snapshot and reloaded on startup every time.
 This works great for the base configuration but gets slow again if you use a
-huge configuration file like spacemacs.</p>
+huge configuration file like spacemacs. </p>
 <p>To get around this I use an experimental feature in spacemacs which adds support
 for dumping a personalized version of emacs with all of my configuration and
 loading that instead of the distributed one. Achieving this requires a bunch of

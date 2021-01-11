@@ -83,6 +83,7 @@ file,</p>
   BANG: &quot;Bang&quot;,
   GARBAGE: &quot;Garbage&quot;
 };
+
 export const standardBlocks = [
   type.WOOD,
   type.ICE,
@@ -101,6 +102,7 @@ integration.</p>
 <pre>
   <code class="language-javascript">import { imagesToDraw } from &quot;.&#x2F;webgl&quot;;
 import { Color, Vector } from &quot;.&#x2F;math&quot;;
+
 export function image({ imageUrl, position, dimensions, rotation = 0, tint = Color.white, center = Vector.half }) {
   imagesToDraw.push({ imageUrl, position, dimensions, rotation, tint, center });
 }</code>
@@ -110,11 +112,14 @@ gets reduced by a certain percentage each frame.</p>
 <pre>
   <code class="language-javascript">const shakeDecay = 0.8;
 const shakeAmount = 50;
+
 let currentShake = 0;
 let cameraShake = 0;
+
 export function shake() {
   cameraShake = shakeAmount;
 }
+
 Update.Subscribe(() =&gt; {
   cameraShake *= shakeDecay;
   currentShake = (Math.random() - 0.5) * cameraShake;

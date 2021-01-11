@@ -135,9 +135,11 @@ simpler.</p>
   <code class="language-javascript">export function print(x, y, letters, c = 0) {
   let currentX = Math.floor(x - _cameraX);
   let currentY = Math.floor(y - _cameraY);
+
   for (let letter of letters.toString().split(&#x27;&#x27;)) {
     const pixels = alphabet[letter.toLowerCase()];
     if (!pixels) currentX += 3; &#x2F;&#x2F; Couldn&#x27;t find a character
+
     let letterWidth = pixels.length &#x2F; 6;
     for (let x = 0; x &lt; letterWidth; x++) {
       for (let y = 0; y &lt; 6; y++) {

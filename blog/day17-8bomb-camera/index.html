@@ -70,11 +70,13 @@ primitives. Easy enough:</p>
   if (topRight) s += 2;
   if (bottomRight) s += 4;
   if (bottomLeft) s += 8;
+  
   let tileTop = -cameraY + ty * tileHeight;
   if (tileTop &gt; -50 &amp;&amp; tileTop &lt; 150) { 
     sprite(tx * tileWidth, -cameraY + ty * tileHeight, s);
   }
 }
+
 function drawTerrain({ terrain, cameraY }) {
   for (let y = 0; y &lt; terrain.length - 1; y++) {
     for (let x = 0; x &lt; terrain[y].length - 1; x++) {
@@ -82,9 +84,11 @@ function drawTerrain({ terrain, cameraY }) {
     }
   }
 }
+
 function drawPlayer({ player, cameraY }) {
   sprite(player.position.x - player.radius, -cameraY + player.position.y - player.radius, 16);
 }
+
 function drawInstructions() { 
   print(5, 0, &quot;left&#x2F;right to move&quot;);
   print(5, 8, &quot;up to jump&quot;);
@@ -116,14 +120,17 @@ function updateCamera(state) {
     state.previousCameraY = state.cameraY;
     state.cameraY += vy * cameraMomentum;
   }
+  
   if (state.player.position.y &gt; state.cameraY + 96) {
     var cameraDiff = state.player.position.y - (state.cameraY + 96);
     state.cameraY += cameraDiff * 0.2;
   }
+  
   if (state.player.position.y &lt; state.cameraY + 32) {
     var cameraDiff = state.player.position.y - (state.cameraY + 32);
     state.cameraY += cameraDiff * 0.2;
   }
+  
   if (!state.previousCameraY) {
     state.previousCameraY = state.cameraY;
   }

@@ -86,28 +86,36 @@ callback whenever the texture is loaded.</p>
 <pre>
   <code class="language-c#">public abstract class ReloadingResource : IDisposable {
     ResourceReloader resourceReloader;
+
     &#x2F;&#x2F; Name of the resource to use in the content directory
     protected string resourceName;
     &#x2F;&#x2F; Path under the Shared&#x2F;Content directory to watch
     protected string debugPath;
+
     FileSystemWatcher watcher;
+
     public ReloadingResource(ResourceReloader resourceReloader, string resourceName) {
 #if DEBUG &amp;&amp; !IOS
         this.resourceReloader = resourceReloader;
         this.resourceName = resourceName;
+
         watcher = new FileSystemWatcher();
         debugPath = $&quot;..&#x2F;..&#x2F;..&#x2F;..&#x2F;Shared&#x2F;Content&#x2F;{resourceName}&quot;;
+
         watcher.Path = Path.GetDirectoryName(debugPath);
         watcher.Filter = Path.GetFileName(debugPath) + &quot;.*&quot;;
         watcher.Changed += (_, __) =&gt; {
             resourceReloader.TriggerReload(resourceName);
         };
         watcher.EnableRaisingEvents = true;
+
         resourceReloader.Register(resourceName, this);
 #endif
     }
+
     public abstract void DebugReload();
     public abstract void ProductionLoad(ContentManager content);
+
     public void Dispose() {
 #if DEBUG &amp;&amp; !IOS
         resourceReloader.Unregister(resourceName);
@@ -130,6 +138,7 @@ class which would be called on update and handle triggering the reloads.</p>
   <code class="language-c#">public class ResourceReloader : IContentLoadable, IUpdateable {
     Dictionary&lt;string, ReloadingResource&gt; reloadingResources = new Dictionary&lt;string, ReloadingResource&gt;();
     ConcurrentQueue&lt;string&gt; resourcesToReload = new ConcurrentQueue&lt;string&gt;();
+
     public void LoadContent(ContentManager content) {
         foreach (ReloadingResource resource in reloadingResources.Values) {
 #if DEBUG &amp;&amp; !IOS
@@ -139,12 +148,15 @@ class which would be called on update and handle triggering the reloads.</p>
 #endif
         }
     }
+
     public void Update(GameTime gameTime) {
         while (resourcesToReload.TryDequeue(out var resourcePath)) {
             reloadingResources[resourcePath].DebugReload();
         }
     }
+
     public void TriggerReload(string resourcePath) =&gt; resourcesToReload.Enqueue(resourcePath);
+
     public void Register(string resourcePath, ReloadingResource resource) =&gt; reloadingResources[resourcePath] = resource;
     public void Unregister(string resourcePath) =&gt; reloadingResources.Remove(resourcePath);
 }</code>
@@ -160,18 +172,22 @@ called with the updated texture on reload.</p>
   <code class="language-c#">public class ReloadingTexture : ReloadingResource {
     Action&lt;Texture2D&gt; loadAction;
     GraphicsDevice graphicsDevice;
+
     public Texture2D LoadedTexture { get; private set; }
+
     public ReloadingTexture(GraphicsDevice graphicsDevice, ResourceReloader resourceReloader, string textureName, Action&lt;Texture2D&gt; loadAction = null) 
         : base(resourceReloader, textureName) {
         this.graphicsDevice = graphicsDevice;
         this.loadAction = loadAction;
     }
+
     public override void DebugReload() {
         using (FileStream textureStream = new FileStream(debugPath + &quot;.png&quot;, FileMode.Open)) {
             LoadedTexture = Texture2D.FromStream(graphicsDevice, textureStream);
             loadAction?.Invoke(LoadedTexture);
         }
     }
+
     public override void ProductionLoad(ContentManager content) {
         LoadedTexture = content.Load&lt;Texture2D&gt;(resourceName);
         loadAction?.Invoke(LoadedTexture);
@@ -197,10 +213,13 @@ values and calculate an array of doubles.</p>
     var pixels = new Color[texture.Width * texture.Height];
     texture.GetData(pixels);
     Color GetPixel(int x, int y) =&gt; pixels[y * texture.Width + x];
+
     var curve = new double[texture.Width];
+
     for (var x = 0; x &lt; texture.Width; x++) {
         var totalY = 0.0;
         var yCount = 0.0;
+
         for (var y = 0; y &lt; texture.Height; y++) {
             var pixelColor = GetPixel(x, y);
             if (pixelColor.A != 0 &amp;&amp; pixelColor != Color.White) {
@@ -210,6 +229,7 @@ values and calculate an array of doubles.</p>
         }
         curve[x] = totalY &#x2F; yCount &#x2F; texture.Height;
     }
+
     return curve;
 }</code>
 </pre>
@@ -221,6 +241,7 @@ fill in the constructor parameters.</p>
   <code class="language-c#">public void LoadContent(ContentManager content) {
     LoadCurve(&quot;Test&quot;, content);
 }
+
 private void LoadCurve(string textureName, ContentManager content) {
     var reloadingTexture = reloadingTextureFactory(textureName, texture =&gt; {
         animationCurves[textureName] = BuildCurve(texture);
@@ -247,10 +268,12 @@ anywhere I could want to use the function.</p>
     int diff = to - from;
     return (int)(Sample(curveName, progress) * diff) + from;
 }
+
 public double Interpolate(string curveName, double progress, double from, double to) {
     double diff = to - from;
     return Sample(curveName, progress) * diff + from;
 }
+
 public Vector2 Interpolate(string curveName, double progress, Vector2 from, Vector2 to) {
     Vector2 diff = to - from;
     return (float)Sample(curveName, progress) * diff + from;
@@ -262,6 +285,7 @@ by a given curve.</p>
 <pre>
   <code class="language-c#">public void LoadContent(ContentManager content) {
     font = content.Load&lt;SpriteFont&gt;(&quot;Gugi&quot;);
+
     actions.Add(content.Load&lt;Texture2D&gt;(&quot;Actions&#x2F;Cloud&quot;));
     actions.Add(content.Load&lt;Texture2D&gt;(&quot;Actions&#x2F;Leaf&quot;));
     actions.Add(content.Load&lt;Texture2D&gt;(&quot;Actions&#x2F;Moon&quot;));
@@ -269,8 +293,10 @@ by a given curve.</p>
     actions.Add(content.Load&lt;Texture2D&gt;(&quot;Actions&#x2F;Stick&quot;));
     actions.Add(content.Load&lt;Texture2D&gt;(&quot;Actions&#x2F;Sun&quot;));
 }
+
 public void Draw(GameTime gameTime) {
     spriteBatch.DrawString(font, &quot;Hello World!&quot;, new Vector2(100, 100), colors.Foreground);
+
     for (var i = 0; i &lt; 5; i++) {
         int yPosition = animationManager.Interpolate(&quot;Test&quot;, gameTime.TotalGameTime.TotalSeconds + 3.1415 * i, 600, 300);
         spriteBatch.Draw(actions[i], new Rectangle(i * 100 + 40, yPosition, 80, 80), Color.White);

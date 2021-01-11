@@ -77,6 +77,7 @@ animation.</p>
 <pre>
   <code class="language-javascript">let clearCircles = [];
 let uncoveredPixels;
+
 Reset.Subscribe(() =&gt; {
   uncoveredPixels = new Set();
   for (let y = 0; y &lt; 128; y++) {
@@ -92,6 +93,7 @@ so:</p>
 <pre>
   <code class="language-javascript">function drawGameOverScreen() {
   drawCircles();
+
   if (player.dead) {
     growCircles();
     addAdditionalCircles();
@@ -136,15 +138,18 @@ growth speed out into a constant.</p>
     clearCircles.push({ center, radius, color, targetRadius });
   }
 }
+
 function markCoveredPixels(center, targetRadius) {
   let radiusVector = new Vector(targetRadius * circleUnderCoverage, targetRadius * circleUnderCoverage);
   for (let pixel of Vector.InRectangle(center.subtract(radiusVector).floor(), center.add(radiusVector).ceil())) {
     if (pixel.subtract(center).length &gt; targetRadius * circleUnderCoverage) continue;
     if (pixel.x &lt; 0 || pixel.x &gt;= 128 || pixel.y &lt; 0 || pixel.y &gt;= 128) continue;
+
     let index = pixel.y * 128 + pixel.x;
     uncoveredPixels.delete(index);
   }
 }
+
 function randomUncoveredPixel() {
   let elementsRemaining = Math.floor(Math.random() * uncoveredPixels.size);
   for (let index of uncoveredPixels) {
@@ -203,11 +208,13 @@ calculations to do them once for each offset.</p>
         let wrappedFirstPosition = first.position.add(wrappedOffset);
         let offset = wrappedFirstPosition.subtract(second.position);
         let distance = offset.length;
+
         if (distance &lt; first.radius + second.radius) {
           if (offset.y &gt; 0) second.grounded = true;
           let amount = first.radius + second.radius - distance;
           let direction = offset.divide(distance);
           let correction = direction.multiply(amount &#x2F; 2);
+
           first.position = first.position.add(correction);
           second.position = second.position.subtract(correction);
         }
@@ -224,15 +231,18 @@ let physicsObjects = getPhysicsObjects();
 for (const bomb of bombsToExplode) {
   cutTerrain(bomb.position.x, bomb.position.y, bombRadius);
   newExplosion(bomb.position.x, bomb.position.y);
+
   for (const object of physicsObjects) {
     for (let wrappedOffset of wrappedOffsets) {
       let wrappedPosition = bomb.position.add(wrappedOffset);
       &#x2F;&#x2F; Find the distance to the object
       let offset = object.position.subtract(wrappedPosition);
       let length = offset.length;
+
       &#x2F;&#x2F; If the object is the player, and the length is less than 3&#x2F;4 of the
       &#x2F;&#x2F; bomb radius, the player has lost.
       if (object == player &amp;&amp; length &lt; bombRadius * 0.75) player.dead = true;
+
       &#x2F;&#x2F; Otherwise knockback the object by the distance * knockBack &#x2F; length^2;
       let lengthSquared = length * length;
       object.position = object.position.add(offset.multiply(knockBack&#x2F;lengthSquared));

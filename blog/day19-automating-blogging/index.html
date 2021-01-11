@@ -87,6 +87,7 @@ and counting the number of holes in a given string.</p>
   <code class="language-rust">fn hole(n: usize) -&gt; String {
     format!(&quot;{{{}}}&quot;, n)
 }
+
 fn count_holes(command: &amp;String) -&gt; usize {
     fn rec(command: &amp;String, n: usize) -&gt; usize {
         match command.contains(&amp;hole(n)[..]) {
@@ -94,6 +95,7 @@ fn count_holes(command: &amp;String) -&gt; usize {
             false =&gt; n
         }
     }
+
     rec(command, 0)
 }</code>
 </pre>
@@ -105,6 +107,7 @@ any remaining arguments to the end of the command.</p>
     let number_of_holes = count_holes(&amp;perferated_command);
     let mut args_iterator = args.iter();
     let mut command = perforated_command;
+
     for hole_number in 0..number_of_holes {
         let hole_string = hole(hole_number);
         command = match args_iterator.next() {
@@ -112,9 +115,11 @@ any remaining arguments to the end of the command.</p>
             None =&gt; command.replace(&amp;hole_string[..], &quot;&quot;)
         };
     }
+
     for arg in args_iterator {
         command = command + &quot; &quot; + arg;
     }
+
     command
 }</code>
 </pre>
@@ -171,6 +176,7 @@ value of an empty list if no arguments were passed.</p>
     } else {
       $script = okeydokey $args[0] -p &quot;pushd {};&quot; -s &quot;; popd&quot;
     }
+
     if ($script -ne $null) {
       iex $script
     }

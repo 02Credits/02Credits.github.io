@@ -85,9 +85,9 @@ iframe {
 min-width: 80vw;
 min-height: 80vw;
 }
-}</p>
-</style>
-  <iframe src="https://kethku.github.io/8Bomb/"></iframe>
+}
+</style></p>
+<iframe src="https://kethku.github.io/8Bomb/"></iframe>
 </div>
 <p>The source code for the minimal SCRIPT-8 implementation can be found
 <a href="https://github.com/Kethku/8Bomb">here</a>.</p>
@@ -103,11 +103,13 @@ the GitHub pages site. I then navigated to the cloned repository, and ran
 started typing.</p>
 <pre>
   <code class="language-html">&lt;html&gt;
+
   &lt;head&gt;
     &lt;style&gt;
      body {
        background: rgb(8,20,30)
      }
+
      #game {
        position: fixed;
        top: 50%;
@@ -119,10 +121,13 @@ started typing.</p>
      }
     &lt;&#x2F;style&gt;
   &lt;&#x2F;head&gt;
+
   &lt;body&gt;
     &lt;canvas id=&quot;game&quot; width=128 height=128&gt;&lt;&#x2F;canvas&gt;
+
     &lt;script src=&quot;.&#x2F;index.js&quot;&gt;&lt;&#x2F;script&gt;
   &lt;&#x2F;body&gt;
+
 &lt;&#x2F;html&gt;</code>
 </pre>
 <p>This was basic boilerplate to create a canvas element, position it in the center
@@ -137,13 +142,17 @@ from the <code>fs</code> module will get a specialized version injected which pr
 contents of the read file instead of actually reading anything. This way the content gets bundled but the code reads just like it would in Node.js.</p>
 <pre>
   <code class="language-javascript">import {readFileSync} from &#x27;fs&#x27;;
+
 let gameCode = readFileSync(__dirname + &quot;&#x2F;game.js&quot;, &#x27;utf-8&#x27;);
+
 let canvas = document.getElementById(&#x27;game&#x27;);
 let ctx = canvas.getContext(&#x27;2d&#x27;);
+
 window.initialState = &quot;&quot;;
 window.draw = () =&gt; {};
 window.update = () =&gt; {};
 window.sprites = {};
+
 eval(gameCode);</code>
 </pre>
 <h2 id="canvas-api">Canvas API</h2>
@@ -247,10 +256,11 @@ it to the end of my game file.</p>
 <h2 id="loop">Loop</h2>
 <p>After working through these minor issues, much of the API went pretty smoothly.
 Getting the actual game to run was as simple as creating a loop function, and
-calling the game functions within it, threading the state through.</p>
+calling the game functions within it, threading the state through. </p>
 <pre>
   <code class="language-javascript">function loop() {
   let state = window.initialState;
+
   window.update(state, {});
   window.draw(state);
   requestAnimationFrame(loop);

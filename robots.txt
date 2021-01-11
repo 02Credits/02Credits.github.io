@@ -1,1 +1,2 @@
 User-agent: *
+Sitemap: http://02credits.com/sitemap.xml

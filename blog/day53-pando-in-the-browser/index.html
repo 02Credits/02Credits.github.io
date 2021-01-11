@@ -65,7 +65,7 @@ than I can reasonably expect to draw with any algorithm I can come up with in a
 short period of time. So instead of rebuilding everything from scratch I will
 use GraphViz and instrument the produced svg with event handlers to enable a
 simple modification UI.</p>
-<h2 id="the-new-plan">The "New" Plan</h2>
+<h2 id="the-new-plan">The &quot;New&quot; Plan</h2>
 <p>The new plan is to use the emscripten compiled version of GraphViz found
 <a href="https://github.com/mdaines/viz.js">here</a> to run GraphViz in the browser,
 compile the Pando code to web assembly using stdweb, and add event handlers for
@@ -73,7 +73,7 @@ mouse functions to the svg elements produced from GraphViz to figure out what
 connections to add and remove from the nodes.</p>
 <p>The user interaction will support five operations: Add a node with a given
 title, remove a node, change a node status, link a node to another node, and
-unlink two nodes.</p>
+unlink two nodes. </p>
 <ul>
 <li>Adding will be supported by a simple input box which allows naming a node and
 tracks when the user presses enter at which point the node will be added to the
@@ -115,6 +115,7 @@ the parcel plugin to produce the correct wrappers.</p>
   <code class="language-toml">[dependencies]
 nom = &quot;4.2.0&quot;
 stdweb = &quot;*&quot;
+
 [lib]
 crate-type = [&quot;cdylib&quot;]</code>
 </pre>
@@ -141,11 +142,14 @@ and renders a test svg to the screen:</p>
 import Viz from &quot;viz.js&quot;;
 import { Module, render } from &#x27;viz.js&#x2F;full.render.js&#x27;;
 import &quot;babel-polyfill&quot;;
+
 const viz = new Viz({ Module, render });
+
 async function renderGraph() {
   let element = await viz.renderSVGElement(compile(&quot;x foo\n&gt; bar [ F ]\n- baz [ B ]&quot;));
   document.body.appendChild(element);
 }
+
 renderGraph();</code>
 </pre>
 <p>After running the produced graph is identical to what I would have gotten from

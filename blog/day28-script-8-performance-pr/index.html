@@ -58,18 +58,22 @@ working.</p>
 <pre>
   <code class="language-text">Rewrite of the CanvasApi functions to use a frame buffer instead of the default
 javascript 2d canvas draw calls.
+
 I tried to simplify things where I could. Since we no longer use the default
 draw calls, we cannot depend on the context object to keep track of the camera
 position. So I rewrote most of the draw functions to reuse the setPixel function
 which keeps track of the camera position instead.
+
 I also changed the structure of the index.js file in canvasAPI&#x2F; so that draw
 functions can depend on each other. I think this makes things easier to
 understand and keeps things DRY but I can change it back if that would be
 preferable.
+
 Most of the cassettes work fine as far as I can tell except for the boot
 animation which seems to have draw problems. At this point it is too late to
 figure out what is really going on, so I am going to head to bed and will look
 into it further.
+
 TODO:
 - Fix Boot Animation
 - Deal with the Actor Magic in Iframe.js

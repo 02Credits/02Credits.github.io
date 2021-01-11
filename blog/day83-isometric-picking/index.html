@@ -68,6 +68,7 @@ isometric transformations.</p>
 <pre>
   <code class="language-c#">public Vector2 WorldToScreen(Vector3 worldPosition) {
     Vector3 relativePosition = worldPosition - new Vector3(CameraWorldPosition, 0) + new Vector3(0.5f, 0.5f, 0);
+
     return new Vector2(
         relativePosition.X * TileWidth + relativePosition.Y * TileWidth,
         -relativePosition.X * TileHeight + relativePosition.Y * TileHeight - relativePosition.Z * TileHeight) &#x2F; 2;
@@ -80,6 +81,7 @@ isometric transformations.</p>
     Vector2 relativePosition = new Vector2(
         (centeredScreenPosition.X - centeredScreenPosition.Y) &#x2F; (2 * TileWidth),
         (centeredScreenPosition.X + centeredScreenPosition.Y) &#x2F; (2 * TileWidth));
+
     return relativePosition + CameraWorldPosition - new Vector2(0.5f, 0.5f);
 }</code>
 </pre>
@@ -113,6 +115,7 @@ version ignored the vertex color since I don't plan on using tinting much.</p>
 <pre>
   <code class="language-hlsl">float4x4 View;
 float4x4 Projection;
+
 texture SpriteSheet;
 sampler2D textureSampler = sampler_state
 {
@@ -122,18 +125,22 @@ sampler2D textureSampler = sampler_state
 	AddressU = Clamp;
 	AddressV = Clamp;
 };
+
 struct VertexShaderOutput
 {
 	float4 Position : POSITION0;
 	float4 Color : COLOR0;
 	float2 TextureCoordinate : TEXCOORD0;
 };
+
 VertexShaderOutput VertexShaderFunction(VertexShaderOutput input)
 {
 	float4 viewPosition = mul(input.Position, View);
 	input.Position = mul(viewPosition, Projection);
+
 	return input;
 }
+
 float4 TexturedPixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
 	return tex2D(textureSampler, input.TextureCoordinate);
@@ -155,9 +162,11 @@ simplifies things so I decided to go with that until it bites me.</p>
         return new Color(Color.Black, 0);
     } else {
         int id = inputId++;
+
         int r = (id &amp; 0x000000FF) &gt;&gt; 0;
         int g = (id &amp; 0x0000FF00) &gt;&gt; 8;
         int b = (id &amp; 0x00FF0000) &gt;&gt; 16;
+
         var color = new Color(r, g, b);
         inputLookup[color] = (click, hover);
         return color;
@@ -186,10 +195,14 @@ normal and once as the input texture.</p>
     graphics.RasterizerState = RasterizerState.CullNone;
     graphics.SamplerStates[0] = SamplerState.PointWrap;
     graphics.DepthStencilState = DepthStencilState.Default;
+
+
     effect.Parameters[&quot;View&quot;].SetValue(cameraManager.View);
     effect.Parameters[&quot;Projection&quot;].SetValue(cameraManager.Projection);
     effect.Parameters[&quot;SpriteSheet&quot;].SetValue(sheetManager.Sheet);
+
     spriteRenderer.SetVertices();
+
     graphics.SetRenderTarget(game.WorldTarget);
     graphics.Clear(colors.Lookup[0]);
     effect.CurrentTechnique = effect.Techniques[&quot;Textured&quot;];
@@ -198,6 +211,7 @@ normal and once as the input texture.</p>
     effect.CurrentTechnique = effect.Techniques[&quot;Solid&quot;];
     DrawVertices();
 }
+
 private void DrawVertices() {
     if (vertexManager.VertexCount &gt; 0) {
         foreach (var pass in effect.CurrentTechnique.Passes) {
@@ -223,16 +237,19 @@ appropriate one.</p>
     var mouseState = Mouse.GetState();
     var mouseX = (int)((float)mouseState.Position.X * screenSizeManager.PixelWidth &#x2F; screenSizeManager.DeviceWidth);
     var mouseY = (int)((float)mouseState.Position.Y * screenSizeManager.PixelHeight &#x2F; screenSizeManager.DeviceHeight);
+
     if (mouseX &gt;= 0 &amp;&amp; mouseX &lt; screenSizeManager.PixelWidth &amp;&amp; mouseY &gt;= 0 &amp;&amp; mouseY &lt; screenSizeManager.PixelHeight) {
         int dataLength = game.InputTarget.Width * game.InputTarget.Height;
         if (inputColorData == null || inputColorData.Length != dataLength) inputColorData = new Color[dataLength];
         game.InputTarget.GetData(inputColorData);
         var lookupColor = inputColorData[mouseY * game.InputTarget.Width + mouseX];
+
         if (inputLookup.TryGetValue(lookupColor, out var actions)) {
             (Action click, Action hover) = actions;
             (mouseState.LeftButton == ButtonState.Pressed ? click : hover)?.Invoke();
         }
     }
+
     inputLookup.Clear();
     inputId = 1;
 }</code>
@@ -241,7 +258,7 @@ appropriate one.</p>
 <p>With all that out of the way, I could actually try it out. Using my new
 Path-Finding code, and a specialized event aggregator (both will be explained in
 a future post) I modified the <code>WorldRenderer</code> to raise a world position event
-with the associated world position on hover.</p>
+with the associated world position on hover. </p>
 <pre>
   <code class="language-c#">public void Draw(GameTime gameTime) {
     for (int x = 0; x &lt; mapManager.TileMap.Length; x++) {

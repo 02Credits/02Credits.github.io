@@ -63,20 +63,25 @@ update and draw systems already.</p>
 <pre>
   <code class="language-typescript">import * as baseScreen from &quot;.&#x2F;events&quot;;
 import * as playScreen from &quot;.&#x2F;play&quot;;
+
 interface IScreen {
   Update: EventManager&lt;[number]&gt;;
   Draw: EventManager&lt;[number]&gt;;
 }
+
 export let currentScreen: IScreen = playScreen;
+
 let frames = 0;
 function loop() {
   frames++;
+
   baseScreen.Update.Publish(frames);
   currentScreen.Update.Publish(frames);
   currentScreen.Draw.Publish(frames);
   baseScreen.Draw.Publish(frames);
   window.requestAnimationFrame(loop);
 }
+
 async function start()  {
   await Promise.all(baseScreen.Setup.Publish());
   playScreen.Setup.Publish();
@@ -95,11 +100,15 @@ import { Vector } from &quot;.&#x2F;math&quot;;
 import { screenSize } from &quot;.&#x2F;renderer&#x2F;webgl&quot;;
 import { image } from &quot;.&#x2F;renderer&#x2F;graphics&quot;;
 import { Lose, LoseWidthOverHeight, Win, WinWidthOverHeight } from &quot;.&#x2F;renderer&#x2F;images&quot;;
+
 import { Draw as gameDraw } from &quot;.&#x2F;play&#x2F;events&quot;;
+
 let imageToDraw: string;
 let widthOverHeight: number;
+
 export const Draw = new EventManager&lt;[number]&gt;();
 export const Update = new EventManager&lt;[number]&gt;();
+
 export function Init(lose: boolean) {
   if (lose) {
     imageToDraw = Lose;
@@ -109,7 +118,9 @@ export function Init(lose: boolean) {
     widthOverHeight = WinWidthOverHeight;
   }
 }
+
 Draw.Subscribe(gameDraw.Publish.bind(gameDraw));
+
 Draw.Subscribe(() =&gt; {
   let width = screenSize.width * 0.75;
   image({

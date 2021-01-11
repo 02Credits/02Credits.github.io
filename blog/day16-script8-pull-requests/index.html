@@ -110,17 +110,21 @@ code and specialization to minify the source before counting.</p>
 <pre>
   <code class="language-javascript">getSize() {
   const { game, songs, chains, phrases, sprites, map } = this.props
+
   const gameText = assembleOrderedGame(game)
+
   const gameTextLz = lz.compress(gameText)
   const art = JSON.stringify({ sprites, map })
   const artLz = lz.compress(art)
   const music = JSON.stringify({ phrases, chains, songs })
   const musicLz = lz.compress(music)
+
   const sizes = [
     [&#x27;code&#x27;, gameText, gameTextLz],
     [&#x27;art&#x27;, art, artLz],
     [&#x27;music&#x27;, music, musicLz]
   ]
+
   return (
     &lt;ul&gt;
       {sizes.map((d, i) =&gt; (
@@ -159,16 +163,19 @@ correct arguments.</p>
 <pre>
   <code class="language-javascript">getSize() {
   const { game, songs, chains, phrases, sprites, map } = this.props
+
   const code = assembleOrderedGame(game)
   const art = JSON.stringify({ sprites, map })
   const music = JSON.stringify({ phrases, chains, songs })
   const total = code + art + music
+
   const assets = {
     code,
     art,
     music,
     total
   };
+
   return (
     &lt;ul&gt;
       {_.toPairs(assets).map(pair =&gt; ((name, code) =&gt; (

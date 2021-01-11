@@ -79,6 +79,7 @@ geometry.</p>
                 int upParent = heightMap[x + 1][y - 1];
                 int leftParent = heightMap[x][y - 1];
                 int rightParent = heightMap[x + 1][y];
+
                 if (leftParent == upParent &amp;&amp; rightParent == upParent &amp;&amp; random.Next(30) == 1) {
                     heightMap[x][y] = leftParent - 1;
                 } else {
@@ -105,6 +106,7 @@ smallest one from each and set the indexed Tiles value into the map array.</p>
     [(0, 1, 1, 0)] = Tiles.SlopeRight,
     [(0, 1, 0, 0)] = Tiles.SlopeUp
 };
+
 TileMap = new (Tiles, int)[heightMap.Length - 1][];
 for (int x = 0; x &lt; TileMap.Length; x++) {
     TileMap[x] = new (Tiles, int)[heightMap[x].Length - 1];
@@ -113,6 +115,7 @@ for (int x = 0; x &lt; TileMap.Length; x++) {
         int up = heightMap[x + 1][y];
         int right = heightMap[x + 1][y + 1];
         int down = heightMap[x][y + 1];
+
         int lowest = new[] { left, up, right, down }.Min();
         Tiles tile = SlopeLookup[(left - lowest, up - lowest, right - lowest, down - lowest)];
         TileMap[x][y] = (tile, lowest);
@@ -127,9 +130,11 @@ make sure I'm not placing trees on slopes.</p>
 for (int i = 0; i &lt; 10; i++) {
     int x = random.Next(Width - 1);
     int y = random.Next(Height - 1);
+
     if (TileMap[x][y].tile == Tiles.Dirt) {
         var tile = Tiles.Tree;
         var position = new Vector2(x, y);
+
         Entities.Add((tile, position));
     }
 }</code>

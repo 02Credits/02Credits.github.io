@@ -56,7 +56,7 @@ Blog
 <h2 id="dimensions">Dimensions</h2>
 <p>Building upon the texture list from yesterday, I wrote <code>garbageRenderInfo</code> which
 takes <code>blockDimensions</code> and returns a list of objects containing the texture to
-draw and what size to draw it at.</p>
+draw and what size to draw it at. </p>
 <p>A garbage block may be either more than one block tall, or less than a full row
 wide, but not both.</p>
 <pre>
@@ -110,8 +110,10 @@ very similar to the block drawing code, but instead loops over each texture and 
   let blocksTopLeft = new Vector(
     gridCenter.x - gridDimensions.width &#x2F; 2,
     gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
+
   let renderInfos = garbageRenderInfo(blockDimensions);
   let topLeft = blocksTopLeft.add(position.multiply(blockWidth).multiplyParts(new Vector(1, -1))).withZ(2);
+
   for (let renderInfo of renderInfos) {
     image(renderInfo.texture, topLeft, renderInfo.dimensions, 0, Color.White, Vector.topLeft);
     topLeft = topLeft.add(new Vector(0, -renderInfo.dimensions.height));

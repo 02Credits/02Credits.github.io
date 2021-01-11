@@ -117,6 +117,7 @@ frame is recorded, we can calculate the velocity, modify it for gravity, and get
 a new position by adding the velocity to the position.</p>
 <pre>
   <code class="language-javascript">const gravity = 0.07;
+
 function updatePhysicsObjects(...objects) {
   for (const obj of objects) {
     let vx = obj.position.x - obj.previous.x;
@@ -124,6 +125,7 @@ function updatePhysicsObjects(...objects) {
     obj.previous.x = obj.position.x;
     obj.previous.y = obj.position.y;
     vy += gravity;
+    
     obj.position.x += vx;
     obj.position.y += vy;
   }
@@ -147,6 +149,7 @@ function.</p>
   <code class="language-javascript">function drawPlayer({ player }) {
   sprite(player.position.x - player.radius, player.position.y - player.radius, 16);
 }
+
 draw = state =&gt; {
   clear();
   drawTerrain(state.terrain);
@@ -175,6 +178,7 @@ the terrain. The entire function is big, so I will build it up piece by piece.</
       let dx = Math.cos(r) * obj.radius;
       let dy = Math.sin(r) * obj.radius;
       if (getPixel(obj.position.x + dx, obj.position.y + dy) != 7) {
+
       }
     }
   }
@@ -216,7 +220,9 @@ calculate how far to push the physics object to escape the terrain.</p>
   <code class="language-javascript">let length = Math.sqrt(dx * dx + dy * dy);
 let nx = dx &#x2F; length;
 let ny = dy &#x2F; length;
+
 let displacement = obj.radius - length;
+
 obj.position.x -= nx * displacement;
 obj.position.y -= ny * displacement;</code>
 </pre>
@@ -247,12 +253,16 @@ that's it! The complete function:</p>
       obj.grounded = false;
       continue;
     }
+  
     let dx = totalX &#x2F; count;
     let dy = totalY &#x2F; count;
+    
     let length = Math.sqrt(dx * dx + dy * dy);
     let nx = dx &#x2F; length;
     let ny = dy &#x2F; length;
+    
     let displacement = obj.radius - length;
+    
     obj.position.x -= nx * displacement;
     obj.position.y -= ny * displacement;
   }
@@ -280,6 +290,7 @@ falling through.</p>
 <pre>
   <code class="language-javascript">const runSpeed = 0.05;
 const airSpeed = 0.01;
+
 function handleInput(input, player, terrain) {
   let speed = player.grounded ? runSpeed : airSpeed;
   if (input.left) {
@@ -288,9 +299,11 @@ function handleInput(input, player, terrain) {
   if (input.right) {
     player.position.x += speed;
   }
+  
   if (input.up &amp;&amp; player.grounded) {
     player.previous.y += 1;
   }
+  
   if (input.a) {
     cutTerrain(player.position.x, player.position.y, 10, terrain);
   }
@@ -305,6 +318,7 @@ modifies the terrain array to cut out a small circle around the player.</p>
   let tx = Math.round(x &#x2F; tileWidth);
   let ty = Math.round(y &#x2F; tileHeight);
   let tr = Math.floor(radius &#x2F; tileWidth);
+  
   for (let cx = tx - tr; cx &lt;= tx + tr; cx++) {
     for (let cy = ty - tr; cy &lt;= ty + tr; cy++) {
       if (cy &gt;= 0 &amp;&amp; cy &lt; terrain.length) {

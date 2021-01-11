@@ -86,6 +86,7 @@ method which creates the covered blocks and sets the timer.</p>
   this.state = state.CLEARING;
   this.timer = 0;
   this.spawnedBlocks = [];
+
   for (let slot of this.overlappingSlots()) {
     this.spawnedBlocks.push({
       visible: false,
@@ -106,6 +107,7 @@ depending on if the block is clearing or not.</p>
     gridCenter.x - gridDimensions.width &#x2F; 2,
     gridCenter.y - gridDimensions.height &#x2F; 2 + blockPixelAdvancement);
   let topLeft = blocksTopLeft.add(this.gridPosition.multiply(blockWidth).multiplyParts(new Vector(1, -1))).withZ(2);
+
   if (this.state === state.CLEARING) {
     this.renderBreaking(topLeft);
   } else {
@@ -149,6 +151,7 @@ recording the current timer value in a variable.</p>
             break;
           }
         }
+
         if (!anyHidden &amp;&amp; !this.breakTimeStarted) {
           this.breakTimeStarted = this.timer;
         }
@@ -168,6 +171,7 @@ and the spawned blocks are added to the grid.</p>
         spawnedBlock.block.state = state.WAITING;
       }
     }
+
     this.timer++;
   }
 }</code>

@@ -135,7 +135,7 @@ info Visit https:&#x2F;&#x2F;yarnpkg.com&#x2F;en&#x2F;docs&#x2F;cli&#x2F;run for
 </pre>
 <p>Pretty cryptic... So I did some initial googling. After nothing obvious turned
 up I then did the important next step of searching the project for similar
-keywords.</p>
+keywords. </p>
 <h3 id="useful-tip-2-search-the-project">Useful Tip #2: Search the Project</h3>
 <p>This serves two purposes. First it ensures that nobody else has run into this
 problem and potentially found a fix. And second it gets me familiar with the
@@ -203,7 +203,7 @@ request</a> I ever tried to make on
 GitHub was a minor disaster because I naively thought that I knew how to format
 things better than the maintainer. The maintainer kindly pointed out my mistake
 and linked to some contributing guidelines, but at that point I was too
-embarrased to continue.</p>
+embarrased to continue. </p>
 <h3 id="useful-tip-4-don-t-force-your-style-on-the-maintainers">Useful Tip #4: Don't Force Your Style on the Maintainers</h3>
 <p>I wont make that mistake again, so now any time I consider making a change in a
 project I scan files trying to understand their patterns and formatting style.
@@ -225,24 +225,30 @@ working.</p>
 let y = 0;
 let vx = 1;
 let vy = 1;
+
 clear()
+
+
 draw = () =&gt; {
   for (let i = 0; i &lt; 100; i++) {
     setPixel(x, y, getPixel(x, y) + 1)
     x = x + vx
     y = y + vy
+  
     if (x &gt;= 127) {
       vx = -1
     }
     if (y &gt;= 127)  {
       vy = -1
     }
+  
     if (x &lt;= 0) {
       vx = 1
     }
     if (y &lt;= 0) {
       vy = 1
     }
+  
     if (random(0, 100) &lt; 5) x += 1
     if (random(0, 100) &lt; 5) x -= 1
     if (random(0, 100) &lt; 5) y += 1
@@ -258,7 +264,7 @@ draw = () =&gt; {
 wherever possible, make their life easier. Updating documentation for public
 facing changes is a good way to gain good will from the project maintainer.</p>
 <p>And that was that! The PR containing the actual changes can be found
-<a href="https://github.com/script-8/script-8.github.io/pull/190">here</a>.
+<a href="https://github.com/script-8/script-8.github.io/pull/190">here</a>. 
 Currently I'm waiting for Gabriel to wake up and take a look at my PRs. I hope
 he finds them adequate, but I'm sure we can resolve any issues if they come up.</p>
 <p>Hopefully this summary of my thought process when contributing to a project is

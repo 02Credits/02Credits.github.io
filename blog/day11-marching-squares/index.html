@@ -86,6 +86,7 @@ coordinates accordingly.</p>
 <pre>
   <code class="language-javascript">const tileWidth = 8;
 const tileHeight = 8;
+
 function drawTile(tx, ty, topLeft, topRight, bottomRight, bottomLeft) {
   let s = 0;
   if (topLeft) s += 1;
@@ -114,6 +115,7 @@ drawn from.</p>
   }
   return result;
 }
+
 initialState = {
   terrain: initTerrain()
 };</code>
@@ -135,6 +137,7 @@ by simply looping over all of the data in the grid and drawing it with the
     }
   }
 }
+
 draw = state =&gt; {
   clear();
   drawTerrain(state.terrain);

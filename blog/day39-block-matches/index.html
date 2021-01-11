@@ -83,6 +83,7 @@ local function to prevent repeating myself.</p>
   let matchBlocks = new Set();
   let currentMatch = [];
   let currentBlockType = null;
+
   function breakMatch(nextBlock) {
     if (currentMatch.length &gt;= 3) {
       for (let block of currentMatch) {
@@ -97,26 +98,31 @@ local function to prevent repeating myself.</p>
       currentBlockType = null;
     }
   }
+
   function processBlock(block) {
     if (block &amp;&amp; (block.state !== state.WAITING &amp;&amp; block.state !== state.DRAGGING)) {
       breakMatch();
       return;
     }
+
     if (currentBlockType == null &amp;&amp; block) {
       currentBlockType = block.type;
       currentMatch.push(block);
       return;
     }
+
     if (!block) {
       breakMatch();
       return;
     }
+
     if (block.type !== currentBlockType) {
       breakMatch(block);
     } else {
       currentMatch.push(block);
     }
   }
+
   for (let y = 1; y &lt;= previousFilledY; y++) {
     let row = blocks[y];
     if (!row) continue;
@@ -125,6 +131,7 @@ local function to prevent repeating myself.</p>
     }
     breakMatch();
   }
+
   for (let x = 0; x &lt; gridBlockDimensions.x; x++) {
     for (let y = 1; y &lt;= previousFilledY; y++) {
       let row = blocks[y];
@@ -133,6 +140,7 @@ local function to prevent repeating myself.</p>
     }
     breakMatch();
   }
+
   if (matchBlocks.size != 0) {
     matches.add(new Match(matchBlocks));
   }
@@ -146,11 +154,13 @@ both axis, I construct a <code>Match</code> object containing the blocks.</p>
   constructor(matchBlocks) {
     this.blocks = matchBlocks;
     this.timer = 0;
+
     for (let block of this.blocks) {
       block.state = state.MATCHED;
       dropBlock(block);
     }
   }
+
   update() {
     if (this.timer &lt; clearDelay) {
       this.timer++;
@@ -169,6 +179,7 @@ both axis, I construct a <code>Match</code> object containing the blocks.</p>
           break;
         }
       }
+
       if (!anyClearing) {
         for (let block of this.blocks) {
           deleteBlock(block);
@@ -176,6 +187,7 @@ both axis, I construct a <code>Match</code> object containing the blocks.</p>
         return true;
       }
     }
+
     return false;
   }
 }</code>
@@ -192,12 +204,14 @@ completes the core changes.</p>
 <pre>
   <code class="language-javascript">Update.Subscribe(() =&gt; {
   findNewMatches();
+
   let finishedMatches = [];
   for (let match of matches) {
     if (match.update()) {
       finishedMatches.push(match);
     }
   }
+
   for (let finishedMatch of finishedMatches) {
     matches.delete(finishedMatch);
   }
@@ -213,6 +227,7 @@ method which keeps track of the animation frames and moves the block state to
   if (this.state === state.CLEARING) {
     if (!this.clearTimer) this.clearTimer = 0;
     this.clearTimer++;
+
     let percentDone = this.clearTimer &#x2F; clearingTime;
     if (this.clearTimer &gt;= clearingTime) {
       this.state = state.CLEARED;
@@ -238,6 +253,7 @@ state is <code>Cleared</code>, then a tint of clear is returned.</p>
     let gridBottom = gridCenter.y - gridDimensions.height &#x2F; 2;
     let blockBottom = centerY - blockWidth &#x2F; 2;
     let distanceFromBottom = blockBottom - gridBottom;
+
     if (distanceFromBottom &gt;= 0) {
       if (this.state === state.SPAWNING) {
         this.state = state.WAITING;
@@ -245,6 +261,7 @@ state is <code>Cleared</code>, then a tint of clear is returned.</p>
       return 1;
     }
     if (distanceFromBottom &lt; -blockWidth) return 0;
+
     return new Color(1, 1, 1, (distanceFromBottom + blockWidth) &#x2F; (blockWidth * 2));
   } else {
     return Color.white;
@@ -302,6 +319,7 @@ if (this.gridSlot.x &gt; 0) {
     }
   }
 }
+
 if (this.gridSlot.x &lt; 5) {
   let rightBlock = blocks[this.gridSlot.y][this.gridSlot.x + 1];
   if (rightBlock &amp;&amp; rightBlock.state !== state.WAITING) {

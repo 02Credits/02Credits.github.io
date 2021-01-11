@@ -117,35 +117,42 @@ with.
 --&gt;
 &lt;XnaContent xmlns:Graphics=&quot;Microsoft.Xna.Framework.Content.Pipeline.Graphics&quot;&gt;
   &lt;Asset Type=&quot;Graphics:FontDescription&quot;&gt;
+
     &lt;!--
     Modify this string to change the font that will be imported.
     --&gt;
     &lt;FontName&gt;Gugi-Regular.ttf&lt;&#x2F;FontName&gt;
+
     &lt;!--
     Size is a float value, measured in points. Modify this value to change
     the size of the font.
     --&gt;
     &lt;Size&gt;24&lt;&#x2F;Size&gt;
+
     &lt;!--
     Spacing is a float value, measured in pixels. Modify this value to change
     the amount of spacing in between characters.
     --&gt;
     &lt;Spacing&gt;0&lt;&#x2F;Spacing&gt;
+
     &lt;!--
     UseKerning controls the layout of the font. If this value is true, kerning information
     will be used when placing characters.
     --&gt;
     &lt;UseKerning&gt;true&lt;&#x2F;UseKerning&gt;
+
     &lt;!--
     Style controls the style of the font. Valid entries are &quot;Regular&quot;, &quot;Bold&quot;, &quot;Italic&quot;,
     and &quot;Bold, Italic&quot;, and are case sensitive.
     --&gt;
     &lt;Style&gt;Regular&lt;&#x2F;Style&gt;
+
     &lt;!--
     If you uncomment this line, the default character will be substituted if you draw
     or measure text that contains characters which were not included in the font.
     --&gt;
     &lt;!-- &lt;DefaultCharacter&gt;*&lt;&#x2F;DefaultCharacter&gt; --&gt;
+
     &lt;!--
     CharacterRegions control what letters are available in the font. Every
     character from Start to End will be built and made available for drawing. The
@@ -192,6 +199,7 @@ with which you setup all of the type configuration.</p>
   <code class="language-c#">public static class Factory {
     private static IContainer container;
     private static ContainerBuilder builder;
+
     public static void BeginRegistration() {
         builder = new ContainerBuilder();
         builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
@@ -199,13 +207,16 @@ with which you setup all of the type configuration.</p>
             .AsSelf()
             .InstancePerLifetimeScope();
     }
+
     public static void RegisterSingleton&lt;T&gt;(T singleton) where T : class {
         builder.RegisterInstance(singleton).AsSelf();
     }
+
     public static void EndRegistration() {
         container = builder.Build();
         builder = null;
     }
+
     public static T Resolve&lt;T&gt;() {
         return container.Resolve&lt;T&gt;();
     }
@@ -223,14 +234,17 @@ lists of types implementing various lifetime function interfaces.</p>
 <pre>
   <code class="language-c#">protected override void LoadContent() {
     spriteBatch = new SpriteBatch(GraphicsDevice);
+
     Factory.BeginRegistration();
     Factory.RegisterSingleton(GraphicsDevice);
     Factory.RegisterSingleton(spriteBatch);
     Factory.EndRegistration();
+
     contentLoadables = Factory.Resolve&lt;IList&lt;IContentLoadable&gt;&gt;();
     updateables = Factory.Resolve&lt;IList&lt;IUpdateable&gt;&gt;();
     drawables = Factory.Resolve&lt;IList&lt;IDrawable&gt;&gt;();
     colorManager = Factory.Resolve&lt;Colors&gt;();
+
     foreach (IContentLoadable contentLoadable in contentLoadables) {
         contentLoadable.LoadContent(Content);
     }
@@ -264,14 +278,18 @@ by including it as a parameter to the constructor.</p>
   <code class="language-c#">public class RoutineTicker : IContentLoadable, IDrawable {
     Colors colors;
     SpriteBatch spriteBatch;
+
     SpriteFont font;
+
     public RoutineTicker(Colors colors, SpriteBatch spriteBatch) {
         this.colors = colors;
         this.spriteBatch = spriteBatch;
     }
+
     public void LoadContent(ContentManager content) {
         font = content.Load&lt;SpriteFont&gt;(&quot;Gugi&quot;);
     }
+
     public void Draw(GameTime gameTime) {
         spriteBatch.DrawString(font, &quot;Hello World!&quot;, new Vector2(100, 100), colors.Foreground);
     }

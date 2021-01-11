@@ -71,11 +71,13 @@ I went wrong.</p>
   constructor(matchBlocks) {
     this.blocks = matchBlocks; &#x2F;&#x2F; Error: blocks does not exist on Match
     this.timer = 0; &#x2F;&#x2F; Error: timer does not exist on Match
+
     for (let block of this.blocks) { &#x2F;&#x2F; Error: blocks does not exist on Match
       block.state = state.MATCHED;
       dropBlock(block);
     }
   }
+
   update() {
     if (this.timer &lt; clearDelay) { &#x2F;&#x2F; Error: timer does not exist on Match
       this.timer++; &#x2F;&#x2F; Error: timer does not exist on Match
@@ -89,14 +91,17 @@ the class.</p>
   <code class="language-typescript">class Match {
   public blocks: Block[];
   public timer: number;
+
   constructor(matchBlocks: Block[]) {
     this.blocks = matchBlocks;
     this.timer = 0;
+
     for (let block of this.blocks) {
       block.state = state.MATCHED;
       dropBlock(block);
     }
   }
+
   update() {
     if (this.timer &lt; clearDelay) {
       this.timer++;
@@ -143,6 +148,7 @@ which are set dynamically in the original source:</p>
     this.a = a;
   }
 }
+
 Color.white = new Color(1, 1, 1, 1);
 Color.gray = new Color(0.5, 0.5, 0.5, 1);
 Color.black = new Color(0, 0, 0, 1);
@@ -156,10 +162,12 @@ declarations within the class itself:</p>
   static gray = new Color(0.5, 0.5, 0.5, 1);
   static black = new Color(0, 0, 0, 1);
   static clear = new Color(0, 0, 0, 0);
+
   public r: number;
   public g: number;
   public b: number;
   public a: number;
+
   constructor(r: number, g: number, b: number, a = 1) {
     this.r = r;
     this.g = g;
@@ -191,6 +199,7 @@ support) brought me to this variable declaration:</p>
     let gridBottom = gridCenter.y - gridDimensions.height &#x2F; 2;
     let blockBottom = centerY - blockWidth &#x2F; 2;
     let distanceFromBottom = blockBottom - gridBottom;
+
     if (distanceFromBottom &gt;= 0) {
       if (this.state === BlockState.Spawning) {
         this.state = BlockState.Waiting;
@@ -198,6 +207,7 @@ support) brought me to this variable declaration:</p>
       return 1;
     }
     if (distanceFromBottom &lt; -blockWidth) return 0;
+
     return new Color(1, 1, 1, (distanceFromBottom + blockWidth) &#x2F; (blockWidth * 2));
   } else {
     return Color.white;

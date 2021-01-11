@@ -100,6 +100,7 @@ hope to dig in deeper.</p>
         }
     })
 }
+
 pub fn progress_task_operation(task_identifier: &amp;str, tasks: Vec&lt;Todo&gt;) -&gt; Vec&lt;Todo&gt; {
     modify_task(task_identifier, tasks, |todo| Some(Todo { status: todo.status.next(), ..todo }))
 }</code>
@@ -111,6 +112,7 @@ just one selected identifier, I had to implement them without my helper like so:
     tasks.push(Todo::new(TaskStatus::Waiting, task_identifier, Vec::new()));
     tasks
 }
+
 pub fn delete_task_operation(task_identifier: &amp;str, tasks: Vec&lt;Todo&gt;) -&gt; Vec&lt;Todo&gt; {
     tasks
         .into_iter()
@@ -143,14 +145,17 @@ function and returns the updated Pando code.</p>
 pub fn newTask(task_identifier: &amp;str, pando_code: &amp;str) -&gt; String {
     pando_operation(pando_code, |tasks| new_task_operation(task_identifier, tasks))
 }
+
 #[js_export]
 pub fn deleteTask(task_identifier: &amp;str, pando_code: &amp;str) -&gt; String {
     pando_operation(pando_code, |tasks| delete_task_operation(task_identifier, tasks))
 }
+
 #[js_export]
 pub fn toggleDependency(task_identifier: &amp;str, dependency_identifier: &amp;str, pando_code: &amp;str) -&gt; String {
     pando_operation(pando_code, |tasks| toggle_dependency_operation(task_identifier, dependency_identifier, tasks))
 }
+
 #[js_export]
 pub fn progressTask(task_identifier: &amp;str, pando_code: &amp;str) -&gt; String {
     pando_operation(pando_code, |tasks| progress_task_operation(task_identifier, tasks))
@@ -179,6 +184,7 @@ the graph svg and keep track of what needs replaced on render.</p>
   <code class="language-javascript">let svgContainer = document.createElement(&quot;div&quot;);
 let tmpNode = document.createElement(&quot;tmp&quot;);
 svgContainer.appendChild(tmpNode);
+
 async function renderGraph() {
   let compileResult = compile(code);
   if (compileResult.success) {
@@ -189,6 +195,7 @@ async function renderGraph() {
     console.error(compileResult.reason);
   }
 }
+
 document.body.appendChild(svgContainer);</code>
 </pre>
 <p>With this setup I can use the <code>replaceChild</code> function on html elements to swap out the rendered image graph.</p>
@@ -199,10 +206,12 @@ helper function for that as well.</p>
 <pre>
   <code class="language-javascript">let codeElement = document.createElement(&quot;pre&quot;);
 codeElement.textContent = code;
+
 function updateCode(newCode) {
   code = newCode;
   renderGraph();
   codeElement.textContent = code;
+
   if (window.location.hash) {
     window.localStorage.setItem(window.location.hash.substring(1), code);
   }
@@ -226,6 +235,7 @@ a way to specify the file name and storage name of a given todo tree.</p>
 version if the hash exists and the stored version exists.</p>
 <pre>
   <code class="language-javascript">let code = &quot;&quot;;
+
 if (window.location.hash) {
   code = window.localStorage.getItem(window.location.hash.substring(1)) || &quot;&quot;;
 }</code>
@@ -248,6 +258,7 @@ tree and add event handlers to them.</p>
         dragFrom = identifier;
       }
     });
+
     node.addEventListener(&quot;mouseup&quot;, function (e) {
       if (e.which == 1 &amp;&amp; dragFrom != null) {
         if (identifier === dragFrom) {
@@ -279,10 +290,12 @@ the Ctrl-S function.</p>
   <code class="language-javascript">document.addEventListener(&quot;keydown&quot;, async function (e) {
   if (e.keyCode == 83 &amp;&amp; e.ctrlKey) {
     e.preventDefault();
+
     let fileName = &quot;todo&quot;;
     if (window.location.hash) {
       fileName = window.location.hash.substring(1);
     }
+
     let compileResult = compile(code);
     if (compileResult.success) {
       let svgText = (await viz.renderSVGElement(compileResult.dotCode)).outerHTML;
@@ -290,6 +303,7 @@ the Ctrl-S function.</p>
       let imageName = fileName + &quot;.svg&quot;;
       saveAs(imageBlob, imageName);
     }
+
     let codeBlob = new Blob([code], { type: &quot;text&#x2F;play;charset=utf-8&quot; });
     let codeName = fileName + &quot;.pando&quot;;
     saveAs(codeBlob, codeName);

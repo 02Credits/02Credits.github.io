@@ -92,6 +92,7 @@ drawn to a canvas.</p>
     await loadedPromise;
     images[path] = image;
   }
+
   return packTextures(images);
 }</code>
 </pre>
@@ -186,9 +187,12 @@ attribute vec2 a_dimensions;
 attribute vec2 a_center;
 attribute float a_scale;
 attribute vec4 a_color;
+
 varying highp vec2 v_texcoord;
 varying highp vec4 v_color;
+
 uniform vec4 u_camera_dimensions;
+
 void main() {
   vec2 relativePosition = (a_coord * a_dimensions - a_dimensions * a_center) * a_scale;
   vec2 rotatedPosition = vec2(cos(a_rotation) * relativePosition.x - sin(a_rotation) * relativePosition.y,
@@ -206,8 +210,10 @@ tint to get the final pixel color.</p>
   <code class="language-javascript">precision highp float;
 uniform float u_map_dimensions;
 uniform sampler2D u_texmap;
+
 varying vec2 v_texcoord;
 varying vec4 v_color;
+
 void main() {
   vec4 sampledColor = texture2D(
     u_texmap,
@@ -256,11 +262,13 @@ import frag from &#x27;.&#x2F;shaders&#x2F;frag.glsl&#x27;;</code>
   gl.clearColor(0, 0, 0, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.viewport(0, 0, screenSize.x, screenSize.y);
+
   twgl.setUniforms(spriteProgram, {
     u_camera_dimensions: [0, 0, screenSize.x, screenSize.y],
     u_texmap: textures.texture,
     u_map_dimensions: textures.size
   });
+
   for (let id in spriteArrays) {
     let expectedLength = 0;
     if (id == &quot;indices&quot;) {
@@ -268,6 +276,7 @@ import frag from &#x27;.&#x2F;shaders&#x2F;frag.glsl&#x27;;</code>
     } else {
       expectedLength = imagesToDraw.length * spriteArrays[id].numComponents * 4;
     }
+
     if (spriteArrays[id].data.length &lt; expectedLength) {
       console.log(expectedLength);
       if (id == &quot;indices&quot;) {
@@ -301,6 +310,7 @@ splice array just copies the single array slice into the destination array.</p>
     dest[offset + i] = data[i];
   }
 }
+
 export function spliceData(array: {numComponents: number, data: Float32Array | Uint16Array}, entityIndex: number, data: number[]) {
   let expectedCount = array.numComponents * 4;
   for (let i = 0; i &lt; expectedCount; i += data.length) {
@@ -352,8 +362,11 @@ frame.</p>
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, spriteArrays[id].data, spriteArrays[id].drawType);
   }
 }
+
 twgl.setBuffersAndAttributes(gl, spriteProgram, bufferInfo);
+
 twgl.drawBufferInfo(gl, bufferInfo, gl.TRIANGLES, imagesToDraw.length * 6);
+
 imagesToDraw = [];</code>
 </pre>
 <p>And thats it! I've found this method of drawing textures to the screen to be

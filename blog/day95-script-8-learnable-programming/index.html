@@ -116,7 +116,7 @@ closure, and passing the closure to a helper function which manages the highligh
 commented, so I will let it do the talking.</p>
 <pre>
   <code class="language-javascript">&#x2F;&#x2F; This takes a tab and returns the code from that tab. It also looks at the call expression under the mouse (if one
-&#x2F;&#x2F; exists) and wraps it in the &#96;_script8.injectHighlight&#96; function to setup higlighting. Decorate is taken as an
+&#x2F;&#x2F; exists) and wraps it in the `_script8.injectHighlight` function to setup higlighting. Decorate is taken as an
 &#x2F;&#x2F; argument so that places which do not need decorated code can preserve the code as written by the user.
 const decorateTabCode = (tab, decorate) =&gt; {
   if (tab.callUnderMouse &amp;&amp; tab.text &amp;&amp; decorate) {
@@ -129,22 +129,22 @@ const decorateTabCode = (tab, decorate) =&gt; {
     &#x2F;&#x2F;
     &#x2F;&#x2F;     if (drawTitle()) { ... do something ... }
     &#x2F;&#x2F;         ^^^^^^^^^^^
-    &#x2F;&#x2F; With the mouse hovering over the drawTitle call. In this case, the &#96;callUnderMouse&#96; for the current tab would be
-    &#x2F;&#x2F; a callExpression node with a &#96;callee&#96; of the drawTitle Identifier, and an empty arguments list. We can hook into
+    &#x2F;&#x2F; With the mouse hovering over the drawTitle call. In this case, the `callUnderMouse` for the current tab would be
+    &#x2F;&#x2F; a callExpression node with a `callee` of the drawTitle Identifier, and an empty arguments list. We can hook into
     &#x2F;&#x2F; this call by wrapping it in a lambda and passing it to a function which sets the highlight flag before and after
-    &#x2F;&#x2F; making the drawTitle call. In our case we have stored a special &#96;injectHighlight&#96; function in the _script8
+    &#x2F;&#x2F; making the drawTitle call. In our case we have stored a special `injectHighlight` function in the _script8
     &#x2F;&#x2F; global variable which is unaccessible by the user. The resulting code for that line looks like this:
     &#x2F;&#x2F;
     &#x2F;&#x2F;     if (_script8.injectHighlight(() =&gt; drawTitle())) { ... do something ... }
     &#x2F;&#x2F;
-    &#x2F;&#x2F; Since &#96;injectHighlight&#96; stores and passes on the return value fom the lambda, the wrapped expression can be used
+    &#x2F;&#x2F; Since `injectHighlight` stores and passes on the return value fom the lambda, the wrapped expression can be used
     &#x2F;&#x2F; in any place the original expression was used. But we get the added benefit of knowing when the command started
     &#x2F;&#x2F; and when it ended
     let node = tab.callUnderMouse
     let before = tab.text.slice(0, node.start)
     let nodeCode = tab.text.slice(node.start, node.end)
     let after = tab.text.slice(node.end)
-    return &#96;${before}_script8.injectHighlight(() =&gt; ${nodeCode})${after}&#96;
+    return `${before}_script8.injectHighlight(() =&gt; ${nodeCode})${after}`
   }
   return tab.text
 };</code>
@@ -156,8 +156,8 @@ returns the stored result. This means that the wrapped expression can be used in
 expression as it returns the same values and exists on the same line (which is important to preseve error line numbers).</p>
 <pre>
   <code class="language-javascript">&#x2F;&#x2F; This function is used in the hover highlight functionality. It is stored on the user inaccessible _script8 global
-&#x2F;&#x2F; variable and takes as argument a lambda wrapping some user expression. The flag &#96;shouldHighlight&#96; is then set to true
-&#x2F;&#x2F; while the passed in code is running and returned to false when it finishes. &#96;shouldHighlight&#96; is used to modify
+&#x2F;&#x2F; variable and takes as argument a lambda wrapping some user expression. The flag `shouldHighlight` is then set to true
+&#x2F;&#x2F; while the passed in code is running and returned to false when it finishes. `shouldHighlight` is used to modify
 &#x2F;&#x2F; colors while true to indicate to the user how a given function call effects the drawing on the screen
 export let shouldHighlight = false
 export const injectHighlight = (code) =&gt; {
@@ -174,7 +174,7 @@ to hook in in this one place, and everything worked properly.</p>
 <pre>
   <code class="language-javascript">int(i) {
   let index = i % intLookup.length;
-  &#x2F;&#x2F; &#96;shouldHighlight&#96; is injected in the use code when the current call is under the mouse. If it is true, all colors
+  &#x2F;&#x2F; `shouldHighlight` is injected in the use code when the current call is under the mouse. If it is true, all colors
   &#x2F;&#x2F; drawn are brightened by 2 steps if they can be, or darkened by two steps if they are already too bright
   if (shouldHighlight) {
     if (index &gt; 2) index = clamp(+index - 2, 0, 7)
@@ -208,7 +208,7 @@ Keith</p>
     
 
     
-    <a id="latest">Latest Post!</a>
+    <a href="http:&#x2F;&#x2F;02credits.com&#x2F;blog&#x2F;day96-neovide-smooth-scrolling&#x2F;" id="tomorrow">Tomorrow</a>
     
   </h3>
 </div>

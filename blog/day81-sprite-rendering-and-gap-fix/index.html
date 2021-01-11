@@ -75,6 +75,7 @@ Pivot as the center point of the Tile.</p>
 <pre>
   <code class="language-c#">public void DrawTile(Tiles tile, Vector2 position, float width, Color color, float layerDepth) {
     SheetElement spritePosition = SpritePositions[tile];
+
     var scale = width &#x2F; spritePosition.SourceSize.Width;
     var sourceRectangle = new Rectangle(spritePosition.Frame.X, spritePosition.Frame.Y, spritePosition.Frame.Width, spritePosition.Frame.Height);
     var destinationWidth = spritePosition.SpriteSourceSize.Width * scale;
@@ -84,6 +85,7 @@ Pivot as the center point of the Tile.</p>
         (int)(spritePosition.SpriteSourceSize.Y * scale + position.Y - spritePosition.Pivot.Y * spritePosition.SourceSize.Height * scale),
         (int)destinationWidth,
         (int)destinationHeight);
+
     spriteBatch.Draw(Sheet, destinationRectangle, sourceRectangle, color, 0, Vector2.Zero, SpriteEffects.None, layerDepth);
 }</code>
 </pre>
@@ -142,6 +144,7 @@ calls, and then swap back to the screen to render the target to the screen.</p>
   <code class="language-c#">protected override void Draw(GameTime gameTime) {
     GraphicsDevice.SetRenderTarget(RenderTarget);
     graphics.GraphicsDevice.Clear(colorManager.Lookup[0]);
+
     foreach (IDrawable drawable in drawables) {
         spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
         drawable.Draw(gameTime);
@@ -151,6 +154,7 @@ calls, and then swap back to the screen to render the target to the screen.</p>
     spriteBatch.Begin(samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.FrontToBack);
     spriteBatch.Draw(RenderTarget, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
     spriteBatch.End();
+
     base.Draw(gameTime);
 }</code>
 </pre>
@@ -159,8 +163,10 @@ of the backbuffer.</p>
 <pre>
   <code class="language-c#">public class ScreenSizeManager {
     private Game game;
+
     public int PixelWidth =&gt; game.RenderTarget.Width;
     public int PixelHeight =&gt; game.RenderTarget.Height;
+
     public ScreenSizeManager(Game game) {
         this.game = game;
     }

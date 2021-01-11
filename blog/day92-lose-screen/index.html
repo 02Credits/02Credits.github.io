@@ -82,8 +82,8 @@ value, I can configure the brightness differenctial from the darkest level to th
 the danger columns by looping over every block and checking the y position. This gets passed to every block render
 function and by extension every calculate color function.</p>
 <p>Since the frame value increments every frame (obviously) I can divide it by some constant value to get a smoother number
-which slowly increases. Also since the Sin function moves from negative one to positive one, I can tell that
-<code>Sin(frame / 5) / 4</code> will go from -0.25 to 0.25 and adding 1 will result in 0.75 to 1.25 which is right where I want it.
+which slowly increases. Also since the Sin function moves from negative one to positive one, I can tell that 
+<code>Sin(frame / 5) / 4</code> will go from -0.25 to 0.25 and adding 1 will result in 0.75 to 1.25 which is right where I want it. 
 This means the animation will move smoothly from slightly darker to slightly brighter than normal.</p>
 <p>If however any of the columns are in the losing position which means the final count down timer has started, I render
 all danger columns as darker than normal. This alerts the player that they are about to lose unless they do something

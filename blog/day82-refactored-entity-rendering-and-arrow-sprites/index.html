@@ -82,11 +82,13 @@ existing entity before storing it in the array.</p>
   <code class="language-c#">for (int i = 0; i &lt; 10; i++) {
   int x = random.Next(Width - 1);
   int y = random.Next(Height - 1);
+
   if (TileMap[x][y].tile == Tiles.Flat &amp;&amp; EntityMap[x][y] == null) {
       Tiles tile = random.Next(2) == 1 ? Tiles.Tree : Tiles.Wall;
       EntityMap[x][y] = tile;
   }
 }
+
 while (true) {
   int x = random.Next(Width - 1);
   int y = random.Next(Height - 1);

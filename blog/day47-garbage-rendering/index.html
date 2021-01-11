@@ -65,6 +65,7 @@ name to URLs.</p>
   &quot;FiveWide&quot;: &quot;.&#x2F;images&#x2F;garbage&#x2F;FiveWideGarbage.png&quot;,
   &quot;SingleLine&quot;: &quot;.&#x2F;images&#x2F;garbage&#x2F;SingleLineGarbage.png&quot;,
   &quot;TwoLine&quot;: &quot;.&#x2F;images&#x2F;garbage&#x2F;TwoLineGarbage.png&quot;,
+
   &quot;TopLine&quot;: &quot;.&#x2F;images&#x2F;garbage&#x2F;TopLineGarbage.png&quot;,
   &quot;MiddleLine&quot;: &quot;.&#x2F;images&#x2F;garbage&#x2F;MiddleLineGarbage.png&quot;,
   &quot;EvenMiddleLine&quot;: &quot;.&#x2F;images&#x2F;garbage&#x2F;EvenMiddleLineGarbage.png&quot;,
@@ -146,6 +147,7 @@ blocks:</p>
   <code class="language-javascript">let y = gridCenter.y;
   for (let row of rows) {
     let dimensions = new Vector(6 * blockWidth, blockWidth);
+
     if (row === garbageImages.EvenMiddleLine ||
         row === garbageImages.TwoLine) {
       dimensions = new Vector(6 * blockWidth, blockWidth * 2);
@@ -154,6 +156,7 @@ blocks:</p>
       y -= blockWidth;
     }
     let position = new Vector(Math.floor(dimensions.x &#x2F; 2) - gridDimensions.width &#x2F; 2, Math.floor(y));
+
     image(row, position, dimensions, 0, Color.White, Vector.zero);
   }
 });</code>
