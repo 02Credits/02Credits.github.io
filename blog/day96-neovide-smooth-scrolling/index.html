@@ -64,7 +64,7 @@ have to be re-rendered every time it needs to be updated.</p>
 <p>As an added benefit, because the renderer knows where each window is being drawn, and which windows are floating windows
 on top, we can implement a better version of the built in window transparency which blurs the background of a floating 
 window. I think this adds the same visual flare without the added difficulty when reading.</p>
-<p><img src="./BlurredBackground.png" alt="Blurred Background" /></p>
+<p><img src="./BlurredFloatingWindows.png" alt="Blurred Background" /></p>
 <p>Neovide tries to animate any changes it can using a quick exponential animation curve. This was introduced with the
 cursor animation where each corner of the cursor is animated to the new location, but is now used for scrolling and
 window position changes as well. So any time I talk about animating the scroll position, it is done by tracking the
